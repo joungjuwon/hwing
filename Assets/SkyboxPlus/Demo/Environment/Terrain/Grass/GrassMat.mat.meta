@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bf442006e0b63416daf20d90e441015c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 182966
+  packageName: Skybox Plus
+  packageVersion: 1.3.1
+  assetPath: Assets/SkyboxPlus/Demo/Environment/Terrain/Grass/GrassMat.mat
+  uploadId: 829892
