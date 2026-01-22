@@ -23,6 +23,7 @@ public class TPSController : MonoBehaviour
     private PlayerInputActions inputActions;
     private Vector2 moveInput;
     private bool isGrounded;
+    public bool IsGrounded => isGrounded; // 외부에서 접근 가능하도록 프로퍼티 추가
     private float nextMoveTime; // 다음 이동 가능 시간
     private Vector3 currentForward; // 캐릭터의 정방향 (이동 방향)
 
@@ -61,6 +62,7 @@ public class TPSController : MonoBehaviour
     private void FixedUpdate()
     {
         CheckGround();
+
         ControlDrag();
         CalculateForward(); // 정방향 계산
         Move();
