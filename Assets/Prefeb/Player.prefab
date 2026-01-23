@@ -198,6 +198,7 @@ MonoBehaviour:
   moveDamping: 1
   stopDamping: 5
   groundCheckDistance: 1.1
+  groundCheckRadius: 0.3
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -214,10 +215,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ca88c71b20dbd4db4d85544e7dd38a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLifeCycle
-  maxLifeTime: 24
-  deathSpawnPrefab: {fileID: 0}
-  playerVisuals: {fileID: 0}
+  maxLifeTime: 5
+  deathSpawnPrefab: {fileID: 7207991665247980607, guid: ab9da033673c1ef45ad05a33ab96d114, type: 3}
+  playerVisuals: {fileID: 6821408077786863926}
   deathStopDamping: 5
+  onSprout:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: SimulationManager, Assembly-CSharp
+        m_MethodName: EnableSimulationMode
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &6397046236243082211
 PrefabInstance:
   m_ObjectHideFlags: 0

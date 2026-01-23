@@ -14,6 +14,7 @@ public class TPSController : MonoBehaviour
     public float moveDamping = 1.0f;  // 이동 중일 때의 저항 (낮을수록 잘 미끄러짐)
     public float stopDamping = 5.0f;  // 멈출 때의 저항 (높을수록 빨리 멈춤)
     public float groundCheckDistance = 1.1f; // 캡슐 높이의 절반 + 여유값
+    public float groundCheckRadius = 0.3f; // 바닥 체크를 위한 구의 반지름
     public LayerMask groundLayer;
 
     [Header("References")]
@@ -170,13 +171,15 @@ public class TPSController : MonoBehaviour
     private void CheckGround()
     {
         // 캐릭터 중심에서 아래로 레이를 쏘아 바닥 감지
-        isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, groundCheckDistance, groundLayer);
+        // 씨앗처럼 둥근 캐릭터는 Raycast보다 SphereCast가 가장자리나 경사면에서 더 안정적입니다.
+        isGrounded = Physics.SphereCast(transform.position + Vector3.up * 0.5f, groundCheckRadius, Vector3.down, out _, groundCheckDistance, groundLayer);
     }
     
     // 바닥 체크 시각화 (디버깅용)
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position + Vector3.up * 0.1f, transform.position + Vector3.up * 0.1f + Vector3.down * groundCheckDistance);
+        // SphereCast 시각화
+        Gizmos.DrawWireSphere(transform.position + Vector3.up * 0.5f + Vector3.down * groundCheckDistance, groundCheckRadius);
     }
 }
