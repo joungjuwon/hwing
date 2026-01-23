@@ -26,9 +26,26 @@ public class SimulationManager : MonoBehaviour
     [Tooltip("랜덤 위치에 생성될 UI 프리팹 (World Space Canvas 권장)")]
     public GameObject spawnUiPrefab;
     public Vector2 spawnAreaSize = new Vector2(40f, 40f); // 스폰 랜덤 범위 (가로, 세로)
+    [Tooltip("레이캐스트 시작 높이 (현재 위치 기준)")]
+    public float raycastHeight = 50f;
+    [Tooltip("레이캐스트 탐색 거리")]
+    public float raycastDistance = 100f;
+    [Tooltip("바닥에서 띄울 높이")]
+    public float spawnOffset = 0.1f;
     public LayerMask groundLayer; // 바닥 감지용 레이어
 
     private GameObject currentSpawnUi; // 현재 생성된 스폰 UI 인스턴스
+
+    private void Start()
+    {
+        // 게임 시작 시 씬에 있는 초기 플레이어(씨앗)를 찾아 이벤트 연결
+        // 이렇게 하면 인스펙터에서 일일이 연결하지 않아도 첫 번째 죽음 시 시뮬레이션 뷰로 전환됩니다.
+        var initialPlayer = FindAnyObjectByType<PlayerLifeCycle>();
+        if (initialPlayer != null)
+        {
+            initialPlayer.onSprout.AddListener(EnableSimulationMode);
+        }
+    }
 
     // PlayerLifeCycle의 OnSprout 이벤트에 연결할 메서드
     public void EnableSimulationMode(Vector3 targetPosition)
@@ -59,6 +76,16 @@ public class SimulationManager : MonoBehaviour
         SpawnRandomRespawnUI();
     }
 
+    private void Update()
+    {
+        // 리스폰 UI가 활성화되어 있을 때 항상 카메라를 바라보도록 설정 (빌보드 효과)
+        if (currentSpawnUi != null && simulationCamera != null)
+        {
+            // World Space Canvas는 카메라와 회전값이 같을 때 정면을 보게 됨
+            currentSpawnUi.transform.rotation = simulationCamera.transform.rotation;
+        }
+    }
+
     private void SpawnRandomRespawnUI()
     {
         if (spawnUiPrefab == null) return;
@@ -71,6 +98,12 @@ public class SimulationManager : MonoBehaviour
 
         // UI 생성
         currentSpawnUi = Instantiate(spawnUiPrefab, randomPos, Quaternion.identity);
+
+        // 생성 즉시 카메라를 바라보도록 초기 회전 설정
+        if (simulationCamera != null)
+        {
+            currentSpawnUi.transform.rotation = simulationCamera.transform.rotation;
+        }
 
         // 버튼 클릭 이벤트 연결
         Button btn = currentSpawnUi.GetComponentInChildren<Button>();
@@ -87,13 +120,26 @@ public class SimulationManager : MonoBehaviour
         float randomX = Random.Range(-spawnAreaSize.x / 2f, spawnAreaSize.x / 2f);
         float randomZ = Random.Range(-spawnAreaSize.y / 2f, spawnAreaSize.y / 2f);
         
-        // 하늘에서 아래로 레이를 쏘아 바닥 위치를 찾음
-        Vector3 searchPos = new Vector3(randomX, 50f, randomZ);
-        if (Physics.Raycast(searchPos, Vector3.down, out RaycastHit hit, 100f, groundLayer))
+        // SimulationManager 오브젝트의 위치를 중심으로 랜덤 좌표 계산
+        Vector3 center = transform.position;
+        
+        // 하늘(현재 높이 + raycastHeight)에서 아래로 레이를 쏘아 바닥 위치를 찾음
+        Vector3 searchPos = new Vector3(center.x + randomX, center.y + raycastHeight, center.z + randomZ);
+        if (Physics.Raycast(searchPos, Vector3.down, out RaycastHit hit, raycastDistance, groundLayer))
         {
-            return hit.point;
+            return hit.point + Vector3.up * spawnOffset;
         }
-        return new Vector3(randomX, 0f, randomZ); // 바닥을 못 찾으면 높이 0 반환
+        return new Vector3(center.x + randomX, center.y + spawnOffset, center.z + randomZ); // 바닥을 못 찾으면 기준 높이 반환
+    }
+
+    // 에디터에서 스폰 범위를 눈으로 확인하기 위한 기즈모 추가
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        // 현재 위치를 중심으로 스폰 범위 박스 그리기 (높이는 raycastDistance로 표시하여 탐색 범위 시각화)
+        Vector3 center = transform.position;
+        Vector3 boxCenter = new Vector3(center.x, center.y + raycastHeight - (raycastDistance * 0.5f), center.z);
+        Gizmos.DrawWireCube(boxCenter, new Vector3(spawnAreaSize.x, raycastDistance, spawnAreaSize.y));
     }
 
     public void RespawnPlayer(Vector3 spawnPos)
@@ -102,6 +148,14 @@ public class SimulationManager : MonoBehaviour
 
         // 플레이어 생성
         GameObject newPlayer = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
+
+        // 중요: 새로 생성된 플레이어의 사망(싹틔우기) 이벤트에 시뮬레이션 모드 전환 기능을 다시 연결합니다.
+        // 이 코드가 없으면 리스폰된 플레이어가 죽었을 때 시뮬레이션 뷰로 돌아오지 않습니다.
+        var lifeCycle = newPlayer.GetComponent<PlayerLifeCycle>();
+        if (lifeCycle != null)
+        {
+            lifeCycle.onSprout.AddListener(EnableSimulationMode);
+        }
 
         // 플레이어 카메라가 새 플레이어를 따라가도록 설정
         if (playerCamera != null)
