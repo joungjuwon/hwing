@@ -72,6 +72,10 @@ public class PlayerLifeCycle : MonoBehaviour
         // 죽었을 때 마찰력 적용
         rb.linearDamping = deathStopDamping;
 
+        // 경사면에서 멈추는 시간을 단축하기 위해 속도를 강제로 서서히 줄임
+        rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, Vector3.zero, Time.fixedDeltaTime * 2f);
+        rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, Vector3.zero, Time.fixedDeltaTime * 2f);
+
         // 아직 오브젝트가 생성되지 않았고, 움직임이 거의 멈췄다면 생성
         if (!hasSpawnedDeathObject && rb.linearVelocity.sqrMagnitude < 0.01f && rb.angularVelocity.sqrMagnitude < 0.01f)
         {

@@ -20,6 +20,12 @@ public class SimulationManager : MonoBehaviour
     [Tooltip("시뮬레이션 모드 UI (보여줄 대상)")]
     public GameObject simulationUI;
 
+    [Header("Time UI")]
+    [Tooltip("하루 시간을 표시할 슬라이더 (상단 바)")]
+    public Slider dayTimeSlider;
+    [Tooltip("하루의 길이 (초 단위)")]
+    public float dayCycleDuration = 60f;
+
     [Header("Respawn Settings")]
     [Tooltip("리스폰할 플레이어 프리팹")]
     public GameObject playerPrefab;
@@ -35,9 +41,20 @@ public class SimulationManager : MonoBehaviour
     public LayerMask groundLayer; // 바닥 감지용 레이어
 
     private GameObject currentSpawnUi; // 현재 생성된 스폰 UI 인스턴스
+    private bool isSimulationActive = false; // 시뮬레이션 모드 활성화 여부
+    private float currentDayTime = 0f; // 현재 시간 흐름
 
     private void Start()
     {
+        // 게임 시작 시 초기 상태 강제 설정: 플레이어 카메라 활성화, 시뮬레이션 카메라 비활성화
+        if (playerCamera != null) playerCamera.SetActive(true);
+        if (simulationCamera != null) simulationCamera.SetActive(false);
+
+        // UI 초기 상태 설정
+        if (playerUI != null) playerUI.SetActive(true);
+        if (simulationUI != null) simulationUI.SetActive(false);
+        isSimulationActive = false;
+
         // 게임 시작 시 씬에 있는 초기 플레이어(씨앗)를 찾아 이벤트 연결
         // 이렇게 하면 인스펙터에서 일일이 연결하지 않아도 첫 번째 죽음 시 시뮬레이션 뷰로 전환됩니다.
         var initialPlayer = FindAnyObjectByType<PlayerLifeCycle>();
@@ -67,6 +84,8 @@ public class SimulationManager : MonoBehaviour
         // 2. UI 전환
         if (playerUI != null) playerUI.SetActive(false);
         if (simulationUI != null) simulationUI.SetActive(true);
+        
+        isSimulationActive = true; // 시뮬레이션 로직 활성화
 
         // 3. 커서 잠금 해제 (시뮬레이션 조작을 위해)
         Cursor.lockState = CursorLockMode.None;
@@ -78,6 +97,14 @@ public class SimulationManager : MonoBehaviour
 
     private void Update()
     {
+        // 모드와 상관없이 시간 흐름 처리 (슬라이더 업데이트)
+        currentDayTime += Time.deltaTime;
+        if (dayTimeSlider != null && dayCycleDuration > 0)
+        {
+            // 0~1 사이 값으로 반복 (왼쪽 -> 오른쪽 이동)
+            dayTimeSlider.value = (currentDayTime % dayCycleDuration) / dayCycleDuration;
+        }
+
         // 리스폰 UI가 활성화되어 있을 때 항상 카메라를 바라보도록 설정 (빌보드 효과)
         if (currentSpawnUi != null && simulationCamera != null)
         {
@@ -174,6 +201,7 @@ public class SimulationManager : MonoBehaviour
         if (playerCamera != null) playerCamera.SetActive(true);
         if (simulationUI != null) simulationUI.SetActive(false);
         if (playerUI != null) playerUI.SetActive(true);
+        isSimulationActive = false; // 시뮬레이션 로직 비활성화
 
         // 커서 잠금 및 스폰 UI 제거
         Cursor.lockState = CursorLockMode.Locked;

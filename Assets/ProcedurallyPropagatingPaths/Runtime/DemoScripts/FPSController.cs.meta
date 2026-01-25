@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: ebb2e83a709ea634f88e30dfdf88dea5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 247881
+  packageName: Procedurally Propagating Paths
+  packageVersion: 1.0.1
+  assetPath: Assets/ProcedurallyPropagatingPaths/Runtime/DemoScripts/FPSController.cs
+  uploadId: 628830
