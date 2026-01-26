@@ -115,9 +115,9 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _Exposure: 1
-    - _FogAlpha: 0.54
+    - _FogAlpha: 0.17
     - _FogAmount: 1
-    - _FogBaseHeight: 0
+    - _FogBaseHeight: -1
     - _FogDaylightInfluence: 1
     - _FogHeight: 0.1
     - _FogMinAmount: 0.1

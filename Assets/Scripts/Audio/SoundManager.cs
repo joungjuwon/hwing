@@ -20,10 +20,13 @@ public class SoundManager : MonoBehaviour
     [Tooltip("효과음용 믹서 그룹")]
     public AudioMixerGroup sfxGroup;
 
-    // 배경음악용 오디오 소스
+    // 배경음악용 오디오 소스 (외부 접근을 위해 프로퍼티로 제공하거나 메서드로 제공)
+    // AudioReactor 등에서 접근할 수 있도록 Get 메서드 추가
     private AudioSource bgmSource;
-    // 효과음용 오디오 소스
     private AudioSource sfxSource;
+
+    public AudioSource GetBGMSource() => bgmSource;
+    public AudioSource GetSFXSource() => sfxSource;
 
     private void Awake()
     {
@@ -106,21 +109,58 @@ public class SoundManager : MonoBehaviour
     /// SoundData를 사용하여 효과음을 재생합니다.
     /// </summary>
     /// <param name="data">사운드 데이터 ScriptableObject</param>
-    public void PlaySFX(SoundData data)
+    /// <param name="forceOneShot">true면 루프 설정이 있어도 1회만 재생 (무한 재귀 방지용)</param>
+    /// <returns>재생된 Audio Clip (없으면 null)</returns>
+    public AudioClip PlaySFX(SoundData data, bool forceOneShot = false)
     {
-        if (data == null || data.clip == null) return;
+        if (data == null) return null;
 
-        // 효과음의 피치 조절을 위해 일시적으로 설정을 변경할 수 있으나, 
-        // PlayOneShot은 피치를 개별적으로 지원하지 않으므로 오디오 소스의 피치를 변경해야 합니다.
-        // 다만 이렇게 하면 동시에 재생되는 다른 소리에도 영향이 갈 수 있어 주의가 필요합니다.
-        // 완벽한 구현을 위해서는 효과음용 오디오 소스를 풀링(Pooling) 방식으로 여러 개 둬야 합니다.
-        // 여기서는 간단하게 현재 소스의 피치를 변경하고 재생합니다.
-        sfxSource.pitch = data.pitch;
-        sfxSource.PlayOneShot(data.clip, data.volume);
+        // 랜덤 루프 설정이 켜져 있고, 강제 1회 재생이 아니라면 -> 루퍼 실행
+        if (data.useRandomLoop && !forceOneShot)
+        {
+            // 헬퍼 오브젝트 생성
+            GameObject looperObj = new GameObject($"Loop_{data.soundName}");
+            SoundRandomLooper looper = looperObj.AddComponent<SoundRandomLooper>();
+            looper.Init(data);
+            return null; // 루퍼가 알아서 재생하므로 여기선 null 반환
+        }
         
-        // 피치 복구 (다음에 재생될 소리를 위해) - 엄밀히는 딜레이를 줘야하지만 간단한 구현을 위해 생략하거나
-        // 코루틴으로 처리해야 합니다. 현재 구조에서는 1.0으로 즉시 복구하면 소리가 이상해질 수 있습니다.
-        // 일단 피치 변경 기능을 넣었으므로 복구 로직은 생략합니다. (계속 설정된 피치로 유지됨)
+        // 재생할 클립 결정 (배열이 있으면 배열에서 랜덤, 없으면 단일 클립)
+        AudioClip playClip = data.clip;
+        if (data.clips != null && data.clips.Length > 0)
+        {
+            playClip = data.clips[Random.Range(0, data.clips.Length)];
+        }
+
+        if (playClip == null) return null;
+
+        // 랜덤 변수 설정
+        float finalVolume = data.volume;
+        float finalPitch = data.pitch;
+
+        if (data.useRandomVariance)
+        {
+            // 볼륨 랜덤: Variance/2 만큼 빼고 더하는 범위
+            float volVar = data.volumeVariance * 0.5f;
+            finalVolume += Random.Range(-volVar, volVar);
+            
+            // 피치 랜덤: Variance/2 만큼 빼고 더하는 범위
+            float pitchVar = data.pitchVariance * 0.5f;
+            finalPitch += Random.Range(-pitchVar, pitchVar);
+        }
+
+        // 효과음의 피치 조절
+        // 주의: PlayOneShot은 오디오 소스의 피치에 영향을 받으므로,
+        // 동시에 여러 소리가 재생될 때 피치 변경이 다른 소리에도 즉시 영향을 줄 수 있는 한계가 있습니다.
+        // 완벽한 구현을 위해서는 AudioSource Pooling 또는 Instantiate(Prefab) 방식이 필요합니다.
+        // 현재는 간단한 구현을 위해 그대로 적용합니다.
+        sfxSource.pitch = finalPitch;
+        sfxSource.PlayOneShot(playClip, finalVolume);
+        
+        // 피치는 상태를 유지하므로 다음 재생 시 데이터에 의해 다시 덮어씌워져야 정상 작동합니다.
+        // (항상 SoundData를 통해 재생한다면 문제없음)
+
+        return playClip;
     }
 
     /// <summary>
