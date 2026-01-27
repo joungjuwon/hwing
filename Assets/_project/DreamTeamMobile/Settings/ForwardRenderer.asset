@@ -1,0 +1,169 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5480367402418077523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dea88b8bfbd93941b433ee338a4192d, type: 3}
+  m_Name: Blit
+  m_EditorClassIdentifier: Assembly-CSharp::Blit
+  m_Active: 1
+  settings:
+    Event: 1000
+    blitMaterial: {fileID: 2100000, guid: 6e5ca818d6fd7784c944901ecc64aadd, type: 2}
+    blitMaterialPassIndex: 0
+--- !u!114 &-4514341818733227991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35cb3a2e0b6ac0c4db0446e6cc38d3dc, type: 3}
+  m_Name: KuwaharaTestRenderFeature
+  m_EditorClassIdentifier: Assembly-CSharp::KuwaharaTestRenderFeature
+  m_Active: 0
+  settings:
+    renderPassEvent: 500
+    material: {fileID: 2100000, guid: 58e22f6477a86864b8e23e6e4f8fb076, type: 2}
+    kernelSize1: 2
+    tensorSpread1: 1
+    weightH1: 1
+    weightV1: 1
+    anisotropy1: 1
+    sharpness1: 20
+    kernelSize2: 3
+    tensorSpread2: 1
+    weightH2: 1
+    weightV2: 1
+    anisotropy2: 1
+    sharpness2: 1
+    blendFactor: 0.075
+    layer2Offset: {x: 0, y: 0}
+    debugPass: 0
+--- !u!114 &-3820226569333327157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c54f3441a3facad479257fe2d04bf6cd, type: 3}
+  m_Name: WatercolorRenderFeature
+  m_EditorClassIdentifier: Assembly-CSharp::WatercolorRenderFeature
+  m_Active: 1
+  settings:
+    renderPassEvent: 1000
+    shader: {fileID: 4800000, guid: f451c6570f639a248b2f28652cba918c, type: 3}
+    noiseTexture: {fileID: 2800000, guid: 10e9d686769e62f4a8b00833232b0827, type: 3}
+    distortionScale: 1
+    distortionStrength: 0.02
+    colorLevels: 8
+    edgeStrength: 1
+    edgeColor: {r: 1, g: 1, b: 1, a: 1}
+    granulationStrength: 0
+    wetEdgeStrength: 0
+    wetEdgeSize: 0.5
+    useCustomEdgeColor: 1
+    wetEdgeColor: {r: 1, g: 1, b: 1, a: 1}
+    enableEdgeBleeding: 1
+    blurShader: {fileID: 4800000, guid: 727b6b37e7b55de4483b09562b2b1c33, type: 3}
+    blendStage: 2
+    blur1Iterations: 2
+    blur1Size: 4
+    layer1KernelSize: 4
+    layer1WeightH: 2
+    layer1WeightV: 0.512
+    layer1Anisotropy: 1
+    layer1Sharpness: 12
+    layerBlendFactor: 0.347
+    layer2Offset: {x: 1, y: 1.2}
+    blur2Iterations: 2
+    blur2Size: 0.65
+    bleedingIntensity: 0.624
+    edgeSensitivity: 0.112
+    useEdgeDetection: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de640fe3d0db1804a85f9fc8f5cadab6, type: 3}
+  m_Name: ForwardRenderer
+  m_EditorClassIdentifier: 
+  debugShaders:
+    debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7, type: 3}
+    hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
+    probeVolumeSamplingDebugComputeShader: {fileID: 7200000, guid: 53626a513ea68ce47b59dc1299fe3959, type: 3}
+  probeVolumeResources:
+    probeVolumeDebugShader: {fileID: 0}
+    probeVolumeFragmentationDebugShader: {fileID: 0}
+    probeVolumeOffsetDebugShader: {fileID: 0}
+    probeVolumeSamplingDebugShader: {fileID: 0}
+    probeSamplingDebugMesh: {fileID: 0}
+    probeSamplingDebugTexture: {fileID: 0}
+    probeVolumeBlendStatesCS: {fileID: 0}
+  m_RendererFeatures: []
+  m_RendererFeatureMap: 
+  m_UseNativeRenderPass: 0
+  xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
+  postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
+  m_AssetVersion: 3
+  m_PrepassLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_OpaqueLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_TransparentLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_DefaultStencilState:
+    overrideStencilState: 0
+    stencilReference: 0
+    stencilCompareFunction: 8
+    passOperation: 0
+    failOperation: 0
+    zFailOperation: 0
+  m_ShadowTransparentReceive: 1
+  m_RenderingMode: 0
+  m_DepthPrimingMode: 0
+  m_CopyDepthMode: 0
+  m_DepthAttachmentFormat: 0
+  m_DepthTextureFormat: 0
+  m_AccurateGbufferNormals: 0
+  m_IntermediateTextureMode: 1
+--- !u!114 &2160428897801718196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f3535f62ae750048bfb2e0af8f8467a, type: 3}
+  m_Name: LuftDeussenWatercolorFeature
+  m_EditorClassIdentifier: Assembly-CSharp::LuftDeussenWatercolorFeature
+  m_Active: 0
+  settings:
+    renderPassEvent: 1000
+    shader: {fileID: 4800000, guid: 27893c2c557e71146ab25aa190e03242, type: 3}
+    paperTexture: {fileID: 2800000, guid: 518aac5a13492ff40b85cd545f7d4eb2, type: 3}
+    turbulenceTexture: {fileID: 2800000, guid: 8e64a30be1a44e840adf7ba6e642a3f4, type: 3}
+    dispersal1Texture: {fileID: 2800000, guid: 2109053f61266394c94b6d7001ee1b9d, type: 3}
+    dispersal2Texture: {fileID: 2800000, guid: c6e2f801e750a4d4ea82816b303816ba, type: 3}
+    halfResolution: 1

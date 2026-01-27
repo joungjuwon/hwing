@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1d11a6e2cc368b34880e12c8c6cf64dd
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 247881
+  packageName: Procedurally Propagating Paths
+  packageVersion: 1.0.1
+  assetPath: Assets/ProcedurallyPropagatingPaths/Prefabs/Fogs/Fog_PinkTaint.prefab
+  uploadId: 628830

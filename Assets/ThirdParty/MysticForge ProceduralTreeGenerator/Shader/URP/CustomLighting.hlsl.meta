@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 08923977817753748bb8623e1bf8e7a4
+ShaderIncludeImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/Shader/URP/CustomLighting.hlsl
+  uploadId: 764581

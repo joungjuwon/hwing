@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 04e4c20aa3020664bb6a0170b5f0e171
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 247881
+  packageName: Procedurally Propagating Paths
+  packageVersion: 1.0.1
+  assetPath: Assets/ProcedurallyPropagatingPaths/Runtime/DynamicObjectSpawner.cs
+  uploadId: 628830

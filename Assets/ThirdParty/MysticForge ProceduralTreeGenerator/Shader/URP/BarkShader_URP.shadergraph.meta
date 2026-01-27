@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: c56b71805e6448744918abe2756ec38b
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 625f186215c104763be7675aa2d941aa, type: 3}
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/Shader/URP/BarkShader_URP.shadergraph
+  uploadId: 764581
