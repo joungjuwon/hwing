@@ -26,18 +26,20 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 7200000, guid: b9a23f869c4fd45f19c5ada54dd82176, type: 3}
   m_RendererFeatures:
   - {fileID: 7833122117494664109}
-  - {fileID: 8165732545850077360}
-  m_RendererFeatureMap: ad6b866f10d7b46cb0703d8e7c825271
+  - {fileID: 2978854559563934430}
+  - {fileID: 8953899675685892614}
+  - {fileID: -5835106127092738162}
+  m_RendererFeatureMap: ad6b866f10d7b46cde6a5c74700457290632beb350a4427c
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_AssetVersion: 3
   m_PrepassLayerMask:
     serializedVersion: 2
-    m_Bits: 63
+    m_Bits: 4294967295
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 63
+    m_Bits: 4294967295
   m_TransparentLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -56,6 +58,23 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
+--- !u!114 &2978854559563934430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dea88b8bfbd93941b433ee338a4192d, type: 3}
+  m_Name: Blit
+  m_EditorClassIdentifier: Assembly-CSharp::Blit
+  m_Active: 1
+  settings:
+    Event: 500
+    blitMaterial: {fileID: 2100000, guid: 6e5ca818d6fd7784c944901ecc64aadd, type: 2}
+    blitMaterialPassIndex: 0
 --- !u!114 &7833122117494664109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,7 +101,7 @@ MonoBehaviour:
     BlurQuality: 0
     Falloff: 100
     SampleCount: -1
---- !u!114 &8165732545850077360
+--- !u!114 &8953899675685892614
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,36 +110,53 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: Draw Hidden Targets
-  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.RenderObjects
+  m_Script: {fileID: 11500000, guid: 3fc0554f5db54e49b480bb9bc102416d, type: 3}
+  m_Name: WatercolorBaseRenderFeature
+  m_EditorClassIdentifier: Assembly-CSharp::WatercolorBaseRenderFeature
   m_Active: 1
   settings:
-    passTag: Draw Hidden Targets
-    Event: 500
-    filterSettings:
-      RenderQueueType: 0
-      LayerMask:
-        serializedVersion: 2
-        m_Bits: 64
-      PassNames: []
-    overrideMaterial: {fileID: 0}
-    overrideMaterialPassIndex: 0
-    overrideShader: {fileID: 0}
-    overrideShaderPassIndex: 0
-    overrideMode: 1
-    overrideDepthState: 1
-    depthCompareFunction: 4
-    enableWrite: 1
-    stencilSettings:
-      overrideStencilState: 1
-      stencilReference: 1
-      stencilCompareFunction: 3
-      passOperation: 0
-      failOperation: 0
-      zFailOperation: 0
-    cameraSettings:
-      overrideCamera: 0
-      restoreCamera: 1
-      offset: {x: 0, y: 0, z: 0, w: 0}
-      cameraFieldOfView: 60
+    renderPassEvent: 1000
+    shader: {fileID: 4800000, guid: f451c6570f639a248b2f28652cba918c, type: 3}
+    noiseTexture: {fileID: 2800000, guid: 10e9d686769e62f4a8b00833232b0827, type: 3}
+    distortionScale: 1
+    distortionStrength: 0.02
+    colorLevels: 8
+    edgeStrength: 1
+    edgeColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    granulationStrength: 0.5
+    wetEdgeStrength: 1
+    wetEdgeSize: 1
+    useCustomEdgeColor: 0
+    wetEdgeColor: {r: 0.3, g: 0.2, b: 0.1, a: 1}
+--- !u!114 &-5835106127092738162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 632e6822af284dafbb3e57899400680b, type: 3}
+  m_Name: WatercolorEdgeBleedingRenderFeature
+  m_EditorClassIdentifier: Assembly-CSharp::WatercolorEdgeBleedingRenderFeature
+  m_Active: 1
+  settings:
+    renderPassEvent: 1000
+    enableEdgeBleeding: 1
+    blurShader: {fileID: 4800000, guid: 727b6b37e7b55de4483b09562b2b1c33, type: 3}
+    blendStage: 2
+    blur1Iterations: 2
+    blur1Size: 1.5
+    layer1KernelSize: 5
+    layer1WeightH: 1
+    layer1WeightV: 1
+    layer1Anisotropy: 1
+    layer1Sharpness: 10
+    layerBlendFactor: 0.3
+    layer2Offset: {x: 2, y: 2}
+    blur2Iterations: 2
+    blur2Size: 1.5
+    bleedingIntensity: 0.3
+    edgeSensitivity: 0.1
+    useEdgeDetection: 1

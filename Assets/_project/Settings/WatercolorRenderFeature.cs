@@ -5,6 +5,11 @@ using UnityEngine.Serialization;
 
 public class WatercolorRenderFeature : ScriptableRendererFeature
 {
+    static readonly int NoiseTexId = Shader.PropertyToID("_NoiseTex");
+    static readonly int NoiseMapId = Shader.PropertyToID("_NoiseMap");
+    static readonly int NoiseStrengthId = Shader.PropertyToID("_NoiseStrength");
+    static readonly int PaperMapId = Shader.PropertyToID("_PaperMap");
+    static readonly int PaperStrengthId = Shader.PropertyToID("_PaperStrength");
     public enum BlendStage
     {
         Blur1,
@@ -119,6 +124,11 @@ public class WatercolorRenderFeature : ScriptableRendererFeature
             {
                 blurMaterial = new Material(settings.blurShader);
             }
+
+            if (material == null && settings.shader != null)
+            {
+                material = new Material(settings.shader);
+            }
         }
 
         [System.Obsolete]
@@ -153,6 +163,25 @@ public class WatercolorRenderFeature : ScriptableRendererFeature
             material.SetFloat("_WetEdgeSize", settings.wetEdgeSize);
             material.SetColor("_WetEdgeColor", settings.wetEdgeColor);
             material.SetFloat("_UseCustomEdgeColor", settings.useCustomEdgeColor ? 1.0f : 0.0f);
+
+            // Compatibility with WatercolourBlit.shader property names
+            if (settings.noiseTexture != null && material.HasProperty(NoiseMapId))
+            {
+                material.SetTexture(NoiseMapId, settings.noiseTexture);
+                material.SetTextureScale(NoiseMapId, Vector2.one * settings.distortionScale);
+            }
+            if (material.HasProperty(NoiseStrengthId))
+            {
+                material.SetFloat(NoiseStrengthId, settings.distortionStrength);
+            }
+            if (material.HasProperty(PaperMapId) && settings.noiseTexture != null)
+            {
+                material.SetTexture(PaperMapId, settings.noiseTexture);
+            }
+            if (material.HasProperty(PaperStrengthId))
+            {
+                material.SetFloat(PaperStrengthId, settings.granulationStrength);
+            }
 
             // Blit watercolor effect
             cmd.Blit(source, tempTexture, material, 0);
