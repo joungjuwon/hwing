@@ -118,11 +118,11 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _GranulationStrength: 0.5
+    - _GranulationStrength: 0.46
     - _Metallic: 0
-    - _NoiseStrength: -0.011
+    - _NoiseStrength: -0.013
     - _OcclusionStrength: 1
-    - _PaperStrength: 0.01
+    - _PaperStrength: 0.14
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
@@ -134,7 +134,7 @@ Material:
     - _Surface: 0
     - _UseCustomEdgeColor: 1
     - _VignetteStrength: 0
-    - _WetEdgeSize: 0.6
+    - _WetEdgeSize: 0.54
     - _WetEdgeStrength: 0
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1

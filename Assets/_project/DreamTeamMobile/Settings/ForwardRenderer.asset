@@ -1,5 +1,37 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7135069850182557432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 632e6822af284dafbb3e57899400680b, type: 3}
+  m_Name: WatercolorEdgeBleedingRenderFeature
+  m_EditorClassIdentifier: Assembly-CSharp::WatercolorEdgeBleedingRenderFeature
+  m_Active: 1
+  settings:
+    renderPassEvent: 550
+    enableEdgeBleeding: 1
+    blurShader: {fileID: 4800000, guid: 727b6b37e7b55de4483b09562b2b1c33, type: 3}
+    blendStage: 1
+    blur1Iterations: 2
+    blur1Size: 0.5
+    layer1KernelSize: 2
+    layer1WeightH: 1.23
+    layer1WeightV: 0.911
+    layer1Anisotropy: 0.967
+    layer1Sharpness: 4.93
+    layerBlendFactor: 0.934
+    layer2Offset: {x: 0, y: 0}
+    blur2Iterations: 1
+    blur2Size: 0.5
+    bleedingIntensity: 0.624
+    edgeSensitivity: 0.112
+    useEdgeDetection: 0
 --- !u!114 &-5480367402418077523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dea88b8bfbd93941b433ee338a4192d, type: 3}
   m_Name: Blit
   m_EditorClassIdentifier: Assembly-CSharp::Blit
-  m_Active: 1
+  m_Active: 0
   settings:
     Event: 1000
     blitMaterial: {fileID: 2100000, guid: 6e5ca818d6fd7784c944901ecc64aadd, type: 2}
@@ -57,12 +89,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c54f3441a3facad479257fe2d04bf6cd, type: 3}
-  m_Name: WatercolorRenderFeature
-  m_EditorClassIdentifier: Assembly-CSharp::WatercolorRenderFeature
+  m_Script: {fileID: 11500000, guid: 3fc0554f5db54e49b480bb9bc102416d, type: 3}
+  m_Name: WatercolorBaseRenderFeature
+  m_EditorClassIdentifier: Assembly-CSharp::WatercolorBaseRenderFeature
   m_Active: 1
   settings:
-    renderPassEvent: 1000
+    renderPassEvent: 500
     shader: {fileID: 4800000, guid: f451c6570f639a248b2f28652cba918c, type: 3}
     noiseTexture: {fileID: 2800000, guid: 10e9d686769e62f4a8b00833232b0827, type: 3}
     distortionScale: 1
@@ -70,28 +102,11 @@ MonoBehaviour:
     colorLevels: 8
     edgeStrength: 1
     edgeColor: {r: 1, g: 1, b: 1, a: 1}
-    granulationStrength: 0
-    wetEdgeStrength: 0
-    wetEdgeSize: 0.5
+    granulationStrength: 0.038
+    wetEdgeStrength: 0.066
+    wetEdgeSize: 1.23
     useCustomEdgeColor: 1
     wetEdgeColor: {r: 1, g: 1, b: 1, a: 1}
-    enableEdgeBleeding: 1
-    blurShader: {fileID: 4800000, guid: 727b6b37e7b55de4483b09562b2b1c33, type: 3}
-    blendStage: 2
-    blur1Iterations: 2
-    blur1Size: 4
-    layer1KernelSize: 4
-    layer1WeightH: 2
-    layer1WeightV: 0.512
-    layer1Anisotropy: 1
-    layer1Sharpness: 12
-    layerBlendFactor: 0.347
-    layer2Offset: {x: 1, y: 1.2}
-    blur2Iterations: 2
-    blur2Size: 0.65
-    bleedingIntensity: 0.624
-    edgeSensitivity: 0.112
-    useEdgeDetection: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,8 +131,13 @@ MonoBehaviour:
     probeSamplingDebugMesh: {fileID: 0}
     probeSamplingDebugTexture: {fileID: 0}
     probeVolumeBlendStatesCS: {fileID: 0}
-  m_RendererFeatures: []
-  m_RendererFeatureMap: 
+  m_RendererFeatures:
+  - {fileID: -5480367402418077523}
+  - {fileID: -3820226569333327157}
+  - {fileID: -7135069850182557432}
+  - {fileID: -4514341818733227991}
+  - {fileID: 2160428897801718196}
+  m_RendererFeatureMap: ad803d3ce2d2f1b3cbba60f52cd4fbca2910b7ab08d659c1b4c9f5d7a262fb1d
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -160,10 +180,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LuftDeussenWatercolorFeature
   m_Active: 0
   settings:
-    renderPassEvent: 1000
+    renderPassEvent: 550
     shader: {fileID: 4800000, guid: 27893c2c557e71146ab25aa190e03242, type: 3}
     paperTexture: {fileID: 2800000, guid: 518aac5a13492ff40b85cd545f7d4eb2, type: 3}
-    turbulenceTexture: {fileID: 2800000, guid: 8e64a30be1a44e840adf7ba6e642a3f4, type: 3}
-    dispersal1Texture: {fileID: 2800000, guid: 2109053f61266394c94b6d7001ee1b9d, type: 3}
-    dispersal2Texture: {fileID: 2800000, guid: c6e2f801e750a4d4ea82816b303816ba, type: 3}
+    turbulenceTexture: {fileID: 2800000, guid: 10e9d686769e62f4a8b00833232b0827, type: 3}
+    dispersal1Texture: {fileID: 2800000, guid: 22c88b04695d3f44d9f583d50f475f10, type: 3}
+    dispersal2Texture: {fileID: 2800000, guid: 1cdc5b506b1a4a33a53c30669ced1f51, type: 3}
     halfResolution: 1
