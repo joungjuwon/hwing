@@ -1,5 +1,8 @@
 ﻿<Solution>
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="ColliderDrivenPathEffects.csproj" />
+  <Project Path="OccaSoftware.OutlineObjects.Demo.csproj" />
+  <Project Path="OccaSoftware.OutlineObjects.Editor.csproj" />
+  <Project Path="OccaSoftware.OutlineObjects.Runtime.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
 </Solution>

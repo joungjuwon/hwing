@@ -1,15 +1,15 @@
 fileFormatVersion: 2
-guid: 335d67321fd1b4248af0b995d537ec9e
+guid: 0ad10dc77705cdd48a6f1ec10461f625
 NativeFormatImporter:
   externalObjects: {}
-  mainObjectFileID: 0
+  mainObjectFileID: 11400000
   userData: 
   assetBundleName: 
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 316447
-  packageName: Full Opaque Water & WaterFall
-  packageVersion: 1.0
+  productId: 313863
+  packageName: Full Opaque Grass Physics & Wind
+  packageVersion: 3.1
   assetPath: Assets/FullOpaqueWater&Waterfall/Settings/OptiFXPostProcessProfile.asset
-  uploadId: 747156
+  uploadId: 759154
