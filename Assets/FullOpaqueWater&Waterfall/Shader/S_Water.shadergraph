@@ -2518,12 +2518,31 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": 50.0,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
+<<<<<<< HEAD
     }
+=======
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
+>>>>>>> devho
 }
 
 {
@@ -2906,12 +2925,31 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": 0.8500000238418579,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
+<<<<<<< HEAD
     }
+=======
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
+>>>>>>> devho
 }
 
 {
@@ -3165,6 +3203,11 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": false
 }
 
@@ -3436,6 +3479,11 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": {
         "x": 0.0,
         "y": 0.0,
@@ -3749,6 +3797,11 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": {
         "r": 0.2705882489681244,
         "g": 0.5960784554481506,
@@ -3779,12 +3832,31 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": 50.0,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
+<<<<<<< HEAD
     }
+=======
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
+>>>>>>> devho
 }
 
 {
@@ -5391,12 +5463,31 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": 0.5,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
+<<<<<<< HEAD
     }
+=======
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
+>>>>>>> devho
 }
 
 {
@@ -5861,12 +5952,31 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": 10.0,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
+<<<<<<< HEAD
     }
+=======
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
+>>>>>>> devho
 }
 
 {
@@ -7198,10 +7308,17 @@
         "w": 1.0
     },
     "m_DefaultValue": {
+<<<<<<< HEAD
         "x": 0.0,
         "y": 0.0,
         "z": 0.0,
         "w": 0.0
+=======
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+>>>>>>> devho
     },
     "m_Labels": []
 }
@@ -7930,12 +8047,31 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": 0.0,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
+<<<<<<< HEAD
     }
+=======
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
+>>>>>>> devho
 }
 
 {
@@ -8608,12 +8744,31 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": 0.029999999329447748,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
+<<<<<<< HEAD
     }
+=======
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
+>>>>>>> devho
 }
 
 {
@@ -9091,6 +9246,11 @@
     "overrideHLSLDeclaration": true,
     "hlslDeclarationOverride": 1,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": {
         "x": 0.0,
         "y": 0.0,
@@ -9334,12 +9494,31 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 2,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": 7.0,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
+<<<<<<< HEAD
     }
+=======
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
+>>>>>>> devho
 }
 
 {
@@ -9424,12 +9603,31 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": 1.0,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
+<<<<<<< HEAD
     }
+=======
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
+>>>>>>> devho
 }
 
 {
@@ -9452,12 +9650,31 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": 0.5,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
+<<<<<<< HEAD
     }
+=======
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
+>>>>>>> devho
 }
 
 {
@@ -10356,6 +10573,11 @@
     "overrideHLSLDeclaration": true,
     "hlslDeclarationOverride": 1,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": {
         "x": 0.0,
         "y": 0.0,
@@ -12046,6 +12268,12 @@
     "m_AlphaClip": false,
     "m_CastShadows": true,
     "m_ReceiveShadows": true,
+<<<<<<< HEAD
+=======
+    "m_DisableTint": false,
+    "m_AdditionalMotionVectorMode": 0,
+    "m_AlembicMotionVectors": false,
+>>>>>>> devho
     "m_SupportsLODCrossFade": false,
     "m_CustomEditorGUI": "",
     "m_SupportVFX": false
@@ -12696,6 +12924,11 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": false
 }
 
@@ -12806,12 +13039,31 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": 0.20000000298023225,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
+<<<<<<< HEAD
     }
+=======
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
+>>>>>>> devho
 }
 
 {
@@ -14282,6 +14534,11 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+<<<<<<< HEAD
+=======
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+>>>>>>> devho
     "m_Value": {
         "x": 0.5,
         "y": -0.5,
