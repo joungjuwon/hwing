@@ -100,7 +100,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Growth: 0.77412266
+    - _Growth: 0
     - _Metallic: 0
     - _NoiseScale: 50
     - _OcclusionStrength: 1

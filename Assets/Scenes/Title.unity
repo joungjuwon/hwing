@@ -196,7 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
-  m_Material: {fileID: 2100000, guid: ef700fe1f0af71f45ac2421382ff7bd7, type: 2}
+  m_Material: {fileID: 2100000, guid: 049229c3313860046adb4ecc73dd337d, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -230,7 +230,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 449283709}
   m_Father: {fileID: 1933628714}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -241,14 +242,16 @@ RectTransform:
 --- !u!1 &449283706
 GameObject:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 2408514951609658811, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-  m_PrefabInstance: {fileID: 712548160}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 449283709}
   - component: {fileID: 449283708}
   - component: {fileID: 449283707}
+  - component: {fileID: 449283711}
+  - component: {fileID: 449283710}
   m_Layer: 0
   m_Name: Particle System
   m_TagString: Untagged
@@ -260,8 +263,8 @@ GameObject:
 ParticleSystemRenderer:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 6805977637865309544, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-  m_PrefabInstance: {fileID: 712548160}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 449283706}
   m_Enabled: 1
@@ -339,8 +342,8 @@ ParticleSystemRenderer:
 --- !u!198 &449283708
 ParticleSystem:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 6713832891355179418, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-  m_PrefabInstance: {fileID: 712548160}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 449283706}
   serializedVersion: 8
@@ -975,7 +978,7 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 5, y: 2, z: 0.1}
+    m_Scale: {x: 0.1, y: 11.5470085, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -5068,21 +5071,55 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!4 &449283709
-Transform:
+--- !u!224 &449283709
+RectTransform:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 5038462140086440919, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-  m_PrefabInstance: {fileID: 712548160}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 449283706}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1028, y: 781, z: -0.87}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 382905279}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &449283710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449283706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fcf11bd56e71e64582cc9eee8a263e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIParticleSystem
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  particleTexture: {fileID: 0}
+  ignore3DRotation: 1
+--- !u!222 &449283711
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449283706}
+  m_CullTransparentMesh: 1
 --- !u!1 &573023639
 GameObject:
   m_ObjectHideFlags: 0
@@ -5124,80 +5161,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 573023639}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e8a968186932aa47ae00ae843698b67, type: 3}
+  m_Script: {fileID: 11500000, guid: b9e7c59c5a6cea1459bedba3cca6650c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TitleEffectController
   titleImage: {fileID: 382905277}
   petalParticle: {fileID: 449283708}
   dissolveParamName: _DissolveAmount
-  particleDepth: 0.5
+  particleDepth: 10
   duration: 10
   targetCamera: {fileID: 1008348944}
---- !u!1001 &712548160
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2408514951609658811, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-      propertyPath: m_Name
-      value: Particle System
-      objectReference: {fileID: 0}
-    - target: {fileID: 5038462140086440919, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1028
-      objectReference: {fileID: 0}
-    - target: {fileID: 5038462140086440919, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 781
-      objectReference: {fileID: 0}
-    - target: {fileID: 5038462140086440919, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.87
-      objectReference: {fileID: 0}
-    - target: {fileID: 5038462140086440919, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5038462140086440919, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5038462140086440919, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5038462140086440919, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5038462140086440919, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5038462140086440919, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5038462140086440919, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6713832891355179418, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-      propertyPath: looping
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6713832891355179418, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 226890cb34ff5524fb1999026e1745fb, type: 3}
 --- !u!1 &719072063
 GameObject:
   m_ObjectHideFlags: 0
@@ -5946,7 +5918,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 1008348944}
-  m_PlaneDistance: 100
+  m_PlaneDistance: 5
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -5991,4 +5963,3 @@ SceneRoots:
   - {fileID: 170744668}
   - {fileID: 818000310}
   - {fileID: 573023641}
-  - {fileID: 712548160}
