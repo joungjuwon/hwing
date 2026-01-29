@@ -73,123 +73,52 @@ public class TitleEffectController : MonoBehaviour
 
     private IEnumerator ProcessEffect()
     {
-        isPlaying = true;
-        Debug.Log("[TitleEffect] Effect Started.");
-
-        // UI 요소의 너비와 높이 가져오기
-        RectTransform rectTransform = titleImage.GetComponent<RectTransform>();
-        float width = rectTransform.rect.width;
-        float height = rectTransform.rect.height;
-
-        // ★ 편의성 개선: 파티클이 UI의 자식으로 있다면 "로컬 좌표"만 쓰면 됨 (복잡한 변환 불필요)
-        bool isChild = petalParticle.transform.parent == titleImage.transform;
-
-        Vector3 startPos, endPos;
-
-        if (isChild)
+        // 셰이더 기반 통합 효과 (ScatterDissolve)
+        
+        // 1. 필요한 컴포넌트 확인 (UIMeshSplitter)
+        var meshSplitter = titleImage.GetComponent<UIMeshSplitter>();
+        if (meshSplitter == null)
         {
-            // 2D UI 모드: 그냥 왼쪽 끝에서 오른쪽 끝으로 로컬 이동
-            // RectTransform 기준: (0,0)이 중심 가정 (Pivot 0.5, 0.5)
-            startPos = new Vector3(-width * 0.5f, 0, 0); 
-            endPos = new Vector3(width * 0.5f, 0, 0);
-            
-            // 파티클의 Z값을 0으로 (UI와 딱 붙음)
-            // 필요하다면 -10 등으로 앞으로 뺄 수 있음
-            startPos.z = -10; 
-            endPos.z = -10;
-
-            Debug.Log("[TitleEffect] Using Local Space (Easy Mode)");
+            Debug.LogWarning("[TitleEffect] UIMeshSplitter component missing! Adding dynamically.");
+            meshSplitter = titleImage.gameObject.AddComponent<UIMeshSplitter>();
         }
-        else
+        
+        // Effect 시작
+        if (titleMaterial != null)
         {
-            // 기존 월드 좌표 로직 (UI와 파티클이 분리된 경우)
-             if (targetCamera == null) targetCamera = Camera.main;
-            
-             // ... (기존 변환 로직 유지 또는 간소화)
-             // 여기서 복잡한 계산을 다시 하기보다 위 로직을 권장함. 
-             // 호환성을 위해 유지하되 간단히 처리
-             
-             startPos = titleImage.transform.position;
-             endPos = titleImage.transform.position; // Fallback
-             
-             if (rectTransform != null)
-             {
-                 Vector3[] corners = new Vector3[4];
-                 rectTransform.GetWorldCorners(corners);
-                 Vector3 centerLeft = (corners[0] + corners[1]) * 0.5f;
-                 Vector3 centerRight = (corners[2] + corners[3]) * 0.5f;
-                 
-                 Canvas canvas = titleImage.canvas;
-                 if (canvas != null && canvas.renderMode == RenderMode.ScreenSpaceOverlay && targetCamera != null)
-                 {
-                     startPos = targetCamera.ScreenToWorldPoint(new Vector3(centerLeft.x, centerLeft.y, particleDepth));
-                     endPos = targetCamera.ScreenToWorldPoint(new Vector3(centerRight.x, centerRight.y, particleDepth));
-                 }
-                 else
-                 {
-                     startPos = centerLeft;
-                     endPos = centerRight;
-                 }
-             }
+            titleMaterial.SetFloat(dissolveParamId, 0f);
         }
 
-        // 1. 파티클 재생 준비
+        // 2. 파티클 시스템 (사용 안 함 - 셰이더로만 표현)
         if (petalParticle != null)
         {
-            if (isChild) petalParticle.transform.localPosition = startPos;
-            else petalParticle.transform.position = startPos;
-
-            // ★ Shape: 얇은 수직 선으로 형태 변경
-            var shape = petalParticle.shape;
-            shape.shapeType = ParticleSystemShapeType.Box;
-            shape.scale = new Vector3(0.1f, height, 1f); // UI 높이만큼
-            shape.rotation = new Vector3(0, 0, 0); 
-
-            var emission = petalParticle.emission;
-            emission.enabled = true;
-            
-            // 모래 효과를 위해 밀도 높임
-            if (emission.rateOverTime.constant < 10)
-            {
-               var rate = emission.rateOverTime;
-               rate.constant = 50; 
-               emission.rateOverTime = rate;
-            }
-
-            petalParticle.Stop(); 
-            petalParticle.Play();
+            petalParticle.gameObject.SetActive(false);
         }
 
-        // 2. 셰이더 Dissolve & 이미터 이동 진행
         float timer = 0f;
         while (timer < duration)
         {
             timer += Time.deltaTime;
             float progress = Mathf.Clamp01(timer / duration);
-            float curveValue = Mathf.SmoothStep(0f, 1f, progress);
+            
+            // 셰이더 파라미터 업데이트
+            float curveValue = Mathf.SmoothStep(0f, 1.5f, progress);
 
             if (titleMaterial != null)
             {
                 titleMaterial.SetFloat(dissolveParamId, curveValue);
             }
 
-            if (petalParticle != null)
-            {
-                if (isChild)
-                    petalParticle.transform.localPosition = Vector3.Lerp(startPos, endPos, curveValue);
-                else
-                    petalParticle.transform.position = Vector3.Lerp(startPos, endPos, curveValue);
-            }
-
             yield return null;
         }
 
-        if (titleMaterial != null) titleMaterial.SetFloat(dissolveParamId, 1f);
+        if (titleMaterial != null) titleMaterial.SetFloat(dissolveParamId, 1.5f);
+        
         if (petalParticle != null)
         {
-            var emission = petalParticle.emission;
-            emission.enabled = false;
+            petalParticle.Stop();
         }
+        
         isPlaying = false;
     }
 

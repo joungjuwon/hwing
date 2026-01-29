@@ -22,6 +22,10 @@ public class SettingsUIController : MonoBehaviour
     [Tooltip("타이틀 씬 인덱스 (Build Settings 기준)")]
     public int titleSceneIndex = 0;
 
+    [Header("Game Settings")]
+    [Tooltip("설정 창을 열 때 게임을 일시 정지할지 여부")]
+    public bool pauseOnOpen = false; // 테스트를 위해 기본값 false
+
     private bool isVisible = false;
 
     private void Start()
@@ -37,7 +41,6 @@ public class SettingsUIController : MonoBehaviour
         if (masterVolumeSlider != null)
         {
             masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeChanged);
-            // 초기값 설정 (저장된 값이 있다면 불러오는 로직이 필요하지만, 여기선 기본값)
             masterVolumeSlider.value = 1.0f; 
         }
 
@@ -84,7 +87,9 @@ public class SettingsUIController : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-            Time.timeScale = 0f; // 게임 일시 정지 (선택 사항)
+            
+            if (pauseOnOpen)
+                Time.timeScale = 0f; // 게임 일시 정지
         }
         else
         {

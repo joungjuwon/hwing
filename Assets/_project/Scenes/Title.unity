@@ -148,9 +148,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 221e17ea17d79b94aa63d81779eca8ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneSoundStarter
-  soundData: {fileID: 11400000, guid: 7470f59f24a2df54cb65e287165925eb, type: 2}
-  playAsBGM: 0
-  delay: 0
+  triggerGroups:
+  - groupName: Title
+    condition: 0
+    commands:
+    - commandName: TitleBGM
+      actionType: 0
+      delay: 0
+      soundData: {fileID: 11400000, guid: 75a8522ee7a353a46961662940802342, type: 2}
+      onExecute:
+        m_PersistentCalls:
+          m_Calls: []
+    - commandName: TitleBGM
+      actionType: 1
+      delay: 0
+      soundData: {fileID: 11400000, guid: 7470f59f24a2df54cb65e287165925eb, type: 2}
+      onExecute:
+        m_PersistentCalls:
+          m_Calls: []
 --- !u!4 &170744668
 Transform:
   m_ObjectHideFlags: 0
@@ -177,13 +192,14 @@ GameObject:
   - component: {fileID: 382905279}
   - component: {fileID: 382905278}
   - component: {fileID: 382905277}
+  - component: {fileID: 382905280}
   m_Layer: 5
   m_Name: RawImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &382905277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,7 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
-  m_Material: {fileID: 2100000, guid: 049229c3313860046adb4ecc73dd337d, type: 2}
+  m_Material: {fileID: 2100000, guid: b3c00ff945006064e8b721dfcdd518fa, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -239,6 +255,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 240}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &382905280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382905276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c86b355091e55145aa6079372fec4bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIMeshSplitter
+  gridX: 50
+  gridY: 20
 --- !u!1 &449283706
 GameObject:
   m_ObjectHideFlags: 0
@@ -978,7 +1008,7 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 0.1, y: 11.5470085, z: 1}
+    m_Scale: {x: 0.1, y: 1080, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -5079,7 +5109,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 449283706}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5087,7 +5117,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -162.36505, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &449283710
@@ -5130,6 +5160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 573023641}
   - component: {fileID: 573023642}
+  - component: {fileID: 573023643}
   m_Layer: 0
   m_Name: TitleEffectManager
   m_TagString: Untagged
@@ -5170,6 +5201,21 @@ MonoBehaviour:
   particleDepth: 10
   duration: 10
   targetCamera: {fileID: 1008348944}
+--- !u!114 &573023643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573023639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bb4ac08df4be064ea2f1cdb8ef909de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TitleInputController
+  nextSceneIndex: 1
+  inputDelay: 0
+  titleEffectController: {fileID: 573023642}
 --- !u!1 &719072063
 GameObject:
   m_ObjectHideFlags: 0
@@ -5461,8 +5507,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd0a34fa9ab0f43b8a6c998016b96daf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkyboxPlus.SkyboxPlus
-  sun: {fileID: 954864539}
-  moon: {fileID: 0}
 --- !u!1 &1008348942
 GameObject:
   m_ObjectHideFlags: 0
@@ -5671,7 +5715,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 06dc0ada10ffb2149ac2befd586d88fc, type: 2}
+  - {fileID: 2100000, guid: 838b91fe48357e24bb248f325877a12a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
