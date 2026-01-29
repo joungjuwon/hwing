@@ -89,6 +89,8 @@ Shader "Custom/Watercolour"
                 float4 positionOS : POSITION;
                 float3 normalOS : NORMAL;
                 float2 uv : TEXCOORD0;
+                float2 staticLightmapUV : TEXCOORD1;
+                float2 dynamicLightmapUV : TEXCOORD2;
                 float3 normalSmooth : TEXCOORD3; // Smoothed Normals
             };
 
@@ -100,6 +102,11 @@ Shader "Custom/Watercolour"
                 float2 uv : TEXCOORD0;
                 float fogFactor : TEXCOORD3;
                 float3 normalSmoothWS : TEXCOORD4; // Passed to Frag
+                DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 5);
+                #ifdef DYNAMICLIGHTMAP_ON
+                float2 dynamicLightmapUV : TEXCOORD6;
+                #endif
+                float4 probeOcclusion : TEXCOORD7;
             };
 
             CBUFFER_START(UnityPerMaterial)
@@ -173,6 +180,12 @@ Shader "Custom/Watercolour"
 
                 output.uv = input.uv; // Pass raw UVs, transform in Frag
                 output.fogFactor = ComputeFogFactor(output.positionCS.z);
+                OUTPUT_LIGHTMAP_UV(input.staticLightmapUV, unity_LightmapST, output.staticLightmapUV);
+                output.probeOcclusion = 0.0;
+                OUTPUT_SH4(GetAbsolutePositionWS(output.positionWS), output.normalWS, GetWorldSpaceNormalizeViewDir(output.positionWS), output.vertexSH, output.probeOcclusion);
+                #ifdef DYNAMICLIGHTMAP_ON
+                output.dynamicLightmapUV = input.dynamicLightmapUV.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
+                #endif
                 return output;
             }
 
@@ -183,8 +196,14 @@ Shader "Custom/Watercolour"
                 float3 viewDirWS = SafeNormalize(GetWorldSpaceNormalizeViewDir(input.positionWS));
 
                 // --- Lighting Calculation ---
-                float4 shadowCoord = TransformWorldToShadowCoord(input.positionWS);
+                float4 shadowCoord;
+                #if defined(_MAIN_LIGHT_SHADOWS_SCREEN) && !defined(_SURFACE_TYPE_TRANSPARENT)
+                shadowCoord = ComputeScreenPos(TransformWorldToHClip(input.positionWS));
+                #else
+                shadowCoord = TransformWorldToShadowCoord(input.positionWS);
+                #endif
                 Light mainLight = GetMainLight(shadowCoord);
+                float3 mainLightColor = mainLight.color * mainLight.distanceAttenuation;
                 
                 float NdotL = dot(normalWS, mainLight.direction);
                 float lightIntensity = saturate(NdotL);
@@ -192,6 +211,7 @@ Shader "Custom/Watercolour"
                 // Shadow Attenuation
                 float shadowAtten = mainLight.shadowAttenuation;
                 lightIntensity *= shadowAtten;
+                float3 directLighting = mainLightColor * lightIntensity;
 
                 // --- UV Calculations ---
                 // Calculate separate UVs for each texture to allow independent Tiling/Offset
@@ -262,10 +282,7 @@ Shader "Custom/Watercolour"
                 float3 mixedBase = lerp(effectiveDeepShadow, celColor, globalShading);
                 
                 // Apply Brightness from Noise (Watercolour paper effect) - subtle overlay
-                float3 finalColor = mixedBase + (noiseVal - 0.5) * _NoiseBrighten * 0.5;
-
-                // Add Specular
-                finalColor += specularColor;
+                float3 baseColor = mixedBase + (noiseVal - 0.5) * _NoiseBrighten * 0.5;
 
                 // --- Fresnel Effect (Hard Rim Light) ---
                 float NdotV = saturate(dot(normalWS, viewDirWS));
@@ -276,7 +293,363 @@ Shader "Custom/Watercolour"
                 // _FresnelSmoothness controls how sharp the edge is
                 float fresnel = smoothstep(_FresnelThreshold, _FresnelThreshold + _FresnelSmoothness, fresnelBase);
                 
-                finalColor += fresnel * _FresnelAmount * _BaseColor.rgb; // Add fresnel glow
+                float3 fresnelColor = fresnel * _FresnelAmount * _BaseColor.rgb; // Rim light color
+
+                float3 additionalLighting = 0.0;
+                #if defined(_ADDITIONAL_LIGHTS)
+                uint additionalLightsCount = GetAdditionalLightsCount();
+                for (uint lightIndex = 0u; lightIndex < additionalLightsCount; ++lightIndex)
+                {
+                    Light additionalLight = GetAdditionalLight(lightIndex, input.positionWS);
+                    float NdotLAdd = saturate(dot(normalWS, additionalLight.direction));
+                    additionalLighting += additionalLight.color * additionalLight.distanceAttenuation * additionalLight.shadowAttenuation * NdotLAdd;
+                }
+                #endif
+                #if defined(_ADDITIONAL_LIGHTS_VERTEX)
+                additionalLighting += VertexLighting(input.positionWS, normalWS);
+                #endif
+
+                float3 bakedGI = 0.0;
+                #if defined(DYNAMICLIGHTMAP_ON)
+                bakedGI = SAMPLE_GI(input.staticLightmapUV, input.dynamicLightmapUV, input.vertexSH, normalWS);
+                #elif !defined(LIGHTMAP_ON) && (defined(PROBE_VOLUMES_L1) || defined(PROBE_VOLUMES_L2))
+                bakedGI = SAMPLE_GI(input.vertexSH,
+                    GetAbsolutePositionWS(input.positionWS),
+                    normalWS,
+                    viewDirWS,
+                    input.positionCS.xy,
+                    input.probeOcclusion,
+                    0);
+                #else
+                bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, normalWS);
+                #endif
+                float3 lighting = directLighting + additionalLighting + bakedGI;
+
+                float3 finalColor = baseColor * lighting;
+                finalColor += specularColor * directLighting;
+                finalColor += fresnelColor * directLighting;
+
+                // Apply Fog
+                MixFog(finalColor, input.fogFactor);
+
+                // --- Inner Outline Overlay (Integrated into Main Pass) ---
+                if (_UseInnerOutline > 0.5)
+                {
+                    // Calculate UVs for Outline Texture
+                    float2 outlineUV = TRANSFORM_TEX(input.uv, _OutlineTexture);
+                    half4 outlineTexColor = SAMPLE_TEXTURE2D(_OutlineTexture, sampler_OutlineTexture, outlineUV);
+                    
+                    // Fresnel Fade (Fade Inwards) using Smoothed Normals
+                    float3 viewDir = SafeNormalize(GetWorldSpaceNormalizeViewDir(input.positionWS));
+                    float3 smoothNormal = SafeNormalize(input.normalSmoothWS);
+                    float NdotV_inner = saturate(dot(smoothNormal, viewDir));
+                    
+                    // 1. Base Gradient (0 at center, 1 at edge)
+                    float fresnelBaseInner = 1.0 - NdotV_inner;
+                    
+                    // 2. Apply Noise Distortion (Blotchy Edge)
+                    // Use the texture to perturb the gradient
+                    fresnelBaseInner += (outlineTexColor.r - 0.5) * _InnerOutlineNoiseStrength;
+                    
+                    // 3. Apply Threshold & Smoothness (with minimum to prevent artifacts)
+                    float innerFresnel = smoothstep(_InnerOutlineThreshold, _InnerOutlineThreshold + max(_InnerOutlineSmoothness, 0.001), fresnelBaseInner);
+                    
+                    // 4. Apply Edge Power (Coffee Ring Effect) with clamped input
+                    // Makes the edge darker and center fade faster
+                    float edgePower = max(_InnerOutlineEdgePower, 0.1);
+                    innerFresnel = pow(max(innerFresnel, 0.0), edgePower);
+                    
+                    float overlayAlpha = 0;
+                    float3 overlayColor = _OutlineColor.rgb;
+                    
+                    if (_UseTextureAsMask > 0.5)
+                    {
+                        // Mask Mode: Use Texture Brightness (R) as Alpha
+                        // Ignore Texture Color (use Outline Color only)
+                        overlayAlpha = outlineTexColor.r * _InnerOutlineAlpha * innerFresnel;
+                        overlayColor = _OutlineColor.rgb;
+                    }
+                    else
+                    {
+                        // Standard Mode: Use Texture Alpha and Color
+                        overlayAlpha = outlineTexColor.a * _InnerOutlineAlpha * innerFresnel;
+                        overlayColor = _OutlineColor.rgb * outlineTexColor.rgb;
+                    }
+                    
+                    // Blend Outline Color on top of Final Color
+                    finalColor = lerp(finalColor, overlayColor, overlayAlpha);
+                }
+
+                return float4(finalColor, _BaseColor.a);
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "ForwardLitOnly"
+            Tags { "LightMode" = "UniversalForwardOnly" }
+            
+            ZWrite On // Force Depth Write to prevent Outline overdraw
+
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            
+            // Unity 6 / URP Keywords
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT
+            #pragma multi_compile_fog
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                float3 normalOS : NORMAL;
+                float2 uv : TEXCOORD0;
+                float2 staticLightmapUV : TEXCOORD1;
+                float2 dynamicLightmapUV : TEXCOORD2;
+                float3 normalSmooth : TEXCOORD3; // Smoothed Normals
+            };
+
+            struct Varyings
+            {
+                float4 positionCS : SV_POSITION;
+                float3 positionWS : TEXCOORD1;
+                float3 normalWS : NORMAL;
+                float2 uv : TEXCOORD0;
+                float fogFactor : TEXCOORD3;
+                float3 normalSmoothWS : TEXCOORD4; // Passed to Frag
+                DECLARE_LIGHTMAP_OR_SH(staticLightmapUV, vertexSH, 5);
+                #ifdef DYNAMICLIGHTMAP_ON
+                float2 dynamicLightmapUV : TEXCOORD6;
+                #endif
+                float4 probeOcclusion : TEXCOORD7;
+            };
+
+            CBUFFER_START(UnityPerMaterial)
+                float4 _BaseColor;
+                float4 _ShadowColor;
+                float4 _DeepShadowColor;
+                float4 _NoiseMap_ST;
+                float4 _ShadowMap_ST;
+                float4 _DeepShadowMap_ST;
+                float _NoiseStrength;
+                float _NoiseBrighten;
+                float _ShadowThreshold;
+                float _ShadowSmoothness;
+                float _DeepShadowThreshold;
+                float _DeepShadowSmoothness;
+                float _DeepShadowSpread;
+                float _DeepShadowFalloff;
+                float _ShadowMapStrength;
+                float _DeepShadowMapStrength;
+                float _FresnelAmount;
+                float _FresnelPower;
+                float _FresnelThreshold;
+                float _FresnelSmoothness;
+                float4 _OutlineColor;
+                float _OutlineWidth;
+                float4 _SpecularColor;
+                float _Glossiness;
+                
+                // Inner Outline Properties (Added for ForwardLit integration)
+                float _UseInnerOutline;
+                float _InnerOutlineAlpha;
+                float _InnerOutlineThreshold;
+                float _InnerOutlineSmoothness;
+                float _InnerOutlineNoiseStrength;
+                float _InnerOutlineEdgePower;
+                float _UseTextureAsMask;
+                float4 _OutlineTexture_ST;
+                
+                // OccaSoftware Properties
+                float _USE_SMOOTHED_NORMALS_ENABLED;
+            CBUFFER_END
+
+            TEXTURE2D(_NoiseMap);
+            SAMPLER(sampler_NoiseMap);
+            TEXTURE2D(_ShadowMap);
+            SAMPLER(sampler_ShadowMap);
+            TEXTURE2D(_DeepShadowMap);
+            SAMPLER(sampler_DeepShadowMap);
+            
+            TEXTURE2D(_OutlineTexture);
+            SAMPLER(sampler_OutlineTexture);
+
+            // URP already provides SafeNormalize in Core.hlsl
+
+            Varyings vert(Attributes input)
+            {
+                Varyings output;
+                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+                output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
+                output.normalWS = TransformObjectToWorldNormal(input.normalOS);
+                
+                // Pass Smoothed Normals (or fallback to regular)
+                if (_USE_SMOOTHED_NORMALS_ENABLED > 0.5)
+                {
+                    output.normalSmoothWS = TransformObjectToWorldNormal(input.normalSmooth);
+                }
+                else
+                {
+                    output.normalSmoothWS = output.normalWS;
+                }
+
+                output.uv = input.uv; // Pass raw UVs, transform in Frag
+                output.fogFactor = ComputeFogFactor(output.positionCS.z);
+                OUTPUT_LIGHTMAP_UV(input.staticLightmapUV, unity_LightmapST, output.staticLightmapUV);
+                output.probeOcclusion = 0.0;
+                OUTPUT_SH4(GetAbsolutePositionWS(output.positionWS), output.normalWS, GetWorldSpaceNormalizeViewDir(output.positionWS), output.vertexSH, output.probeOcclusion);
+                #ifdef DYNAMICLIGHTMAP_ON
+                output.dynamicLightmapUV = input.dynamicLightmapUV.xy * unity_DynamicLightmapST.xy + unity_DynamicLightmapST.zw;
+                #endif
+                return output;
+            }
+
+            half4 frag(Varyings input) : SV_Target
+            {
+                // Use SafeNormalize to prevent NaN from degenerate normals
+                float3 normalWS = SafeNormalize(input.normalWS);
+                float3 viewDirWS = SafeNormalize(GetWorldSpaceNormalizeViewDir(input.positionWS));
+
+                // --- Lighting Calculation ---
+                float4 shadowCoord;
+                #if defined(_MAIN_LIGHT_SHADOWS_SCREEN) && !defined(_SURFACE_TYPE_TRANSPARENT)
+                shadowCoord = ComputeScreenPos(TransformWorldToHClip(input.positionWS));
+                #else
+                shadowCoord = TransformWorldToShadowCoord(input.positionWS);
+                #endif
+                Light mainLight = GetMainLight(shadowCoord);
+                float3 mainLightColor = mainLight.color * mainLight.distanceAttenuation;
+                
+                float NdotL = dot(normalWS, mainLight.direction);
+                float lightIntensity = saturate(NdotL);
+                
+                // Shadow Attenuation
+                float shadowAtten = mainLight.shadowAttenuation;
+                lightIntensity *= shadowAtten;
+                float3 directLighting = mainLightColor * lightIntensity;
+
+                // --- UV Calculations ---
+                // Calculate separate UVs for each texture to allow independent Tiling/Offset
+                float2 noiseUV = TRANSFORM_TEX(input.uv, _NoiseMap);
+                float2 shadowUV = TRANSFORM_TEX(input.uv, _ShadowMap);
+                float2 deepShadowUV = TRANSFORM_TEX(input.uv, _DeepShadowMap);
+
+                // --- Noise Sampling ---
+                half4 noiseSample = SAMPLE_TEXTURE2D(_NoiseMap, sampler_NoiseMap, noiseUV);
+                float noiseVal = noiseSample.r;
+                
+                // Sample Shadow Texture
+                half4 shadowTexSample = SAMPLE_TEXTURE2D(_ShadowMap, sampler_ShadowMap, shadowUV);
+                float3 shadowPattern = shadowTexSample.rgb;
+
+                // Sample Deep Shadow Texture
+                half4 deepShadowTexSample = SAMPLE_TEXTURE2D(_DeepShadowMap, sampler_DeepShadowMap, deepShadowUV);
+                float3 deepShadowPattern = deepShadowTexSample.rgb;
+
+                // --- Color Definitions ---
+                // Mix the texture with white based on strength before multiplying
+                // or lerp the result: lerp(Color, Color * Texture, Strength)
+                
+                float3 shadowTexMixed = lerp(float3(1,1,1), shadowPattern, _ShadowMapStrength);
+                float3 effectiveShadow = _ShadowColor.rgb * shadowTexMixed;
+                
+                float3 deepShadowTexMixed = lerp(float3(1,1,1), deepShadowPattern, _DeepShadowMapStrength);
+                float3 effectiveDeepShadow = _DeepShadowColor.rgb * deepShadowTexMixed;
+
+                // --- Specular Highlighting (Wet Paint Effect) ---
+                float3 halfDir = normalize(mainLight.direction + viewDirWS);
+                float NdotH = saturate(dot(normalWS, halfDir));
+                float specular = pow(NdotH, _Glossiness * 128.0);
+                float3 specularColor = specular * _SpecularColor.rgb;
+
+                // --- Lighting Calculation (Cel Shading Gradient) ---
+                // We use NdotL directly for the gradient
+                // Note: We DO NOT multiply shadowAtten here anymore.
+                // We want the gradient to be based on the object's form (Self-Shadow).
+                // Cast shadows will be applied as a "Force Dark" override later.
+                float noisyNdotL = NdotL + (noiseVal - 0.5) * _NoiseStrength;
+
+                // --- Global Shading (Deep Shadow) ---
+                // Apply Spread (Offset) and Falloff (Power) to the gradient
+                float gradientInput = noisyNdotL + _DeepShadowSpread;
+                float remappedGradient = saturate(gradientInput * 0.5 + 0.5); // 0..1
+                float globalShading = pow(remappedGradient, _DeepShadowFalloff);
+
+                // 2. Two-Tone Shadow (Cel Shading Step)
+                // This adds the stylized "Shadow" band
+                float shadowEdge = _ShadowThreshold;
+                float shadowSmooth = _ShadowSmoothness;
+                float shadowFactor = smoothstep(shadowEdge - shadowSmooth, shadowEdge + shadowSmooth, noisyNdotL);
+                
+                // --- Apply Cast Shadows (Shadow Attenuation) ---
+                // Cast shadows should force the surface into Shadow and then Deep Shadow.
+                // We apply shadowAtten to the factors.
+                // If shadowAtten is 0 (Dark), factors go to 0 (Dark state).
+                shadowFactor = min(shadowFactor, shadowAtten);
+                globalShading = min(globalShading, shadowAtten);
+                
+                // Calculate Cel Shading Base (Base vs Shadow)
+                float3 celColor = lerp(effectiveShadow, _BaseColor.rgb, shadowFactor);
+                
+                // Combine Global Shading (Deep Shadow) with Cel Shading
+                // We use the global gradient (globalShading) to interpolate towards Deep Shadow
+                // globalShading: 1 = Lightest (use celColor), 0 = Darkest (use Deep Shadow)
+                float3 mixedBase = lerp(effectiveDeepShadow, celColor, globalShading);
+                
+                // Apply Brightness from Noise (Watercolour paper effect) - subtle overlay
+                float3 baseColor = mixedBase + (noiseVal - 0.5) * _NoiseBrighten * 0.5;
+
+                // --- Fresnel Effect (Hard Rim Light) ---
+                float NdotV = saturate(dot(normalWS, viewDirWS));
+                float fresnelBase = pow(1.0 - NdotV, _FresnelPower);
+                
+                // Apply smoothstep for Hard Fresnel
+                // _FresnelThreshold controls where the rim starts
+                // _FresnelSmoothness controls how sharp the edge is
+                float fresnel = smoothstep(_FresnelThreshold, _FresnelThreshold + _FresnelSmoothness, fresnelBase);
+                
+                float3 fresnelColor = fresnel * _FresnelAmount * _BaseColor.rgb; // Rim light color
+
+                float3 additionalLighting = 0.0;
+                #if defined(_ADDITIONAL_LIGHTS)
+                uint additionalLightsCount = GetAdditionalLightsCount();
+                for (uint lightIndex = 0u; lightIndex < additionalLightsCount; ++lightIndex)
+                {
+                    Light additionalLight = GetAdditionalLight(lightIndex, input.positionWS);
+                    float NdotLAdd = saturate(dot(normalWS, additionalLight.direction));
+                    additionalLighting += additionalLight.color * additionalLight.distanceAttenuation * additionalLight.shadowAttenuation * NdotLAdd;
+                }
+                #endif
+                #if defined(_ADDITIONAL_LIGHTS_VERTEX)
+                additionalLighting += VertexLighting(input.positionWS, normalWS);
+                #endif
+
+                float3 bakedGI = 0.0;
+                #if defined(DYNAMICLIGHTMAP_ON)
+                bakedGI = SAMPLE_GI(input.staticLightmapUV, input.dynamicLightmapUV, input.vertexSH, normalWS);
+                #elif !defined(LIGHTMAP_ON) && (defined(PROBE_VOLUMES_L1) || defined(PROBE_VOLUMES_L2))
+                bakedGI = SAMPLE_GI(input.vertexSH,
+                    GetAbsolutePositionWS(input.positionWS),
+                    normalWS,
+                    viewDirWS,
+                    input.positionCS.xy,
+                    input.probeOcclusion,
+                    0);
+                #else
+                bakedGI = SAMPLE_GI(input.staticLightmapUV, input.vertexSH, normalWS);
+                #endif
+                float3 lighting = directLighting + additionalLighting + bakedGI;
+
+                float3 finalColor = baseColor * lighting;
+                finalColor += specularColor * directLighting;
+                finalColor += fresnelColor * directLighting;
 
                 // Apply Fog
                 MixFog(finalColor, input.fogFactor);
