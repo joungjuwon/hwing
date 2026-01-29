@@ -41,7 +41,6 @@ public class SimulationManager : MonoBehaviour
     public LayerMask groundLayer; // 바닥 감지용 레이어
 
     private GameObject currentSpawnUi; // 현재 생성된 스폰 UI 인스턴스
-    private bool isSimulationActive = false; // 시뮬레이션 모드 활성화 여부
     private float currentDayTime = 0f; // 현재 시간 흐름
 
     private void Start()
@@ -53,7 +52,6 @@ public class SimulationManager : MonoBehaviour
         // UI 초기 상태 설정
         if (playerUI != null) playerUI.SetActive(true);
         if (simulationUI != null) simulationUI.SetActive(false);
-        isSimulationActive = false;
 
         // 게임 시작 시 씬에 있는 초기 플레이어(씨앗)를 찾아 이벤트 연결
         // 이렇게 하면 인스펙터에서 일일이 연결하지 않아도 첫 번째 죽음 시 시뮬레이션 뷰로 전환됩니다.
@@ -85,8 +83,6 @@ public class SimulationManager : MonoBehaviour
         if (playerUI != null) playerUI.SetActive(false);
         if (simulationUI != null) simulationUI.SetActive(true);
         
-        isSimulationActive = true; // 시뮬레이션 로직 활성화
-
         // 3. 커서 잠금 해제 (시뮬레이션 조작을 위해)
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -201,7 +197,6 @@ public class SimulationManager : MonoBehaviour
         if (playerCamera != null) playerCamera.SetActive(true);
         if (simulationUI != null) simulationUI.SetActive(false);
         if (playerUI != null) playerUI.SetActive(true);
-        isSimulationActive = false; // 시뮬레이션 로직 비활성화
 
         // 커서 잠금 및 스폰 UI 제거
         Cursor.lockState = CursorLockMode.Locked;
