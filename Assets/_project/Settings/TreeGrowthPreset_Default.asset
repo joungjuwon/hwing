@@ -1,0 +1,122 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48bee460bbda48c0855d9444d5d20254, type: 3}
+  m_Name: TreeGrowthPreset_Default
+  m_EditorClassIdentifier: 
+  general:
+    seed: 0
+    baseStepLength: 0.18
+    baseRadius: 0.12
+    minRadius: 0.02
+    radiusFalloff: 0.93
+    pipeExponent: 2
+    maxNodes: 2000
+    radialSegments: 10
+    lightFalloff: 0.12
+    leafDropDuration: 2
+  stages:
+  - name: Seedling
+    duration: 8
+    stepLength: 0.14
+    branchProbability: 0.12
+    branchAngleRange: {x: 20, y: 55}
+    mainAxisRadiusScale: 0.995
+    branchRadiusScale: 0.75
+    branchLengthScale: 0.7
+    radiusFalloffOverride: 0
+    branchGravity: 0
+    lateralBias: 0.15
+    crownDepth: 0.7
+    innerLeafDensity: 0.3
+    apicalDominance: 0.75
+    pruningLightThreshold: 0.1
+    leafDensity: 0.7
+    leafSize: 0.18
+    leafCountPerNode: 3
+    leafCycle: 1
+    leafCyclePeriod: 2.2
+    leafVisibleFraction: 0.55
+    allowCotyledons: 1
+    removeCotyledonsOnEnter: 0
+    pruneInnerLeavesOnEnter: 0
+  - name: Sapling
+    duration: 18
+    stepLength: 0.18
+    branchProbability: 0.28
+    branchAngleRange: {x: 30, y: 70}
+    mainAxisRadiusScale: 0.99
+    branchRadiusScale: 0.8
+    branchLengthScale: 0.9
+    radiusFalloffOverride: 0
+    branchGravity: 0.05
+    lateralBias: 0.25
+    crownDepth: 1.6
+    innerLeafDensity: 0.45
+    apicalDominance: 0.6
+    pruningLightThreshold: 0.18
+    leafDensity: 0.85
+    leafSize: 0.22
+    leafCountPerNode: 4
+    leafCycle: 1
+    leafCyclePeriod: 2.6
+    leafVisibleFraction: 0.6
+    allowCotyledons: 0
+    removeCotyledonsOnEnter: 1
+    pruneInnerLeavesOnEnter: 0
+  - name: Juvenile
+    duration: 35
+    stepLength: 0.22
+    branchProbability: 0.38
+    branchAngleRange: {x: 35, y: 85}
+    mainAxisRadiusScale: 0.985
+    branchRadiusScale: 0.8
+    branchLengthScale: 1
+    radiusFalloffOverride: 0
+    branchGravity: 0.08
+    lateralBias: 0.3
+    crownDepth: 2.4
+    innerLeafDensity: 0.6
+    apicalDominance: 0.45
+    pruningLightThreshold: 0.22
+    leafDensity: 0.7
+    leafSize: 0.28
+    leafCountPerNode: 5
+    leafCycle: 1
+    leafCyclePeriod: 3
+    leafVisibleFraction: 0.6
+    allowCotyledons: 0
+    removeCotyledonsOnEnter: 0
+    pruneInnerLeavesOnEnter: 1
+  - name: Mature
+    duration: 999
+    stepLength: 0.18
+    branchProbability: 0.22
+    branchAngleRange: {x: 40, y: 95}
+    mainAxisRadiusScale: 0.98
+    branchRadiusScale: 0.75
+    branchLengthScale: 0.7
+    radiusFalloffOverride: 0
+    branchGravity: 0.12
+    lateralBias: 0.3
+    crownDepth: 2.6
+    innerLeafDensity: 0.45
+    apicalDominance: 0.35
+    pruningLightThreshold: 0.25
+    leafDensity: 0.55
+    leafSize: 0.24
+    leafCountPerNode: 4
+    leafCycle: 1
+    leafCyclePeriod: 3.2
+    leafVisibleFraction: 0.6
+    allowCotyledons: 0
+    removeCotyledonsOnEnter: 0
+    pruneInnerLeavesOnEnter: 1

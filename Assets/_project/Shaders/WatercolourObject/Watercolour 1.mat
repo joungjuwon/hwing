@@ -120,9 +120,9 @@ Material:
     - _FresnelAmount: 0.8
     - _FresnelPower: 0
     - _FresnelSmoothness: 1
-    - _FresnelThreshold: 0
+    - _FresnelThreshold: 1
     - _GlossMapScale: 0
-    - _Glossiness: 0.258
+    - _Glossiness: 1
     - _GlossyReflections: 0
     - _InnerOutlineAlpha: 1
     - _InnerOutlineEdgePower: 1
@@ -131,7 +131,7 @@ Material:
     - _InnerOutlineSmoothness: 1
     - _InnerOutlineThreshold: 0.321
     - _Metallic: 0
-    - _NoiseBrighten: -0.45
+    - _NoiseBrighten: 0
     - _NoiseStrength: -0.92
     - _OcclusionStrength: 1
     - _OutlineNoiseFramerate: 0
@@ -157,13 +157,13 @@ Material:
     m_Colors:
     - Color_D9F05973: {r: 0.43543077, g: 0.8962264, b: 0.5195443, a: 0}
     - Color_DB04B181: {r: 0.046858322, g: 0.254717, b: 0.15771627, a: 0}
-    - _BaseColor: {r: 0.62028706, g: 0.9433962, b: 0.5740477, a: 1}
+    - _BaseColor: {r: 0.2784314, g: 0.39607847, b: 0.09411766, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color2: {r: 0.29999998, g: 0.59, b: 0.61, a: 1}
-    - _DeepShadowColor: {r: 0.10403549, g: 0.2264151, b: 0.024563907, a: 1}
+    - _DeepShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _OutlineColor: {r: 0.21125273, g: 0.509434, b: 0.0744927, a: 1}
-    - _ShadowColor: {r: 0.2625553, g: 0.3962264, b: 0.09158064, a: 1}
+    - _OutlineColor: {r: 0.27620545, g: 0.4811321, b: 0, a: 1}
+    - _ShadowColor: {r: 0.10753065, g: 0.16037738, b: 0.03706836, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecularColor: {r: 0.5566038, g: 0.5303488, b: 0.27042544, a: 0.4117647}
   m_BuildTextureStacks: []
