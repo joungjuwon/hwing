@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d4a3554be570b4de18a660b399f72dbb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 182966
+  packageName: Skybox Plus
+  packageVersion: 1.3.1
+  assetPath: Assets/SkyboxPlus/Resources/SkyboxPlus/Materials/Haze-3.mat
+  uploadId: 829892

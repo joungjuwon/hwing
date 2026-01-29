@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: b8dd87b2d48fa4d4c9144188eaea7b96
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 182966
+  packageName: Skybox Plus
+  packageVersion: 1.3.1
+  assetPath: Assets/SkyboxPlus/Demo/Scripts/InputProxy.cs
+  uploadId: 829892
