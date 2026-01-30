@@ -173,11 +173,35 @@ public class SimulationManager : MonoBehaviour
     {
         if (playerPrefab == null) return;
 
+        // 인트로 컨트롤러 찾기
+        var introController = FindAnyObjectByType<IntroSequenceController>();
+
+        // 인트로가 있다면 인트로 재생 후 스폰, 없다면 즉시 스폰
+        if (introController != null)
+        {
+            // 인트로 카메라와 간섭 없도록 UI/카메라 정리 먼저 수행
+            if (simulationCamera != null) simulationCamera.SetActive(false);
+            if (simulationUI != null) simulationUI.SetActive(false);
+            
+            // 인트로 시작! (콜백으로 실제 스폰 로직 전달)
+            introController.PlayIntro(spawnPos, () => 
+            {
+                SpawnPlayerLogic(spawnPos);
+            });
+        }
+        else
+        {
+            SpawnPlayerLogic(spawnPos);
+        }
+    }
+
+    // 실제 플레이어 생성 및 설정 로직 (인트로 종료 후 또는 즉시 실행)
+    private void SpawnPlayerLogic(Vector3 spawnPos)
+    {
         // 플레이어 생성
         GameObject newPlayer = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
 
         // 중요: 새로 생성된 플레이어의 사망(싹틔우기) 이벤트에 시뮬레이션 모드 전환 기능을 다시 연결합니다.
-        // 이 코드가 없으면 리스폰된 플레이어가 죽었을 때 시뮬레이션 뷰로 돌아오지 않습니다.
         var lifeCycle = newPlayer.GetComponent<PlayerLifeCycle>();
         if (lifeCycle != null)
         {
@@ -196,7 +220,7 @@ public class SimulationManager : MonoBehaviour
             }
         }
 
-        // 시뮬레이션 모드 종료 및 플레이어 모드 복귀
+        // 시뮬레이션 모드 종료 및 플레이어 모드 복귀(이미 꺼져있을 수 있지만 확실하게)
         if (simulationCamera != null) simulationCamera.SetActive(false);
         if (playerCamera != null) playerCamera.SetActive(true);
         if (simulationUI != null) simulationUI.SetActive(false);
