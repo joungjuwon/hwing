@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 47e0dfedf53e25843ba58f64539fd634
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/DemoScene_URP/Materials/Fog3.mat
+  uploadId: 764581

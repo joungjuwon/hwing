@@ -1,0 +1,117 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Leaves1_Billboard
+  m_Shader: {fileID: -6465566751694194690, guid: 25d815d7080f7614fad0e3274219ca0e, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_b2a00480a8124d01b2af89a46c773702:
+        m_Texture: {fileID: 2800000, guid: b6bff47ca57f0e548bba151669d7d521, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTexture:
+        m_Texture: {fileID: 2800000, guid: c4fdeea4f3b959b449853c5136cb2981, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadowTexture2D:
+        m_Texture: {fileID: 2800000, guid: c4fdeea4f3b959b449853c5136cb2981, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_a8daebb9da0c43ecab68bf2e053ddf58_Out_0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - Vector1_0fde2861440441bc82390949ca1ca7e1: 3.3
+    - Vector1_2743cf52874548f89e3db9532b311b8a: 0
+    - Vector1_294b2488135d4c17a3bc528cac259639: 0.278
+    - Vector1_298a981201cc4b94aa8516eddd1bca15: 0
+    - Vector1_2f02255e20be497c8b25b2fba893b01d: 0
+    - Vector1_352b393eef4b4e6a885927a9c33b6c64: 0.5
+    - Vector1_398070c34c464322ba6062108232fa67: 0
+    - Vector1_5c9d8dca9c464ea5946cb88c3829900f: 0
+    - Vector1_5eed681b3b2d488baeb23cccd0587e74: 0.6
+    - Vector1_6ea3b37cbad64043b37765735482c529: 0.75
+    - Vector1_790d93cf423c41fcb5c028640d0ab54d: 0
+    - Vector1_a6a29775135e4c5d857b624e3e2c8a9a: 1.12
+    - Vector1_a876e7e4e7f247e0aa043a83821ae934: 1
+    - Vector1_afe61ff10a0542d39e00d493a195de53: 0
+    - Vector1_b9cac2be30334f13b55393bbfd1decd9: 0.33
+    - Vector1_debdbc3723d743f9bd09116a45e9c510: 0
+    - Vector1_ec1dc3fcf93c4dde8a4d4143f1b166d9: 0.13
+    - Vector1_fc5b23ce2c0d4f1ca332c15fabc46125: 0
+    - _Alpha: 0.488
+    - _Bend_Strength_Vertex: 1
+    - _Billboard_Size: 1.3
+    - _Inflate: 0
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _ShadowStep: 0.17
+    - _Size: 0
+    - _Wind_Noise_UV: 0.5
+    - _Wind_Speed_UV: 1
+    m_Colors:
+    - Color_1cb0c2bfee6f4cdabdeee3c65762c2eb: {r: 1, g: 1, b: 1, a: 0}
+    - Color_2d505f9b354042b7ae96e73b473c84d0: {r: 0, g: 0.4412079, b: 1, a: 0}
+    - Color_57cbcb22924141b09658415f783d0ed2: {r: 0, g: 0, b: 0, a: 0}
+    - Color_920613b551d24ba8a220f2d334ebfa29: {r: 1, g: 1, b: 1, a: 0}
+    - Color_9462486b37c34801a0089636a571b0ec: {r: 0, g: 0, b: 0, a: 0}
+    - Color_b722be98cc234933b3f3e52b5707d779: {r: 1, g: 0, b: 0, a: 0}
+    - Color_feffc926576c463da5c62622eab04d3c: {r: 1, g: 1, b: 1, a: 0}
+    - Vector2_38d767ffed9a468dac2af402021a43c6: {r: 0.5, g: 0, b: 0, a: 0}
+    - Vector2_9ad786e427d8409c9cfc18d3793b4e52: {r: -1, g: 1, b: 0, a: 0}
+    - Vector2_e3d6420d994944e9b4eadec0d13187cf: {r: 1, g: 1, b: 0, a: 0}
+    - _Bending_Direction_Vertex: {r: 1, g: 1, b: 0, a: 0}
+    - _MainColor: {r: 0.6886792, g: 0.6886792, b: 0.6886792, a: 0}
+    - _ShadowColor: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 0}
+    - _ShadowPatternColor: {r: 0.509434, g: 0.4061054, b: 0.4061054, a: 0}
+    - _ShadowTextureTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _Vector2: {r: 1.24, g: 1, b: 0, a: 0}
+    - _Wind_Direction: {r: 0.5, g: 0.5, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
+--- !u!114 &4505123536118650208
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 10

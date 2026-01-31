@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 632e6822af284dafbb3e57899400680b, type: 3}
   m_Name: WatercolorEdgeBleedingRenderFeature
   m_EditorClassIdentifier: Assembly-CSharp::WatercolorEdgeBleedingRenderFeature
-  m_Active: 1
+  m_Active: 0
   settings:
     renderPassEvent: 550
     enableEdgeBleeding: 1
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fc0554f5db54e49b480bb9bc102416d, type: 3}
   m_Name: WatercolorBaseRenderFeature
   m_EditorClassIdentifier: Assembly-CSharp::WatercolorBaseRenderFeature
-  m_Active: 1
+  m_Active: 0
   settings:
     renderPassEvent: 500
     shader: {fileID: 4800000, guid: f451c6570f639a248b2f28652cba918c, type: 3}

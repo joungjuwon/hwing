@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 59694a20e0e6e4744bea01f83f9f2672
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 4300000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/DemoScene_URP/Models/Tree2_TreeMesh.asset
+  uploadId: 764581

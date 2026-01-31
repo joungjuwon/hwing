@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 65bd74391e1d6b84d9119ec41f1b3093
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/Materials/URP/Leaves/Leaves20.mat
+  uploadId: 764581

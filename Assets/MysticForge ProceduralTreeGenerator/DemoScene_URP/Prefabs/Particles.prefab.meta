@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 51b1cc09c1a636546b85733d958b30a6
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/DemoScene_URP/Prefabs/Particles.prefab
+  uploadId: 764581

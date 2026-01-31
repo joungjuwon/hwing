@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a13aec0e3d05fbd43abfb3a36dbba46c
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/DemoScene_URP/Prefabs/Grass
+    Planes.prefab
+  uploadId: 764581

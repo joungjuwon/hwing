@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6144fa0ff0bed7f4383b7fe72511b07a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/LeafPrefabs/LeafPlus2QuadLong.prefab
+  uploadId: 764581

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 802a14395db2c1a4aaaf86b7b8b2aa82
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/LeafPrefabs/LeafPlus4Quads.prefab
+  uploadId: 764581

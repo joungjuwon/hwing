@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 9d899aeb608421b49a64ec929beab02a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/DemoScene_URP/Prefabs/Tree4.prefab
+  uploadId: 764581
