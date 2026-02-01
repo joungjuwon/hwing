@@ -23,7 +23,7 @@ namespace MysticForgeRuntime
 
         [Range(10f, 90f)] public float branchingAngle = 35f;
 
-        [Range(0f, 1f)] public float noiseIntensity = 0.2f;
+        [Range(-1f, 1f)] public float noiseIntensity = 0.2f;
         [Range(0f, 1f)] public float lengthRandomness = 0.2f;
         [Range(45f, 160f)] public float maxVerticalAngle = 100f; 
         public int randomSeed = 0;
@@ -139,7 +139,7 @@ namespace MysticForgeRuntime
             float height = maxTrunkHeight * growthCycle;
             float rootThick = maxTrunkThickness * Mathf.Clamp01(growthCycle);
             
-            rootNode = GenerateSkeletonNode(Vector3.zero, Vector3.up, height, rootThick, 0, 0, masterSeed, Quaternion.LookRotation(Vector3.up), true, rootThick);
+            rootNode = GenerateSkeletonNode(Vector3.zero, Vector3.up, height, rootThick, 0, 0, masterSeed, Quaternion.LookRotation(Vector3.up), true, rootThick, null);
 
             if (rootNode != null)
             {
@@ -165,7 +165,7 @@ namespace MysticForgeRuntime
             }
         }
 
-        private BioNode GenerateSkeletonNode(Vector3 pos, Vector3 dir, float length, float structuralRadius, int depth, int generation, int seed, Quaternion startRot, bool allowTrifurcation, float parentTipRadius)
+        private BioNode GenerateSkeletonNode(Vector3 pos, Vector3 dir, float length, float structuralRadius, int depth, int generation, int seed, Quaternion startRot, bool allowTrifurcation, float parentTipRadius, List<Vector3> avoidDirs)
         {
             if (generation >= maxRecursion || structuralRadius < 0.002f) return null;
 
@@ -243,8 +243,35 @@ namespace MysticForgeRuntime
                 float baseNewLen = length * lengthDecay * localGrowth * randomFactor;
                 Vector3 refRight = Vector3.Cross(curDir, Vector3.up);
                 if(refRight.sqrMagnitude < 0.01f) refRight = Vector3.right;
-                Quaternion roll = Quaternion.AngleAxis((float)rng.NextDouble() * 360f, curDir);
-                Vector3 forkAxis = (roll * refRight).normalized;
+                
+                Quaternion rollRot = Quaternion.AngleAxis((float)rng.NextDouble() * 360f, curDir);
+                Vector3 forkAxis = (rollRot * refRight).normalized;
+
+                // Avoidance Logic: If avoidDirs provided, rotate roll to avoid conflict (±15 degrees on normal plane)
+                if (avoidDirs != null && avoidDirs.Count > 0)
+                {
+                    for(int attempt=0; attempt<36; attempt++) 
+                    {
+                        Vector3 d1 = Quaternion.AngleAxis(branchingAngle, forkAxis) * curDir;
+                        Vector3 d2 = Quaternion.AngleAxis(-branchingAngle, forkAxis) * curDir;
+                        
+                        bool conflict = false;
+                        foreach(var av in avoidDirs) {
+                            Vector3 avProj = Vector3.ProjectOnPlane(av, curDir).normalized;
+                            Vector3 d1Proj = Vector3.ProjectOnPlane(d1, curDir).normalized;
+                            Vector3 d2Proj = Vector3.ProjectOnPlane(d2, curDir).normalized;
+                            
+                            if(Vector3.Angle(avProj, d1Proj) < 15f || Vector3.Angle(avProj, d2Proj) < 15f) {
+                                conflict = true; break;
+                            }
+                        }
+                        if(!conflict) break;
+                        
+                        // Rotate 10 degrees to find valid orientation
+                        rollRot = Quaternion.AngleAxis(10f, curDir) * rollRot;
+                        forkAxis = (rollRot * refRight).normalized;
+                    }
+                }
 
                 bool isTrifurcation = allowTrifurcation && (rng.NextDouble() < 0.5);
                 List<BranchSpec> specList = new List<BranchSpec>();
@@ -334,8 +361,15 @@ namespace MysticForgeRuntime
                     // DETERMINISTIC SEED: Use parent seed + child index to ensure structure stability
                     int childSeed = seed * 31 + i + generation * 7919;
                     
+                    // Pass side branch directions to main child if trifurcation
+                    List<Vector3> nextAvoidDirs = null;
+                    if (isTrifurcation && specList[i].isMainRole) {
+                        nextAvoidDirs = new List<Vector3>();
+                        foreach(var s in specList) if(!s.isMainRole) nextAvoidDirs.Add(s.dir);
+                    }
+
                     BioNode childNode = GenerateSkeletonNode(curPos, specList[i].dir, baseNewLen, childR, nDepth, generation + 1, childSeed, 
-                        Quaternion.FromToRotation(curDir, specList[i].dir) * current.rotation, !specList[i].isMainRole, current.radius);
+                        Quaternion.FromToRotation(curDir, specList[i].dir) * current.rotation, !specList[i].isMainRole, current.radius, nextAvoidDirs);
                     
                     if(childNode != null)
                     {
