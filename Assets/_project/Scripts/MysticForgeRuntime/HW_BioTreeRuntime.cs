@@ -20,9 +20,9 @@ namespace MysticForgeRuntime
         
         [Header("Branching Rules")]
         [Range(0.5f, 0.99f)] public float lengthDecay = 0.8f;
-        [Range(0.5f, 0.99f)] public float radiusDecay = 0.7f;
+
         [Range(10f, 90f)] public float branchingAngle = 35f;
-        [Range(0.5f, 2.0f)] public float branchSpread = 1.0f;
+
         [Range(0f, 1f)] public float noiseIntensity = 0.2f;
         [Range(0f, 1f)] public float lengthRandomness = 0.2f;
         [Range(45f, 160f)] public float maxVerticalAngle = 100f; 
@@ -31,7 +31,7 @@ namespace MysticForgeRuntime
         [Header("Space Filling (Volumetric)")]
         [Range(1, 15)] public int sensingSamples = 6;
         [Range(0f, 1f)] public float repulsionStrength = 0.5f;
-        [Range(0f, 1f)] public float balancingStrength = 0.5f; // Bias growth toward empty XZ directions
+
         [Range(0f, 1f)] public float gravityStrength = 0.3f; // Thin/long branches droop downward
 
         [Header("Foliage")]
@@ -74,8 +74,7 @@ namespace MysticForgeRuntime
         private List<Vector2> uvs = new List<Vector2>();
         private List<int> tris = new List<int>();
         private List<CombineInstance> leafInstances = new List<CombineInstance>();
-        private List<Vector3> occupiedSpace = new List<Vector3>();
-        private List<Vector3> canopySpace = new List<Vector3>(); // Only leaf-bearing branches for directional balance
+
 
         private int radialSegments = 12;
 
@@ -130,8 +129,7 @@ namespace MysticForgeRuntime
             Random.InitState(masterSeed);
             
             // CLEANUPS
-            occupiedSpace.Clear();
-            canopySpace.Clear();
+
             leafInstances.Clear();
             verts.Clear();
             uvs.Clear();
@@ -185,7 +183,7 @@ namespace MysticForgeRuntime
 
             Vector3 curPos = pos;
             Vector3 curDir = dir; 
-            occupiedSpace.Add(curPos);
+
             
             for(int s=0; s<segments; s++)
             {
@@ -221,12 +219,9 @@ namespace MysticForgeRuntime
                 Quaternion bend = Quaternion.FromToRotation(curDir, nextDirChoice);
                 Quaternion nextRot = bend * current.rotation;
                 Vector3 nextPos = curPos + nextDirChoice * segLen;
-                occupiedSpace.Add(nextPos);
+
                 
-                // Add to canopy space if in leaf zone
-                int leafLayers = Mathf.Clamp(maxRecursion - 1, 1, 3);
-                int canopyThreshold = maxRecursion - leafLayers;
-                if (generation >= canopyThreshold) canopySpace.Add(nextPos);
+
                 
                 float targetR = structuralRadius * Mathf.Pow(0.98f, s+1);
                 BioNode nextNode = new BioNode { position = nextPos, direction = nextDirChoice, radius = targetR, depth = depth, generation = generation, rotation = nextRot };
@@ -244,7 +239,8 @@ namespace MysticForgeRuntime
             
             if (localGrowth > 0.05f && generation < maxRecursion)
             {
-                float baseNewLen = length * lengthDecay * localGrowth;
+                float randomFactor = 1.0f + ((float)rng.NextDouble() * 2f - 1f) * lengthRandomness;
+                float baseNewLen = length * lengthDecay * localGrowth * randomFactor;
                 Vector3 refRight = Vector3.Cross(curDir, Vector3.up);
                 if(refRight.sqrMagnitude < 0.01f) refRight = Vector3.right;
                 Quaternion roll = Quaternion.AngleAxis((float)rng.NextDouble() * 360f, curDir);
