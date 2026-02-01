@@ -441,12 +441,39 @@ namespace MysticForgeRuntime
         private void BuildLimbMesh(BioNode node)
         {
             if (node == null) return;
-            GenerateRing(node); 
+            
+            // Count total segments in this limb to calculate taper
+            int totalSegments = 0;
+            BioNode counter = node;
+            while(counter != null) { totalSegments++; counter = counter.mainChild; }
+            
+            // Generate rings with tapering applied
+            int segmentIndex = 0;
             BioNode w = node;
+            float startRadius = node.radius; // Remember root radius
+            
+            // First ring - convex taper (sqrt) for smoother trunk, sharper tip
+            float t = (float)segmentIndex / totalSegments;
+            float taperFactor = Mathf.Sqrt(1f - t); // Convex curve: slow at top, fast at tip
+            w.radius = startRadius * Mathf.Max(taperFactor, 0.01f);
+            GenerateRing(w);
+            
             while(w.mainChild != null)
             {
                 BioNode next = w.mainChild;
-                GenerateRing(next); 
+                segmentIndex++;
+                
+                // Apply convex taper to next node's radius
+                t = (float)segmentIndex / totalSegments;
+                taperFactor = Mathf.Sqrt(1f - t); // Convex curve
+                float originalRadius = next.radius;
+                next.radius = originalRadius * Mathf.Max(taperFactor, 0.01f);
+                
+                GenerateRing(next);
+                
+                // Restore original radius for structure (so children calculate correctly)
+                next.radius = originalRadius;
+                
                 foreach(var branch in w.sideChildren)
                 {
                     int bestK = 0; float maxDot = -1f;
@@ -466,13 +493,32 @@ namespace MysticForgeRuntime
 
         private void CloseCap(BioNode node)
         {
+            // Taper tip: create a very small ring at the tip position, then close with a point
+            float tipRadius = Mathf.Max(node.radius * 0.01f, 0.001f); // 1% = nearly a point
+            Vector3 tipPos = node.position + node.direction * node.radius; // Extend by full radius length
+            
+            // Generate tiny tip ring
+            int tipRingStart = verts.Count;
+            Vector3 arbitraryUp = (Mathf.Abs(Vector3.Dot(node.direction, Vector3.up)) < 0.99f) ? Vector3.up : Vector3.forward;
+            Vector3 tipRight = Vector3.Cross(node.direction, arbitraryUp).normalized;
+            for(int s=0; s<=radialSegments; s++) {
+                float angle = (float)s / radialSegments * Mathf.PI * 2f;
+                Vector3 offset = Quaternion.AngleAxis(angle * Mathf.Rad2Deg, node.direction) * tipRight * tipRadius;
+                verts.Add(tipPos + offset);
+                uvs.Add(new Vector2((float)s / radialSegments, 1f));
+            }
+            
+            // Bridge from last ring to tip ring
+            for(int k=0; k<radialSegments; k++) AddQuad(node.ringStartIndex+k, node.ringStartIndex+k+1, tipRingStart+k+1, tipRingStart+k);
+            
+            // Close with center point
             int centerIdx = verts.Count; 
-            verts.Add(node.position + node.direction * (node.radius * 0.2f)); 
+            verts.Add(tipPos + node.direction * tipRadius); 
             uvs.Add(new Vector2(0.5f, 1f)); 
             for(int s=0; s<radialSegments; s++) { 
                 tris.Add(centerIdx); 
-                tris.Add(node.ringStartIndex + s + 1); 
-                tris.Add(node.ringStartIndex + s);
+                tris.Add(tipRingStart + s + 1); 
+                tris.Add(tipRingStart + s);
             }
         }
         
