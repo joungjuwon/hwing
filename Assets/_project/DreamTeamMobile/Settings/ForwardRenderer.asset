@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8268435355435867243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab40ef0296f774b37864154aaae1e725, type: 3}
+  m_Name: AquaEffectFeature
+  m_EditorClassIdentifier: Kino.Aqua.Universal.Runtime::Kino.Aqua.Universal.AquaEffectFeature
+  m_Active: 1
 --- !u!114 &-7135069850182557432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,7 +150,8 @@ MonoBehaviour:
   - {fileID: -7135069850182557432}
   - {fileID: -4514341818733227991}
   - {fileID: 2160428897801718196}
-  m_RendererFeatureMap: ad803d3ce2d2f1b3cbba60f52cd4fbca2910b7ab08d659c1b4c9f5d7a262fb1d
+  - {fileID: -8268435355435867243}
+  m_RendererFeatureMap: ad803d3ce2d2f1b3cbba60f52cd4fbca08e14444c623fb9c2910b7ab08d659c1b4c9f5d7a262fb1d95e3f62eda9d408d
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}

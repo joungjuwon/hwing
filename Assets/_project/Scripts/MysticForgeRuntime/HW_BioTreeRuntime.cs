@@ -61,6 +61,7 @@ namespace MysticForgeRuntime
             public BioNode mainChild; 
             public List<BioNode> sideChildren = new List<BioNode>();
             public int ringStartIndex = -1; 
+            public float vCoord; // Accumulated texture V coordinate
         }
 
         private struct BranchSpec 
@@ -139,7 +140,7 @@ namespace MysticForgeRuntime
             float height = maxTrunkHeight * growthCycle;
             float rootThick = maxTrunkThickness * Mathf.Clamp01(growthCycle);
             
-            rootNode = GenerateSkeletonNode(Vector3.zero, Vector3.up, height, rootThick, 0, 0, masterSeed, Quaternion.LookRotation(Vector3.up), true, rootThick, null);
+            rootNode = GenerateSkeletonNode(Vector3.zero, Vector3.up, height, rootThick, 0, 0, masterSeed, Quaternion.LookRotation(Vector3.up), true, rootThick, null, 0f);
 
             if (rootNode != null)
             {
@@ -165,7 +166,7 @@ namespace MysticForgeRuntime
             }
         }
 
-        private BioNode GenerateSkeletonNode(Vector3 pos, Vector3 dir, float length, float structuralRadius, int depth, int generation, int seed, Quaternion startRot, bool allowTrifurcation, float parentTipRadius, List<Vector3> avoidDirs)
+        private BioNode GenerateSkeletonNode(Vector3 pos, Vector3 dir, float length, float structuralRadius, int depth, int generation, int seed, Quaternion startRot, bool allowTrifurcation, float parentTipRadius, List<Vector3> avoidDirs, float vStart)
         {
             if (generation >= maxRecursion || structuralRadius < 0.002f) return null;
 
@@ -178,7 +179,7 @@ namespace MysticForgeRuntime
             float effectiveStartRadius = Mathf.Min(parentTipRadius, startRadiusCap);
             if (structuralRadius > parentTipRadius * 0.7f) effectiveStartRadius = parentTipRadius; 
             
-            BioNode firstNode = new BioNode { position = pos, direction = dir, radius = effectiveStartRadius, depth = depth, generation = generation, rotation = startRot };
+            BioNode firstNode = new BioNode { position = pos, direction = dir, radius = effectiveStartRadius, depth = depth, generation = generation, rotation = startRot, vCoord = vStart };
             BioNode current = firstNode;
 
             Vector3 curPos = pos;
@@ -224,7 +225,8 @@ namespace MysticForgeRuntime
 
                 
                 float targetR = structuralRadius * Mathf.Pow(0.98f, s+1);
-                BioNode nextNode = new BioNode { position = nextPos, direction = nextDirChoice, radius = targetR, depth = depth, generation = generation, rotation = nextRot };
+                float nextV = vStart + (s + 1) * segLen; // Map V to distance (1 unit = 1 meter approx)
+                BioNode nextNode = new BioNode { position = nextPos, direction = nextDirChoice, radius = targetR, depth = depth, generation = generation, rotation = nextRot, vCoord = nextV };
                 current.mainChild = nextNode;
                 current = nextNode;
                 curPos = nextPos;
@@ -369,7 +371,7 @@ namespace MysticForgeRuntime
                     }
 
                     BioNode childNode = GenerateSkeletonNode(curPos, specList[i].dir, baseNewLen, childR, nDepth, generation + 1, childSeed, 
-                        Quaternion.FromToRotation(curDir, specList[i].dir) * current.rotation, !specList[i].isMainRole, current.radius, nextAvoidDirs);
+                        Quaternion.FromToRotation(curDir, specList[i].dir) * current.rotation, !specList[i].isMainRole, current.radius, nextAvoidDirs, current.vCoord);
                     
                     if(childNode != null)
                     {
@@ -559,7 +561,7 @@ namespace MysticForgeRuntime
             for(int s=0; s<=radialSegments; s++) { 
                  float a = (float)s / radialSegments * Mathf.PI * 2f; 
                  verts.Add(node.position + rot * new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0) * node.radius); 
-                 uvs.Add(new Vector2((float)s/radialSegments, (float)node.generation)); 
+                 uvs.Add(new Vector2((float)s/radialSegments, node.vCoord)); 
             }
         }
         
