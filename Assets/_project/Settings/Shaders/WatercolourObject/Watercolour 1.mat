@@ -109,27 +109,27 @@ Material:
     - _BumpScale: 1
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DeepShadowFalloff: 0.1
+    - _DeepShadowFalloff: 1.9
     - _DeepShadowMapStrength: 0
     - _DeepShadowPower: 1
-    - _DeepShadowSmoothness: 0
-    - _DeepShadowSpread: 1
-    - _DeepShadowThreshold: -1
+    - _DeepShadowSmoothness: 0.373
+    - _DeepShadowSpread: 0.179
+    - _DeepShadowThreshold: 1
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _FresnelAmount: 0
-    - _FresnelPower: 0
-    - _FresnelSmoothness: 0.001
-    - _FresnelThreshold: 0
+    - _FresnelPower: 4.22
+    - _FresnelSmoothness: 1
+    - _FresnelThreshold: 1
     - _GlossMapScale: 0
-    - _Glossiness: 0.01
+    - _Glossiness: 0.262
     - _GlossyReflections: 0
     - _InnerOutlineAlpha: 1
-    - _InnerOutlineEdgePower: 1
-    - _InnerOutlineNoiseStrength: 0
+    - _InnerOutlineEdgePower: 8.22
+    - _InnerOutlineNoiseStrength: 1.5
     - _InnerOutlinePower: 0.1
-    - _InnerOutlineSmoothness: 0
-    - _InnerOutlineThreshold: 0
+    - _InnerOutlineSmoothness: 0.288
+    - _InnerOutlineThreshold: 0.123
     - _Metallic: 0
     - _NoiseBrighten: 0
     - _NoiseStrength: -0.92
@@ -142,11 +142,12 @@ Material:
     - _RANDOM_OFFSETS_ENABLED: 1
     - _ReceiveShadows: 1
     - _ShadowMapStrength: 0
-    - _ShadowSmoothness: 0
-    - _ShadowThreshold: -1
+    - _ShadowSmoothness: 0.373
+    - _ShadowThreshold: 0.858
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _SpecularNoiseStrength: 0.3
     - _SrcBlend: 1
     - _Surface: 0
     - _USE_SMOOTHED_NORMALS_ENABLED: 1
@@ -157,13 +158,13 @@ Material:
     m_Colors:
     - Color_D9F05973: {r: 0.43543077, g: 0.8962264, b: 0.5195443, a: 0}
     - Color_DB04B181: {r: 0.046858322, g: 0.254717, b: 0.15771627, a: 0}
-    - _BaseColor: {r: 0.73752385, g: 0.990566, b: 0.34109113, a: 1}
+    - _BaseColor: {r: 0.5283019, g: 0.44320244, b: 0.41117835, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color2: {r: 0.29999998, g: 0.59, b: 0.61, a: 1}
     - _DeepShadowColor: {r: 0.0754717, g: 0.009611962, b: 0.009611962, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _OutlineColor: {r: 0.93927366, g: 0.9528302, b: 0.92136884, a: 1}
-    - _ShadowColor: {r: 0.42061234, g: 0.6037736, b: 0.18511927, a: 1}
+    - _OutlineColor: {r: 0.14150941, g: 0.02974965, b: 0.027367385, a: 1}
+    - _ShadowColor: {r: 0.3301887, g: 0.2151332, b: 0.15107691, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecularColor: {r: 0.5566038, g: 0.5303488, b: 0.27042544, a: 0.4117647}
   m_BuildTextureStacks: []

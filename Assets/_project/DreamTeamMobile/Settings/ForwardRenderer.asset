@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab40ef0296f774b37864154aaae1e725, type: 3}
   m_Name: AquaEffectFeature
   m_EditorClassIdentifier: Kino.Aqua.Universal.Runtime::Kino.Aqua.Universal.AquaEffectFeature
-  m_Active: 1
+  m_Active: 0
 --- !u!114 &-7135069850182557432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Blit
   m_Active: 0
   settings:
-    Event: 1000
+    Event: 600
     blitMaterial: {fileID: 2100000, guid: 6e5ca818d6fd7784c944901ecc64aadd, type: 2}
     blitMaterialPassIndex: 0
 --- !u!114 &-4514341818733227991
@@ -120,6 +120,28 @@ MonoBehaviour:
     wetEdgeSize: 1.23
     useCustomEdgeColor: 1
     wetEdgeColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &-3783601582752599893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9df2a49497ee2d24faf290cec48da7d9, type: 3}
+  m_Name: WatercolorPaperFeature
+  m_EditorClassIdentifier: Assembly-CSharp::WatercolorPaperFeature
+  m_Active: 0
+  settings:
+    paperBlitShader: {fileID: 4800000, guid: c9757b6a800e6774fb56f4cbefc92825, type: 3}
+    paperTexture: {fileID: 2800000, guid: 518aac5a13492ff40b85cd545f7d4eb2, type: 3}
+    paperST: {x: 1, y: 1, z: 0, w: 0}
+    saturation: 0.75
+    contrast: 1.2
+    brightness: 0
+    passEvent: 250
+    forceIntermediateTexture: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,7 +173,8 @@ MonoBehaviour:
   - {fileID: -4514341818733227991}
   - {fileID: 2160428897801718196}
   - {fileID: -8268435355435867243}
-  m_RendererFeatureMap: ad803d3ce2d2f1b3cbba60f52cd4fbca08e14444c623fb9c2910b7ab08d659c1b4c9f5d7a262fb1d95e3f62eda9d408d
+  - {fileID: -3783601582752599893}
+  m_RendererFeatureMap: ad803d3ce2d2f1b3cbba60f52cd4fbca08e14444c623fb9c2910b7ab08d659c1b4c9f5d7a262fb1d95e3f62eda9d408dabf06c2868f27dcb
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
