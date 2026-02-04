@@ -1,0 +1,120 @@
+﻿[Worker1] Start importing Assets/ThirdParty/SkyboxPlus/Demo/Environment/Terrain/Textures/dirt_normals.png using Guid(377143d66b45e4680999e62306a87041) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker1] (PreviewImporter)
+[Worker0]  -> (artifact id: 'cee6fb57383a836a3484d2c3909ccf7c') in 0.0268671 seconds
+[Worker1]  -> (artifact id: 'dcd1ace38259ffec4a7d9759bfcbe108') in 0.0287833 seconds
+[Worker0] Start importing Assets/MysticForge ProceduralTreeGenerator/Textures/Leaf Textures/Leaves4.png using Guid(11fac554705a4344594d41276d198741) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker0] (PreviewImporter)
+[Worker0]  -> (artifact id: 'a2b908f4cc286829f376dd43c5fcbfa9') in 0.0094035 seconds
+[Worker1] Start importing Assets/_project/Settings/Shaders/pngtree-texture-rich-backdrop-of-white-sheet-and-rough-surface-drawing-paper-image_13716118.png using Guid(518aac5a13492ff40b85cd545f7d4eb2) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker1] (PreviewImporter)
+[Worker1]  -> (artifact id: 'e6d8321cff2fbaaf7663d5e06c9fd89e') in 0.0075975 seconds
+[Worker0] Start importing Assets/ThirdParty/SkyboxPlus/Demo/Environment/Terrain/Textures/rocks_color.png using Guid(66beef217e39b4cf7847bb5b04ee0cc2) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker0] (PreviewImporter)
+[Worker1] Start importing Assets/ThirdParty/TextMesh Pro/Examples & Extras/Textures/Fruit Jelly (B&W).jpg using Guid(1cdc5b506b1a4a33a53c30669ced1f51) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker1] (PreviewImporter)
+[Worker0]  -> (artifact id: '798abe7bd978653481f71fff760571e2') in 0.0257414 seconds
+[Worker1]  -> (artifact id: '6651d3c6efa620280ea3ec50af7202e9') in 0.0245653 seconds
+[Worker0] Start importing Assets/ThirdParty/URP_ShaderGraphCustomLighting-6000.1/Examples/Ramp Textures/GradientRamp.png using Guid(29feaa972fc66b448a664812a2799447) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker0] (PreviewImporter)
+[Worker1] Start importing Assets/FullOpaqueWater&Waterfall/Textures/T_Grass_Color.png using Guid(de35ab0326674cb4f8dd2ff37cb5ebfd) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker1] (PreviewImporter)
+[Worker0]  -> (artifact id: 'c56e1e1dd179a560a2b90d0cb5ddf2f1') in 0.021914 seconds
+[Worker1]  -> (artifact id: '97f1d2108838b408614659bba48d57ac') in 0.0323705 seconds
+[Worker0] Start importing Assets/ThirdParty/TextMesh Pro/Examples & Extras/Resources/Fonts & Materials/Oswald Bold SDF.asset using Guid(0161d805a3764c089bef00bfe00793f5) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker0] (PreviewImporter)
+[Worker1] Start importing Assets/ThirdParty/KinoAqua-main/KinoAqua-main/HDRP/Assets/Test/pexels-karolina-grabowska-4041230.jpg using Guid(506c54923e3910048bbc87b076a6bd8d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker1] (PreviewImporter)
+[Worker0]  -> (artifact id: '7251f19bd7bc983d2b1011d6cf57882b') in 0.0282911 seconds
+[Worker1]  -> (artifact id: 'bce3c89b760461700eaf1e5b9ce3680c') in 0.0235673 seconds
+[Worker0] Start importing Assets/MysticForge ProceduralTreeGenerator/Textures/Leaf Textures/Leaves20.png using Guid(071821e3162add349a51bfd3a1dcf3b8) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker0] (PreviewImporter)
+[Worker1] Start importing Assets/MysticForge ProceduralTreeGenerator/Textures/Leaf Textures/Leaves1.png using Guid(c4fdeea4f3b959b449853c5136cb2981) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker1] (PreviewImporter)
+[Worker0]  -> (artifact id: '281d263960abca9c58745ea02b04dc06') in 0.0294799 seconds
+[Worker1]  -> (artifact id: '5c5773d5c8c190ae6787195786327809') in 0.0608675 seconds
+[Worker0] Start importing Assets/FullOpaqueGrass/DemoScenes/URP/DemoScene/DemoScene_URP/Lightmap-0_comp_shadowmask.png using Guid(2f92424d96a21c845ad35c346bafd38b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker0] (PreviewImporter)
+[Worker1] Start importing Assets/ThirdParty/URP_ShaderGraphCustomLighting-6000.1/Examples/Ramp Textures/ToonRamp.png using Guid(9771bd5fbe60f8f42a9c5f5b9caff218) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker1] (PreviewImporter)
+[Worker0]  -> (artifact id: '218630de55aa4a9d98728ebed888f42b') in 0.0485806 seconds
+[Worker1]  -> (artifact id: '2345d23896e81d6c3418942127c66954') in 0.0285446 seconds
+[Worker6] Start importing Packages/com.occasoftware.outline-objects/Textures/NoiseTex_05.png using Guid(9c0d66649a1dc324eb9c8e220a11b1e1) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker6] (PreviewImporter)
+[Worker0] Start importing Assets/MysticForge ProceduralTreeGenerator/Textures/Leaf Textures/Leaves2.png using Guid(b6bff47ca57f0e548bba151669d7d521) Importer(815301076,1909f56bfc062723c751e8b465ee728b) 
+[Worker0] (PreviewImporter)
+[Worker0]  -> (artifact id: '22a816ebf20d4996b8aa6ae061452f93') in 0.0369505 seconds
+[Worker6]  -> (artifact id: '45c3ba3b654a045ed1ae6c7c134bf0da') in 0.0816603 seconds
+Request Asset Garbage Collect because used heap size increased from 0.86 GB to 1.11 GB, exceeding the threshold of 256.0 MB.
+Unloading 138 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 1752 unused Assets / (41.5 MB). Loaded Objects now: 9240.
+Memory consumption went from 1.11 GB to 1.07 GB.
+Total: 41.882000 ms (FindLiveObjects: 0.853800 ms CreateObjectMapping: 0.295100 ms MarkObjects: 32.460900 ms  DeleteObjects: 8.270900 ms)
+
+Asset Pipeline Refresh (id=b833b048e0114344caf28896af1aa269): Total: 0.005 seconds - Initiated by RefreshV2(AllowForceSynchronousImport)
+Asset Pipeline Refresh (id=8066788fe417643459f31374b626a16d): Total: 0.003 seconds - Initiated by RefreshV2(AllowForceSynchronousImport)
+Asset Pipeline Refresh (id=6b510ae508f8d1046a5c33b2ca7abb35): Total: 0.003 seconds - Initiated by RefreshV2(AllowForceSynchronousImport)
+Asset Pipeline Refresh (id=88067a6e0ad1fce41afde833c948d077): Total: 0.003 seconds - Initiated by RefreshV2(AllowForceSynchronousImport)
+Asset Pipeline Refresh (id=d77c6dfd8f144f1488a66740e5cfa11f): Total: 0.005 seconds - Initiated by RefreshV2(AllowForceSynchronousImport)
+Scanning for USB devices : 2.511ms
+Scanning for USB devices : 2.118ms
+Scanning for USB devices : 10.322ms
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "XGYbZUoF"... (expires: 2026-02-02T15:59:40Z)
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "XGYbZUoF"... (expires: 2026-02-02T15:59:41Z)
+Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+.Scanning for USB devices : 3.204ms
+Scanning for USB devices : 2.750ms
+Scanning for USB devices : 2.454ms
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "cFh5lsxB"... (expires: 2026-02-02T17:59:33Z)
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "cFh5lsxB"... (expires: 2026-02-02T17:59:34Z)
+Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+.[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "CfQGD8ym"... (expires: 2026-02-02T19:58:52Z)
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "CfQGD8ym"... (expires: 2026-02-02T19:58:53Z)
+Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+.Scanning for USB devices : 5.061ms
+Scanning for USB devices : 2.229ms
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "YWxQoBTZ"... (expires: 2026-02-02T21:58:37Z)
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "YWxQoBTZ"... (expires: 2026-02-02T21:58:38Z)
+Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+.[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "G8inEoug"... (expires: 2026-02-02T23:58:05Z)
+Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+.[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "QielRN-a"... (expires: 2026-02-03T01:57:59Z)
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "QielRN-a"... (expires: 2026-02-03T01:58:00Z)
+Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+.[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "j8eBQul9"... (expires: 2026-02-03T03:57:15Z)
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "j8eBQul9"... (expires: 2026-02-03T03:57:16Z)
+Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+.[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Client] Successfully resolved entitlement details

@@ -1,0 +1,14 @@
+﻿d3d12: failed to query info queue interface (0x80004002).
+			LogAssemblyErrors (0ms)
+    com.unity.shadergraph@17.2.0 (location: C:\Users\User\Documents\GitHub\hwing\Library\PackageCache\com.unity.shadergraph@bb4ad9d6ddac)
+AssetDatabase: script compilation time: 1.197177s
+			LogAssemblyErrors (0ms)
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.07 seconds
+Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+.Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+.Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403

@@ -1,0 +1,16 @@
+﻿ .../Prefabs/Terrain/Terrain/Terrain.asset          | Bin 3011756 -> 3011756 bytes
+ Assets/ThirdParty/watercolor_rose.blend            | Bin 1134364 -> 1552150 bytes
+ Assets/_project/Scenes/Demo.unity                  | 360 ++++++++++-----------
+ Assets/_project/Scenes/New Scene.unity             |   8 +-
+ .../Shaders/WatercolourObject/Watercolour 1.mat    |  23 +-
+ .../Shaders/WatercolourObject/Watercolour.shader   |  10 +-
+ .../Shaders/Watercolor/New/WatercolorCore.hlsl     |   4 +
+ .../Shaders/Watercolor/New/Watercolour.shader      |   9 +-
+ .../Watercolor/SG_WatercolorCore.shadersubgraph    |  93 ------
+ .../SG_WatercolorCore.shadersubgraph.meta          |  10 -
+ .../Shaders/Watercolor/WatercolorCore.hlsl         | 108 -------
+ .../Shaders/Watercolor/WatercolorCore.hlsl.meta    |   7 -
+ .../Shaders/Watercolor/WatercolorLit.shader        | 175 ----------
+ .../Shaders/Watercolor/WatercolorLit.shader.meta   |   9 -
+ ProjectSettings/ProjectSettings.asset              |  14 +-
+ 15 files changed, 222 insertions(+), 608 deletions(-)

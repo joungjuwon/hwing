@@ -1,0 +1,200 @@
+﻿[Licensing::Module] Error: Access token is unavailable; failed to update
+d3d12: failed to query info queue interface (0x80004002).
+Shader 'Standard': fallback shader 'VertexLit' not found
+Shader 'Hidden/Internal-GUIRoundedRect': fallback shader 'Hidden/Internal-GUITextureClip' not found
+Shader 'Hidden/Internal-GUIRoundedRectWithColorPerBorder': fallback shader 'Hidden/Internal-GUITextureClip' not found
+			LogAssemblyErrors (0ms)
+    com.unity.shadergraph@17.2.0 (location: C:\Users\User\Documents\GitHub\hwing\Library\PackageCache\com.unity.shadergraph@bb4ad9d6ddac)
+[ScriptCompilation] Requested script compilation because: Assembly Definition File(s) changed
+[ScriptCompilation] Requested script compilation because: Assetdatabase observed changes in script compilation related files
+Starting: C:\Program Files\Unity\Hub\Editor\6000.2.15f1\Editor\Data\Tools\netcorerun\netcorerun.exe "C:\Program Files\Unity\Hub\Editor\6000.2.15f1\Editor\Data\Tools\BuildPipeline\ScriptCompilationBuildProgram.exe" "Library/Bee/1900b0aE.dag.json" "Library/Bee/1900b0aE-inputdata.json" "Library\Bee\buildprogram0.traceevents"
+[ 56/940    0s] MovedFromExtractor Library/Bee/artifacts/mvdfrm/UnityEditor.ShaderFoundryModule.dll_FAA4CE357B1FBE6D.mvfrm
+[115/940    0s] MovedFromExtractor Library/Bee/artifacts/mvdfrm/UnityEngine.ShaderVariantAnalyticsModule.dll_B514E9393E4D9F7C.mvfrm
+[162/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipeline.Universal.ShaderLibrary.UnityAdditionalFile.txt
+[163/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipeline.Universal.ShaderLibrary.rsp2
+[174/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipeline.Universal.ShaderLibrary.dll.mvfrm.rsp
+[178/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipeline.Universal.ShaderLibrary.rsp
+[200/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Utilities.UnityAdditionalFile.txt
+[202/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Utilities.rsp2
+[205/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Utilities.dll.mvfrm.rsp
+[206/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Utilities.rsp
+[218/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Editor.UnityAdditionalFile.txt
+[225/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Editor.rsp2
+[240/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Editor.dll.mvfrm.rsp
+[252/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Editor.rsp
+[306/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Universal.Shaders.rsp2
+[320/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Core.ShaderLibrary.UnityAdditionalFile.txt
+[321/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Core.ShaderLibrary.rsp2
+[322/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.UnityAdditionalFile.txt
+[323/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Universal.Shaders.UnityAdditionalFile.txt
+[324/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.rsp2
+[332/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Universal.Shaders.dll.mvfrm.rsp
+[337/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Core.ShaderLibrary.dll.mvfrm.rsp
+[339/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll.mvfrm.rsp
+[348/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.rsp
+[349/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Universal.Shaders.rsp
+[360/940    0s] WriteText Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Core.ShaderLibrary.rsp
+[508/940    0s] MovedFromExtractor Library/Bee/artifacts/mvdfrm/Unity.CompilationPipeline.Common.dll_C381B8C848A79C98.mvfrm
+[535/940    0s] MovedFromExtractor-Combine Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Universal.Shaders.dll.mvfrm
+[540/940    0s] MovedFromExtractor-Combine Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Core.ShaderLibrary.dll.mvfrm
+[545/940    0s] MovedFromExtractor-Combine Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll.mvfrm
+[550/940    0s] MovedFromExtractor-Combine Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Utilities.dll.mvfrm
+[555/940    0s] Csc Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Core.ShaderLibrary.dll (+2 others)
+[558/940    0s] Csc Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll (+2 others)
+[561/940    0s] Csc Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Universal.Shaders.dll (+2 others)
+[568/940    0s] Csc Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Utilities.dll (+2 others)
+[           0s] Csc Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Core.ShaderLibrary.dll (+2 others) [CacheWrite 00000000000000000000000000000005]
+[572/940    0s] MovedFromExtractor Library/Bee/artifacts/mvdfrm/Unity.RenderPipelines.Core.ShaderLibrary.ref.dll_7F2C410A434F5518.mvfrm
+[           1s] Csc Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Utilities.dll (+2 others) [CacheWrite 00000000000000000000000000000005]
+Failure while invoking caching client: Csc Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Universal.Shaders.dll (+2 others)
+move_path failed: No error
+[           1s] Csc Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Universal.Shaders.dll (+2 others) [CacheWrite 00000000000000000000000000000005]
+[           1s] Csc Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll (+2 others) [CacheWrite 00000000000000000000000000000005]
+[582/940    0s] MovedFromExtractor Library/Bee/artifacts/mvdfrm/Unity.ShaderGraph.Utilities.ref.dll_0524057423981A9D.mvfrm
+[585/940    0s] MovedFromExtractor Library/Bee/artifacts/mvdfrm/Unity.RenderPipelines.Universal.Shaders.ref.dll_9468B054363B0720.mvfrm
+[590/940    0s] MovedFromExtractor Library/Bee/artifacts/mvdfrm/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.ref.dll_1A2083B43FB0BF18.mvfrm
+[668/940    0s] MovedFromExtractor-Combine Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipeline.Universal.ShaderLibrary.dll.mvfrm
+[677/940    0s] Csc Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipeline.Universal.ShaderLibrary.dll (+2 others)
+[           0s] Csc Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipeline.Universal.ShaderLibrary.dll (+2 others) [CacheWrite 00000000000000000000000000000005]
+[684/940    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Unity.RenderPipelines.Universal.Shaders.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Universal.Shaders.dll, with 133 defines and 264 references
+[685/940    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Unity.RenderPipelines.Core.ShaderLibrary.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.Core.ShaderLibrary.dll, with 133 defines and 264 references
+[686/940    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll, with 133 defines and 264 references
+[701/940    0s] MovedFromExtractor Library/Bee/artifacts/mvdfrm/Unity.RenderPipeline.Universal.ShaderLibrary.ref.dll_5436F99F8BDCED8B.mvfrm
+[712/940    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Unity.RenderPipeline.Universal.ShaderLibrary.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Unity.RenderPipeline.Universal.ShaderLibrary.dll, with 133 defines and 265 references
+[729/940    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Unity.ShaderGraph.Utilities.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Utilities.dll, with 131 defines and 272 references
+[735/940    0s] CopyFiles Library/ScriptAssemblies/Unity.RenderPipelines.Core.ShaderLibrary.dll
+[737/940    0s] CopyFiles Library/ScriptAssemblies/Unity.RenderPipeline.Universal.ShaderLibrary.dll
+[744/940    0s] CopyFiles Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll
+[751/940    0s] CopyFiles Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Shaders.dll
+[762/940    0s] CopyFiles Library/ScriptAssemblies/Unity.ShaderGraph.Utilities.dll
+[765/940    0s] CopyFiles Library/ScriptAssemblies/Unity.ShaderGraph.Utilities.pdb
+[770/940    0s] CopyFiles Library/ScriptAssemblies/Unity.RenderPipeline.Universal.ShaderLibrary.pdb
+[789/940    0s] CopyFiles Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Shaders.pdb
+[790/940    0s] CopyFiles Library/ScriptAssemblies/Unity.RenderPipelines.Core.ShaderLibrary.pdb
+[795/940    0s] CopyFiles Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.pdb
+[854/940    0s] MovedFromExtractor-Combine Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Editor.dll.mvfrm
+[894/940    0s] Csc Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Editor.dll (+2 others)
+[           0s] Csc Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Editor.dll (+2 others) [CacheWrite 00000000000000000000000000000005]
+[905/940    0s] ILPostProcess Library/Bee/artifacts/1900b0aE.dag/post-processed/Unity.ShaderGraph.Editor.dll (+pdb)
+Processing assembly Library/Bee/artifacts/1900b0aE.dag/Unity.ShaderGraph.Editor.dll, with 131 defines and 276 references
+[906/940    0s] CopyFiles Library/ScriptAssemblies/Unity.ShaderGraph.Editor.pdb
+[907/940    0s] MovedFromExtractor Library/Bee/artifacts/mvdfrm/Unity.ShaderGraph.Editor.ref.dll_0F50152946DB09D0.mvfrm
+[912/940    0s] CopyFiles Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll
+AssetDatabase: script compilation time: 20.024748s
+Start importing Packages/com.unity.shadergraph using Guid(683e317485b1d30bd7b29555157c1e4b) (DefaultImporter) -> (artifact id: '4a46fe7195aca1905a3a5512803b3c50') in 0.0002728 seconds
+Start importing Packages/com.occasoftware.outline-objects/Shaders using Guid(80b434603d2442e46a68a673c663fc1d) (DefaultImporter) -> (artifact id: '360bb98ef07733e51622fd21c96c151d') in 0.0003604 seconds
+Start importing Assets/ThirdParty/URP_ShaderGraphCustomLighting-6000.1 using Guid(a025019b1e25cbc47b256fb44c4c6de4) (DefaultImporter) -> (artifact id: 'd33fb49296f77854e390c3f055a7fd4d') in 0.0003373 seconds
+Start importing Assets/FullOpaqueWater&Waterfall/Shader using Guid(91af2ee05a783bb40a76a6bc2279038d) (DefaultImporter) -> (artifact id: '51d10125db8f2c533fe2aacd586f4179') in 0.0003712 seconds
+Start importing Packages/com.unity.shadergraph/ShaderGraphLibrary using Guid(c1bc9b92d5eaa40f8a85c1f48ba87de9) (DefaultImporter) -> (artifact id: 'be7b64766ee5b69eb7ec498c0dbae152') in 0.000367 seconds
+Start importing Assets/MysticForge ProceduralTreeGenerator/Shader using Guid(23ec2fc85a3c19d48b11ae6145eefb3b) (DefaultImporter) -> (artifact id: '5c9242c26950b1888b3848519f133265') in 0.0003378 seconds
+Start importing Packages/com.unity.render-pipelines.core/ShaderLibrary using Guid(534c3b565c7ef4248a10594dbdf4faf1) (DefaultImporter) -> (artifact id: '2fbf526cc6816413d66c6fe72f697787') in 0.0003518 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Shaders using Guid(248877dd7078443d6b51abf21ee7d52a) (DefaultImporter) -> (artifact id: '564022fb5e58e1dc030736cf0c6b7619') in 0.0003963 seconds
+Start importing Packages/com.unity.shadergraph/Tests using Guid(b67edcfd84add6e4a97f27f155b61a7b) (DefaultImporter) -> (artifact id: '8d392ba38630bc1cd2405718685f9616') in 0.0003887 seconds
+Start importing Packages/com.unity.render-pipelines.core/Shaders using Guid(1966e5ee4a6d00344b701c86ac98a770) (DefaultImporter) -> (artifact id: 'a76a0467b16d8ab2206ade82af08c20f') in 0.0003624 seconds
+Start importing Assets/_project/Shaders using Guid(ab5c7b95c8af5bf49ad87ea81b081b34) (DefaultImporter) -> (artifact id: '4e44d143d51f5cc4208a39693ffb9f3c') in 0.0003361 seconds
+Start importing Packages/com.unity.splines/Shader using Guid(2cf15e72bac216b9684886fb42a35910) (DefaultImporter) -> (artifact id: '667be28115234c2bdd5fe96ec69b3d5f') in 0.0003581 seconds
+Start importing Packages/com.unity.render-pipelines.universal/ShaderLibrary using Guid(2de5b472450204ae2853db2cb6a2540a) (DefaultImporter) -> (artifact id: 'd34fd82b23d644112ff05e85decdabfe') in 0.0003703 seconds
+Start importing Packages/com.unity.shadergraph/Editor using Guid(af35822cb60c9a44cba3e3f0317ac0ac) (DefaultImporter) -> (artifact id: '7261d79a32e2d81e40b6ce40e175d685') in 0.0004267 seconds
+Start importing Packages/com.unity.shadergraph/Editor/ShaderGUI using Guid(c03d0f7d344c4c0a877eea9f1a0168fd) (DefaultImporter) -> (artifact id: '5458946980227493f80136b1555a48e2') in 0.0003926 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Utilities using Guid(f09c1bd643b38480bba505d3a9023457) (DefaultImporter) -> (artifact id: '36f24709c8aa53207503157df67777aa') in 0.000372 seconds
+Start importing Packages/com.unity.render-pipelines.core/Editor/ShaderStripping using Guid(61ff35fb502752843acbefd0946f06f6) (DefaultImporter) -> (artifact id: '4750eb5caf7eb9c959580594c1bba763') in 0.0003576 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Importers using Guid(a1485bce8acd0428fae1525629b9ed8b) (DefaultImporter) -> (artifact id: 'ffbfeb695b117171855aba615cf49e01') in 0.0003697 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Drawing using Guid(628a36608983fbe49bd5b01cc799f525) (DefaultImporter) -> (artifact id: '83c71d4c4fb5be23ca8e872ac75a2792') in 0.0003686 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Editor/ShaderGUI using Guid(e2eccaf646dce46a69c0224eb55c61a2) (DefaultImporter) -> (artifact id: '59405a9be535d2e9720149365de02558') in 0.0003635 seconds
+Start importing Packages/com.unity.render-pipelines.core/Runtime/ShaderLibrary using Guid(f259e8e6a245f82429441223b86481b7) (DefaultImporter) -> (artifact id: '94068eed1fa26ea6fca6ca33a0f922af') in 0.0003749 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Shaders/Debug using Guid(83e12e3399064822abd3e69798ce3053) (DefaultImporter) -> (artifact id: '7fc5ebf51e3fce3c7894b877f2d19f5a') in 0.0003869 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Shaders/XR using Guid(e3ddeb98d5e10214c9be71d26faa6a3d) (DefaultImporter) -> (artifact id: '51fe14c1f4edc68fbb1b3c9b8e1a0045') in 0.0003867 seconds
+Start importing Packages/com.unity.render-pipelines.core/ShaderLibrary/Sampling using Guid(14115a7568c4882499f59039a0585e3b) (DefaultImporter) -> (artifact id: '929c43f7605fef7204381429549df66c') in 0.0004169 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Resources using Guid(64c9c5df0004c44f0896e816c69c7aa1) (DefaultImporter) -> (artifact id: 'e8af06982c7c66e9403baf3ad48e9d19') in 0.0003832 seconds
+Start importing Packages/com.unity.shadergraph/Tests/Editor using Guid(8453a00e344fd7e408223e92fc924cc2) (DefaultImporter) -> (artifact id: '052966781480ac10fb68eaad3af58ef1') in 0.0003803 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Serialization using Guid(c495761f69a84f0fba9c9bd2b9cbdf86) (DefaultImporter) -> (artifact id: '9526714e877b7551b243bb717b662a34') in 0.0003598 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Util using Guid(e45006b8ac3b76f4aa0df05ea8514cbe) (DefaultImporter) -> (artifact id: 'cbd62b08dd41dc0e33b4c10d1c54abbc') in 0.0003884 seconds
+Start importing Packages/com.unity.render-pipelines.core/Runtime/ShaderGenerator using Guid(4545c8d908390cb4da76ded2ad888b12) (DefaultImporter) -> (artifact id: '6246639d9b65e4bc309465d9ed472b08') in 0.0003654 seconds
+Start importing Packages/com.unity.render-pipelines.core/ShaderLibrary/Shadow using Guid(d52d6e1ad3dca474ebd73d054d17fb2e) (DefaultImporter) -> (artifact id: '3acced90f34cc2dc6004f5ab63ea103b') in 0.000371 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Generation using Guid(e51156e26e632ae4faebae701a3bff82) (DefaultImporter) -> (artifact id: '34bdca27e9d0d24b89427f99e2300b13') in 0.000352 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Data using Guid(f56929b05da66c942ad2e3fe376346fa) (DefaultImporter) -> (artifact id: '2734f35c57be9c456f4e50c2c2902fbb') in 0.0003572 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Extensions using Guid(f57abe45f65794ead8ea70a427e17eb7) (DefaultImporter) -> (artifact id: 'e8093d8c33a7f145411a30993d8fa7e4') in 0.0003548 seconds
+Start importing Packages/com.unity.render-pipelines.universal/ShaderLibrary/LightCookie using Guid(a648b46fb6b4749f589f22d9ef6e441a) (DefaultImporter) -> (artifact id: '3f8a7d4751f33d64db7c69b5854ce206') in 0.0003939 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Shaders/2D using Guid(e674d0c2643d94245b5da6cc11dfe0ec) (DefaultImporter) -> (artifact id: 'e2a3c458848601ac6d02b2d5975b7d6f') in 0.0003708 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Shaders/PostProcessing using Guid(a7a16c0caf8b8a84592e5c6591db2513) (DefaultImporter) -> (artifact id: '42125684f84245f885c0e84a3f6e0756') in 0.0003907 seconds
+Start importing Packages/com.unity.render-pipelines.core/Editor/ShaderGenerator using Guid(a7ecca2f74946b44494f07937e31b793) (DefaultImporter) -> (artifact id: '05395b83c27884a1d28bd45f0c431a89') in 0.0003787 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Interface using Guid(f7cd1e478bcba4d0f9570597921367a0) (DefaultImporter) -> (artifact id: '15a417b5ad1117392ec083fa0debf3ad') in 0.000413 seconds
+Start importing Assets/MysticForge ProceduralTreeGenerator/DemoScene_URP/Shader using Guid(085555d2ab1a2db4ba5cff21b7cb23ce) (DefaultImporter) -> (artifact id: '0852673a5ec6738c9c3f0d8ccc4d1e2d') in 0.0003412 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Shaders/Utils using Guid(593842fd4bfffcc41877fd07df639f3c) (DefaultImporter) -> (artifact id: '9956d0bce239ff6e7b4a6bab527183ce') in 0.0004143 seconds
+Start importing Assets/MysticForge ProceduralTreeGenerator/Shader/HDRP using Guid(890c1f8b8b5b8934db298029d585fdab) (DefaultImporter) -> (artifact id: '2c283e16f40694b28c771f07bb06487e') in 0.0003621 seconds
+Start importing Assets/ThirdParty/TextMesh Pro/Shaders using Guid(e9f693669af91aa45ad615fc681ed29f) (DefaultImporter) -> (artifact id: 'a661aa957427be1ae260b953a44c80f1') in 0.0003397 seconds
+Start importing Assets/ThirdParty/URP_ShaderGraphCustomLighting-6000.1/Examples using Guid(5aaf5d21734b08b4f8c47d51e64b5cdc) (DefaultImporter) -> (artifact id: 'f23353ddf731dfb881399f6f4f154a87') in 0.0003547 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Shaders/Particles using Guid(7aa17bb9699a0ee4282141a28d9fb8ea) (DefaultImporter) -> (artifact id: 'fab76e225adb639a99c9591a03329285') in 0.0003751 seconds
+Start importing Packages/com.occasoftware.outline-objects/Editor/ShaderGUI using Guid(bbd74fb41deb78b40a341b0bc946cbd1) (DefaultImporter) -> (artifact id: '3577176f4de5b2dd731596180f092123') in 0.0003499 seconds
+Start importing Packages/com.unity.shadergraph/ShaderGraphLibrary/Nature using Guid(4cc7da0ede79c9248a9e2e96a546813d) (DefaultImporter) -> (artifact id: '2f4bfb4d2b150f22df2807ad380ea85a') in 0.0003623 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Shaders/Nature using Guid(4cbffddcbed277c40a97feee7c42e857) (DefaultImporter) -> (artifact id: '4703b0663c9acb01d588b4ca883531fa') in 0.000417 seconds
+Start importing Assets/_project/Shaders/Watercolor using Guid(8c7b98aa07874f7408928406fca0b6e2) (DefaultImporter) -> (artifact id: '4e56d0848d0f71350ddb3ed0c41784b3') in 0.000365 seconds
+Start importing Assets/_project/Settings/Shaders using Guid(ac13585b6ec633b4d8f29fd91747c725) (DefaultImporter) -> (artifact id: '0bb1be8a43ccefe8bb97312d370c70ff') in 0.0003447 seconds
+Start importing Packages/com.unity.ugui/Editor Resources/Shaders using Guid(2da27f5fe80a3a549ac7331d9f52f5f0) (DefaultImporter) -> (artifact id: '8ba95b6473bead211c52ddc79ac818a9') in 0.0003709 seconds
+Start importing Packages/com.unity.shadergraph/Editor/AssetCallbacks using Guid(4d0b60652dca71b49a137663137e38ea) (DefaultImporter) -> (artifact id: '2df397367178a902c0d177926a354354') in 0.0003558 seconds
+Start importing Assets/ThirdParty/URP_ShaderGraphCustomLighting-6000.1/SubGraphs using Guid(4ee7bd589e126134eb6a115410f4f6c9) (DefaultImporter) -> (artifact id: 'a784dc27c1f75d16251cd17906b65c9e') in 0.0003433 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph using Guid(ae1e56b12b01f3b4d9c9bb9d7154d97f) (DefaultImporter) -> (artifact id: '9942a48caef877124beabb6276af027e') in 0.0003865 seconds
+Start importing Packages/com.unity.render-pipelines.core/ShaderLibrary/API using Guid(6fa64bbd0ffaf8843b041c6e42bb5f82) (DefaultImporter) -> (artifact id: '53387ff39bd29cc125ff4e1a9a4bfbb4') in 0.0003663 seconds
+Start importing Packages/com.unity.render-pipelines.universal/ShaderLibrary/Debug using Guid(9f4aa226a5594efa99614cb0158c2f59) (DefaultImporter) -> (artifact id: 'f93cb9b399904b4bf4b55009ef66c97b') in 0.0003785 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Shaders/Terrain using Guid(cf2defa266cfe43e59a7230ff55c6107) (DefaultImporter) -> (artifact id: 'e9c17b40b8f3dbba27d66ff9961f63e4') in 0.0003763 seconds
+Start importing Assets/MysticForge ProceduralTreeGenerator/Shader/URP using Guid(ef79f4899f2021348a8a77dbcf9bdecd) (DefaultImporter) -> (artifact id: '1bfca7e27db2c69cd76ec853b1428d39') in 0.0003353 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Shaders/AutodeskInteractive using Guid(ffac7c69f2faf9345b5b32ae0580e2e9) (DefaultImporter) -> (artifact id: 'ab649f9792d275d2d2b31f12d46089b2') in 0.0003698 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Data/Nodes using Guid(0082d52fe349b94449238a3d0db01df0) (DefaultImporter) -> (artifact id: '09f4a7464d3e25305c65151d08ad4079') in 0.0004423 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Data/SubGraph using Guid(605eb5c5a280c014fa0952cd022f2579) (DefaultImporter) -> (artifact id: '57a39bbc0b15ad434b819c73f2bf683a') in 0.0003602 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Resources/GraphView using Guid(80f811e405d64564b1c671c9813ea9a9) (DefaultImporter) -> (artifact id: '1b32eed5f524b3c800529a38081db13a') in 0.0003668 seconds
+Start importing Packages/com.unity.render-pipelines.core/Editor/BuildProcessors/ShaderStrippers using Guid(b0efad93b2507274daeaf8cc7306a312) (DefaultImporter) -> (artifact id: '334144efc9e65e03ff0d31cba58ab598') in 0.0003934 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Generation/Enumerations using Guid(d0cb1fc17ee65684592babcd1dba61b9) (DefaultImporter) -> (artifact id: 'c61260644ff489c4716223a55a736695') in 0.0003833 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Generation/Targets using Guid(219feb550e92ac54ebc24e3fd8d5240a) (DefaultImporter) -> (artifact id: 'be0c2b7f5528870c388e6fd11acb19e1') in 0.0004025 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Shaders/2D/Include using Guid(b1e0c8a42c5ad194389231f7780e158d) (DefaultImporter) -> (artifact id: '89c2cc3a9170d97be16f5dc5a432e00a') in 0.0003701 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Drawing/Controllers using Guid(b1b1a4fb9c392ef49acffada0059f01e) (DefaultImporter) -> (artifact id: '257383b5e5dc8c779b47db3705a91a9f') in 0.0003899 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Resources/UXML using Guid(e14441797a82fb84fb4e43064342bcb5) (DefaultImporter) -> (artifact id: '6aa9ada540b08c68d9480af29db5c0b3') in 0.0003868 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Data/Util using Guid(32e29ba6d98ba0140a774b7804b02a28) (DefaultImporter) -> (artifact id: '658cd436f18a377686bcfcd32e6628e8') in 0.0004401 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Runtime/VFXGraph/Shaders using Guid(424d16c89244f3e4685b81926e90cb4b) (DefaultImporter) -> (artifact id: 'c8e9829102df3d0c4f35d7825fef057e') in 0.0003943 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Generation/Templates using Guid(52f964a4069524b47bd98441cad69cd3) (DefaultImporter) -> (artifact id: '79f623838a4e0705f7f9fe00ae0aab93') in 0.0003764 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Data/Legacy using Guid(624f34d4e59649fd80163f3590d97d73) (DefaultImporter) -> (artifact id: '00faf816d1d84ce7ae4abc313474683e') in 0.0003635 seconds
+Start importing Packages/com.unity.visualscripting/Editor/VisualScripting.Core/Exceptions using Guid(7261815fb7b1c4aeb899c8f9cc18d5d8) (DefaultImporter) -> (artifact id: 'd0d5334f32b5c031f10497054727cc2c') in 0.0003828 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Editor/ShaderGUI/ShadingModels using Guid(a22c22fb536604167866c59ce9a780d2) (DefaultImporter) -> (artifact id: '387159ba31b0c72bbc94d7275dc65ead') in 0.0004103 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Drawing/Views using Guid(a24ff57a99e64e33b4f88b1e81d84e97) (DefaultImporter) -> (artifact id: 'deabab7b6318a13e2dbf3fe9c9e1dfbc') in 0.0003698 seconds
+Start importing Assets/_project/Shaders/Watercolor/New using Guid(d2257df5ea1a4b7f92f61a355af8c3a2) (DefaultImporter) -> (artifact id: '37167c52b8d74a5d6d3988a817f0e228') in 0.0003571 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Targets using Guid(d27a56a5783f89e409983f9a35efe7cc) (DefaultImporter) -> (artifact id: '3f194da53cfdf4271073e4826020d7fb') in 0.0003691 seconds
+Start importing Assets/ThirdParty/URP_ShaderGraphCustomLighting-6000.1/Examples/Ramp Textures using Guid(f25c2843f49a7d9429c800730b212c0b) (DefaultImporter) -> (artifact id: 'cad9b14eb076369e1020ae0204cd52a7') in 0.0003681 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Editor/2D/ShaderGraph using Guid(53926c186e474a85a679dafcc7f45d40) (DefaultImporter) -> (artifact id: 'fa1aaefa6bd589a061439142c61b5901') in 0.0003767 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Data/Implementation using Guid(931ad3a4d181270419aa65ff77b3ec16) (DefaultImporter) -> (artifact id: '5262d891a83110d4d3089e4f09bd6d6a') in 0.0003886 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Data/Graphs using Guid(f329b5b280b7f6f449659f05937ac2f2) (DefaultImporter) -> (artifact id: '7ae39efab1d55fb2a5da36961662dfce') in 0.0004064 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Editor/ShaderGUI/Shaders using Guid(44979452441cd45d5a88ff530647528f) (DefaultImporter) -> (artifact id: '50e8de7cdf2ed3d2df503aebe5d02ec8') in 0.0003951 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Generation/Processors using Guid(f4a2b3d2dd6f5468a8423947316be163) (DefaultImporter) -> (artifact id: '32ee9de72cc8bd7d062a9f6772ba9e96') in 0.0003819 seconds
+Start importing Assets/_project/Settings/Shaders/WatercolourDecal using Guid(f4c6680fe0e451a4ea1c8c304f8c7dd7) (DefaultImporter) -> (artifact id: 'ee39bdea3fe1f4e208fb9a92a4e9c1bb') in 0.0003504 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Resources/Icons using Guid(f4d6d4aaf7f25a14fb15dabc0b24d7ef) (DefaultImporter) -> (artifact id: '561decef2ea012187c421b244ec7bfad') in 0.0003706 seconds
+Start importing Assets/_project/Settings/Shaders/Outline using Guid(f47a1388a31f7ff4d94ff44f9a720d71) (DefaultImporter) -> (artifact id: 'd4f70c9342a76d2d4255a5f914eccc0d') in 0.0003398 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Generation/TargetResources using Guid(45e29c7fe2bbe4bd199f0029b890f5f5) (DefaultImporter) -> (artifact id: '54650005a37db5f4c42e519cb100081f') in 0.0003653 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Data/Enumerations using Guid(55b9824914ca013428dfb7a5c38fc2de) (DefaultImporter) -> (artifact id: '953e1292ac457d63f13e9bfa60e5bd1b') in 0.0003594 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Resources/Shaders using Guid(95a0c8e39aaf7f3468cff72de2b7c094) (DefaultImporter) -> (artifact id: '15e9651cb1887799b1e4c863438ffa3d') in 0.0003743 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Generation/Attributes using Guid(95d4f3eaeba344017b164174ed877b77) (DefaultImporter) -> (artifact id: '16043190afcd0e7c683f0e29861756ac') in 0.0003569 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Generation/Descriptors using Guid(e5779cc2c32bb4c90b671ed2e6629e3d) (DefaultImporter) -> (artifact id: 'a81b4a8b55d41faad4cce5358543ec36') in 0.0004078 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Drawing/Blackboard using Guid(465f456071d65c648a34adddf33057f7) (DefaultImporter) -> (artifact id: 'e19dc96236a709ac12609f83f53b9da4') in 0.0004709 seconds
+Start importing Packages/com.unity.render-pipelines.core/Runtime/PostProcessing/Shaders using Guid(86304ecf756376e4b8ecb6f9d6111b89) (DefaultImporter) -> (artifact id: '7a4e6a369bb7a235af716f4f9700c8d3') in 0.0003873 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Generation/Collections using Guid(d6d4496479c324d29acc5c0d0a40d1b9) (DefaultImporter) -> (artifact id: '4506dbd6ed12beb3e5201ed3099706e5') in 0.0003848 seconds
+Start importing Packages/com.unity.shadergraph/Tests/Editor/IntegrationTests using Guid(e636bcaad60bb8e4da48c07cdcb938b5) (DefaultImporter) -> (artifact id: 'aac36f3be3c9da0761b7fd4db954b324') in 0.0004512 seconds
+Start importing Packages/com.unity.render-pipelines.core/Runtime/Vrs/Shaders using Guid(77658d0b0e15bb342a01e17ef1b2172a) (DefaultImporter) -> (artifact id: 'd665d223b97413405aa3f55398523bec') in 0.0003911 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Generation/Utils using Guid(a776ae8783d76794ead8bbefa7461cb8) (DefaultImporter) -> (artifact id: 'c6452bed8e3962f8b5e9f778e78d6a2e') in 0.0003923 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Generation/Contexts using Guid(e7109562d81c04d45be09c804dc1b8ae) (DefaultImporter) -> (artifact id: '775b5d35f82cc8e690d0cef117b852a3') in 0.0004131 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Generation/Data using Guid(f78c50a65bb1b22409719a84b48ff794) (DefaultImporter) -> (artifact id: '2b41176d2562fccdf1073a675166e2b7') in 0.0003669 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Data/Attributes using Guid(08871a332c049d44d9bf2563943a52c0) (DefaultImporter) -> (artifact id: 'b09de6ccad4ef58db7ed1e416d02beca') in 0.0003953 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Drawing/MaterialEditor using Guid(381bcc6523571fb478a4937355db4c0d) (DefaultImporter) -> (artifact id: '90c1a6c1d83a9d94a935db832c169103') in 0.0004025 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Drawing/Interfaces using Guid(58ecb05b886e4306918caed5d3178020) (DefaultImporter) -> (artifact id: 'bea49cb982c5b5a30a9d131405a3f1b7') in 0.0003672 seconds
+Start importing Packages/com.unity.render-pipelines.core/Tests/Editor/ShaderStripping using Guid(a869f30d596b98e41b8553703937b6e5) (DefaultImporter) -> (artifact id: 'db2dcc91b1e4412e823ed014cce3b769') in 0.000378 seconds
+Start importing Assets/_project/Shaders/Watercolor/Legacy using Guid(d88bf5849b1ce0d4c897c861b80edc8a) (DefaultImporter) -> (artifact id: '628dd5282e12a440208958e25e4557ae') in 0.0003459 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Drawing/Controls using Guid(29309be0e1004fad967256187775c528) (DefaultImporter) -> (artifact id: 'af9300f652828052b1cc17ba0e5fbbc8') in 0.0003772 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Nodes using Guid(6979e5ac3dcd9e147be8acbcea517686) (DefaultImporter) -> (artifact id: '6072ef90b925365cb4ffed458af5b0e3') in 0.0003833 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes using Guid(f9df817efe7f52045a7cd7ae84fd47ae) (DefaultImporter) -> (artifact id: '06479cd795399b12c4037e15097a4fb6') in 0.0003541 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Data/Actions using Guid(9abbc5074e3b457c98f721847723bf2e) (DefaultImporter) -> (artifact id: 'fe7d8305a96034bb30ef6b12dae53088') in 0.0003752 seconds
+Start importing Packages/com.unity.render-pipelines.universal/Editor/Overrides/Shaders using Guid(da0f06d1af1e98c48b8ffbe1e6e4df96) (DefaultImporter) -> (artifact id: '77d9edfd77d13472b7f0c72ef9d99487') in 0.0003882 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Data/Interfaces using Guid(fa6cfee2afcf9584b9e67fe405662d0e) (DefaultImporter) -> (artifact id: '3802db2e58a2263174b47c8549202657') in 0.000359 seconds
+Start importing Assets/_project/Settings/Shaders/Test using Guid(2baa21a4098d11c42af233a30c9f028a) (DefaultImporter) -> (artifact id: '603655e67e48d0396e50ffdcca0691f1') in 0.0003599 seconds
+Start importing Packages/com.unity.shadergraph/Editor/Drawing/Manipulators using Guid(abc41fae76b14617ae2f7d38d3ebef3a) (DefaultImporter) -> (artifact id: '66dd8f5d1b713dd8ee8796dd3f9403bf') in 0.0003723 seconds
+Start importing Assets/ThirdParty/URP_ShaderGraphCustomLighting-6000.1/SubGraphs/Deprecated using Guid(bbd10d355e83b48459f8c20767baba95) (DefaultImporter) -> (artifact id: '4afc5676f05f51cd2bc99d8019062e12') in 0.0003826 seconds

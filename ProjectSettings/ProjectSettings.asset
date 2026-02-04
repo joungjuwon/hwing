@@ -900,7 +900,13 @@ PlayerSettings:
   XboxOneOverrideIdentityName: 
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    Build: 0
+    Game Performance: 0
+    Legacy Analytics: 0
+    Purchasing: 0
+    UDP: 0
+    Unity Ads: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -922,11 +928,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: 10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7
+  cloudProjectId: 6ce22103-f9ba-40a7-b64f-992dd702224c
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Hwing
-  organizationId: juwon1466
+  projectName: Hwing (1)
+  organizationId: gameinjaewon
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

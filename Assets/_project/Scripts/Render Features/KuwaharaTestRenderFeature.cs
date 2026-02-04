@@ -107,6 +107,14 @@ public class KuwaharaTestRenderFeature : ScriptableRendererFeature
 
             var cmd = CommandBufferPool.Get("Kuwahara");
             var cameraColorTarget = renderingData.cameraData.renderer.cameraColorTargetHandle;
+
+            // Safety: URP can run passes for cameras that don't have a valid color target (or RTHandles may be null if allocation failed).
+            if (cameraColorTarget == null || cameraColorTarget.rt == null ||
+                m_SourceCopy == null || m_Tensor1 == null || m_Temp1 == null || m_Tensor2 == null || m_Temp2 == null || m_Layer1 == null || m_Layer2 == null)
+            {
+                CommandBufferPool.Release(cmd);
+                return;
+            }
             
             // Copy camera color to source copy
             Blitter.BlitCameraTexture(cmd, cameraColorTarget, m_SourceCopy);

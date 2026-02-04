@@ -1,59 +1,65 @@
-from PIL import Image, ImageDraw
 
-def create_gradient(width, height, colors, filename):
-    img = Image.new("RGB", (width, height), "#FFFFFF")
-    draw = ImageDraw.Draw(img)
+import os
+import numpy as np
+from PIL import Image
+
+OUT_DIR = r"C:\Users\User\Documents\GitHub\hwing\Assets\_project\Textures\WatercolorRamps"
+os.makedirs(OUT_DIR, exist_ok=True)
+
+width, height = 512, 1
+
+def save_ramp(name, data_func):
+    # Generate 0..1 gradient
+    x = np.linspace(0, 1, width)
     
-    # Simple linear interpolation for multiple stops
-    # colors is a list of (position_0to1, hex_color)
-    # e.g. [(0.0, "#000000"), (1.0, "#FFFFFF")]
+    # Calculate RGB/Grayscale values
+    pixels = data_func(x)
     
-    for x in range(width):
-        t = x / (width - 1)
+    # Convert to standard 0-255 uint8
+    pixels = (np.clip(pixels, 0, 1) * 255).astype(np.uint8)
+    
+    # Reshape for Image (Height, Width, Channels)
+    if pixels.ndim == 1:
+        # Grayscale: (512,) -> (1, 512)
+        pixels = np.tile(pixels, (height, 1))
+        img = Image.fromarray(pixels, mode='L')
+    else:
+        # RGB: (512, 3) -> (1, 512, 3)
+        pixels = np.tile(pixels, (height, 1, 1))
+        img = Image.fromarray(pixels, mode='RGB')
         
-        # Find the two color stops t is between
-        start_stop = colors[0]
-        end_stop = colors[-1]
-        
-        for i in range(len(colors) - 1):
-            if colors[i][0] <= t <= colors[i+1][0]:
-                start_stop = colors[i]
-                end_stop = colors[i+1]
-                break
-                
-        # Remap t to 0..1 range between these stops
-        if end_stop[0] == start_stop[0]:
-            local_t = 0
-        else:
-            local_t = (t - start_stop[0]) / (end_stop[0] - start_stop[0])
-            
-        # Interpolate color
-        c1 = [int(start_stop[1][i:i+2], 16) for i in (1, 3, 5)]
-        c2 = [int(end_stop[1][i:i+2], 16) for i in (1, 3, 5)]
-        
-        r = int(c1[0] + (c2[0] - c1[0]) * local_t)
-        g = int(c1[1] + (c2[1] - c1[1]) * local_t)
-        b = int(c1[2] + (c2[2] - c1[2]) * local_t)
-        
-        draw.line([(x, 0), (x, height)], fill=(r, g, b))
-        
-    img.save(filename)
-    print(f"Created {filename}")
+    path = os.path.join(OUT_DIR, name)
+    img.save(path)
+    print(f"Saved {path}")
 
-# Rose Body Ramp: Dark Burgundy -> Soft Pink -> White
-# Left (Dark/Shadow) -> Right (Light)
-body_colors = [
-    (0.0, "#501030"), # Deep Shadow
-    (0.4, "#9B3E72"), # Midtone (Rose)
-    (0.7, "#D5A781"), # Light warm pink
-    (1.0, "#FFFFFF")  # Highlight
-]
+# 1. RampLightingA_Steps: 3-step lighting (Shadow, Mid, Highlight)
+def ramp_a_steps(x):
+    # 0.0 - 0.3: Shadow (0.1)
+    # 0.3 - 0.7: Mid (0.5)
+    # 0.7 - 1.0: Highlight (1.0)
+    y = np.piecewise(x, 
+        [x < 0.3, (x >= 0.3) & (x < 0.7), x >= 0.7],
+        [0.2, 0.6, 1.0] 
+    )
+    return y
 
-# Edge Ramp: Reddish Pink -> White
-edge_colors = [
-    (0.0, "#D04060"), # Dark Edge
-    (1.0, "#FFFFFF")  # Fade out
-]
+# 2. RampLightingB_Palette: Color Ramp (Warm/Cool)
+def ramp_b_palette(x):
+    # Shadow (0.0): Deep Cool Blue
+    # Mid    (0.5): Neutral
+    # Light  (1.0): Warm White
+    r = np.interp(x, [0, 0.5, 1], [0.1, 0.8, 1.0])
+    g = np.interp(x, [0, 0.5, 1], [0.1, 0.6, 0.95])
+    b = np.interp(x, [0, 0.5, 1], [0.4, 0.5, 0.9])
+    return np.dstack((r, g, b))[0]
 
-create_gradient(256, 4, body_colors, "Assets/_project/Textures/RoseBodyRamp.png")
-create_gradient(256, 4, edge_colors, "Assets/_project/Textures/RoseEdgeRamp.png")
+# 3. RampEdgeA_Thin: Edge rim light mask
+def ramp_edge_thin(x):
+    return np.power(x, 8)
+
+if __name__ == "__main__":
+    print("Generating textures...")
+    save_ramp("RampLightingA_Steps512x1.png", ramp_a_steps)
+    save_ramp("RampLightingB_Palette512x1.png", ramp_b_palette)
+    save_ramp("RampEdgeA_Thin512x1.png", ramp_edge_thin)
+    print("Done.")

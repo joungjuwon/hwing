@@ -1,0 +1,200 @@
+﻿[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-Hwing
+Unloading 21 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Assets/_project/Scenes/New Scene.unity'
+	Deserialize:            23.058 ms
+	Integration:            178.692 ms
+	Integration of assets:  3.285 ms
+	Thread Wait Time:       -0.008 ms
+	Total Operation Time:   205.027 ms
+Unloading 6637 unused Assets / (3.2 MB). Loaded Objects now: 7424.
+Memory consumption went from 262.5 MB to 259.3 MB.
+Total: 7.257900 ms (FindLiveObjects: 0.812900 ms CreateObjectMapping: 0.288500 ms MarkObjects: 4.666500 ms  DeleteObjects: 1.489400 ms)
+
+Loaded scene 'Assets/FullOpaqueGrass/DemoScenes/URP/DemoScene/DemoScene_URP.unity'
+	Deserialize:            15.384 ms
+	Integration:            138.985 ms
+	Integration of assets:  1.224 ms
+	Thread Wait Time:       0.014 ms
+	Total Operation Time:   155.606 ms
+VFXController received new wind direction: (-1.00, -3.00)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+MyGame.VFX.VFXController:OnWindDirectionChanged (UnityEngine.Vector2) (at Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs:86)
+MyGame.Wind.WindManager:OnValidate () (at Assets/FullOpaqueWater&Waterfall/Script/VFX_WindManager.cs:50)
+UnityEditor.EditorApplication:Internal_RestoreLastOpenedScenes ()
+
+(Filename: Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs Line: 86)
+
+VFXController received new wind direction: (-1.00, -3.00)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+MyGame.VFX.VFXController:OnWindDirectionChanged (UnityEngine.Vector2) (at Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs:86)
+MyGame.Wind.WindManager:OnValidate () (at Assets/FullOpaqueWater&Waterfall/Script/VFX_WindManager.cs:50)
+UnityEditor.EditorApplication:Internal_RestoreLastOpenedScenes ()
+
+(Filename: Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs Line: 86)
+
+Loaded scene 'Assets/_project/Scenes/Demo.unity'
+	Deserialize:            20.991 ms
+	Integration:            72.602 ms
+	Integration of assets:  0.002 ms
+	Thread Wait Time:       119.312 ms
+	Total Operation Time:   212.907 ms
+[LAYOUT] About to load UserSettings\Layouts\default-6000.dwlt, keepMainWindow=False
+[LAYOUT] About to save layout C:\Users\User\Documents\GitHub\hwing\UserSettings\Layouts\default-6000.dwlt
+[LAYOUT] About to save layout C:/Users/User/AppData/Roaming/Unity/Editor-5.x/Preferences\Layouts\current\default-6000.dwlt
+[MODES] ModeService[default].InitializeCurrentMode
+[MODES] ModeService[default].RaiseModeChanged(default, default)
+Unity is running with Administrator privileges, which is not supported. Unity executes scripts and binary libraries in your project that may originate from third party sources and potentially be harmful to your computer. Unity may also execute scripts and binary libraries that are still under development and not yet fully tested. Running Unity with Administrator privileges may lead to catastrophic consequences, including but not limited to accidental data loss, change of global system settings or even bricking your device.
+<RI> Initializing input.
+
+Using Windows.Gaming.Input
+[Project] Loading completed in 26.897 seconds
+	Project init time: 				24.287 seconds
+		Template init time: 		0.000 seconds
+		Package Manager init time: 		0.110 seconds
+		Asset Database init time: 		0.842 seconds
+		Global illumination init time: 	0.021 seconds
+		Assemblies load time: 			7.145 seconds
+		Unity extensions init time: 	0.022 seconds
+		Asset Database refresh time: 	12.934 seconds
+	Scene opening time: 			1.180 seconds
+##utp:{"type":"ProjectInfo","version":2,"phase":"Immediate","time":1770095301607,"processId":52988,"projectLoad":26.8971766,"projectInit":24.2865038,"templateInit":0.0,"packageManagerInit":0.1101779,"assetDatabaseInit":0.8420877,"globalIlluminationInit":0.0206489,"assembliesLoad":7.1452602,"unityExtensionsInit":0.0221287,"assetDatabaseRefresh":12.933594,"sceneOpening":1.1796293}
+##utp:{"type":"EditorInfo","version":2,"phase":"Immediate","time":1770095301607,"processId":52988,"editorVersion":"6000.2.15f1 (0707b6d1e918)","branch":"6000.2/staging","buildType":"Release","platform":"Windows"}
+Asset Pipeline Refresh (id=92151e7db7eb67447bc087f0caaf470a): Total: 0.037 seconds - Initiated by RefreshV2(AllowForceSynchronousImport)
+Asset Pipeline Refresh (id=540a5837e21e0cf47802f5532d4d42b9): Total: 0.030 seconds - Initiated by RefreshV2(NoUpdateAssetOptions)
+VFXController received new wind direction: (-1.00, -3.00)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+MyGame.VFX.VFXController:OnWindDirectionChanged (UnityEngine.Vector2) (at Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs:86)
+MyGame.Wind.WindManager:Update () (at Assets/FullOpaqueWater&Waterfall/Script/VFX_WindManager.cs:33)
+
+(Filename: Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs Line: 86)
+
+VFXController received new wind direction: (-1.00, -3.00)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+MyGame.VFX.VFXController:OnWindDirectionChanged (UnityEngine.Vector2) (at Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs:86)
+MyGame.Wind.WindManager:Update () (at Assets/FullOpaqueWater&Waterfall/Script/VFX_WindManager.cs:33)
+
+(Filename: Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs Line: 86)
+
+VFXController received new wind direction: (-1.00, -3.00)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+MyGame.VFX.VFXController:OnWindDirectionChanged (UnityEngine.Vector2) (at Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs:86)
+MyGame.Wind.WindManager:Update () (at Assets/FullOpaqueWater&Waterfall/Script/VFX_WindManager.cs:33)
+
+(Filename: Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs Line: 86)
+
+VFXController received new wind direction: (-1.00, -3.00)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+MyGame.VFX.VFXController:OnWindDirectionChanged (UnityEngine.Vector2) (at Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs:86)
+MyGame.Wind.WindManager:Update () (at Assets/FullOpaqueWater&Waterfall/Script/VFX_WindManager.cs:33)
+
+(Filename: Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs Line: 86)
+
+VFXController received new wind direction: (-1.00, -3.00)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+MyGame.VFX.VFXController:OnWindDirectionChanged (UnityEngine.Vector2) (at Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs:86)
+MyGame.Wind.WindManager:Update () (at Assets/FullOpaqueWater&Waterfall/Script/VFX_WindManager.cs:33)
+
+(Filename: Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs Line: 86)
+
+VFXController received new wind direction: (-1.00, -3.00)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+MyGame.VFX.VFXController:OnWindDirectionChanged (UnityEngine.Vector2) (at Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs:86)
+MyGame.Wind.WindManager:Update () (at Assets/FullOpaqueWater&Waterfall/Script/VFX_WindManager.cs:33)
+
+(Filename: Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs Line: 86)
+
+VFXController received new wind direction: (-1.00, -3.00)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+MyGame.VFX.VFXController:OnWindDirectionChanged (UnityEngine.Vector2) (at Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs:86)
+MyGame.Wind.WindManager:Update () (at Assets/FullOpaqueWater&Waterfall/Script/VFX_WindManager.cs:33)
+
+(Filename: Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs Line: 86)
+
+VFXController received new wind direction: (-1.00, -3.00)
+UnityEngine.Debug:ExtractStackTraceNoAlloc (byte*,int,string)
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:Internal_Log (UnityEngine.LogType,UnityEngine.LogOption,string,UnityEngine.Object)
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+MyGame.VFX.VFXController:OnWindDirectionChanged (UnityEngine.Vector2) (at Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs:86)
+MyGame.Wind.WindManager:Update () (at Assets/FullOpaqueWater&Waterfall/Script/VFX_WindManager.cs:33)
+
+(Filename: Assets/FullOpaqueWater&Waterfall/Script/VFX_Controller.cs Line: 86)
+
+Request Asset Garbage Collect because used heap size increased from 259.5 MB to 0.73 GB, exceeding the threshold of 256.0 MB.
+Unloading 8 Unused Serialized files (Serialized files now loaded: 0)
+Created GICache directory at C:/Users/User/AppData/LocalLow/Unity/Caches/GiCache. Took: 0.009s, timestamps: [27.996 - 28.005]
+Unloading 73 unused Assets / (126.5 KB). Loaded Objects now: 8923.
+Memory consumption went from 0.82 GB to 0.82 GB.
+Total: 13.534200 ms (FindLiveObjects: 0.408600 ms CreateObjectMapping: 0.147300 ms MarkObjects: 12.507100 ms  DeleteObjects: 0.470600 ms)
+
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "YQsh_Zs4"... (expires: 2026-02-03T07:08:23Z)
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated access token: "YQsh_Zs4"... (expires: 2026-02-03T07:08:24Z)
+Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+.Asset Pipeline Refresh (id=0d931d8ae00ea154483d3848fe763fa3): Total: 0.003 seconds - Initiated by RefreshV2(AllowForceSynchronousImport)
+TrimDiskCacheJob: Current cache size 0mb
+Asset Pipeline Refresh (id=60bba4a6fc49e324ca59386595773f29): Total: 0.003 seconds - Initiated by RefreshV2(AllowForceSynchronousImport)
+Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+.Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+.Project ID request failed, Reason: The requested URL returned error: 403 (403).
+Unknown Unity Connect error (400). Please contact support at support@unity.com while processing request "https://services.unity.com/api/unity/legacy/v1/projects/10f4a7ba-8eaa-48ea-b409-8eccd80a9ad7", HTTP error code 403
+.UPID Received '6ce22103-f9ba-40a7-b64f-992dd702224c'.
+Start importing ProjectSettings/ProjectSettings.asset using Guid(00000000000000004000000000000000) (LibraryAssetImporter) -> (artifact id: 'a3e27f20037bd7eafafeec1650e687cf') in 0.0100043 seconds
+Refreshing native plugins compatible for Editor in 0.70 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Asset Pipeline Refresh (id=8c10639790cf7a542b13e09dc4651bf1): Total: 0.094 seconds - Initiated by StopAssetImportingV2(NoUpdateAssetOptions)
+Asset Pipeline Refresh (id=73892c86ec2e3564fb59b67e24cae942): Total: 0.009 seconds - Initiated by RefreshV2(AllowForceSynchronousImport)
+Asset Pipeline Refresh (id=7edc9220ecdb0df498e62af013c9b29f): Total: 0.003 seconds - Initiated by RefreshV2(AllowForceSynchronousImport)

@@ -1,0 +1,3 @@
+﻿proj=C:\Users\User\Documents\GitHub\hwing
+out=C:\Users\User\Documents\GitHub\hwing\Reports\auto-bounty\20260203-141305
+ts=20260203-141305

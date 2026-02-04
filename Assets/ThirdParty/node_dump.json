@@ -1,0 +1,5524 @@
+{
+  "materials": [
+    {
+      "name": "Material Node Tree Versioning",
+      "nodes": [
+        {
+          "name": "프레임",
+          "type": "NodeFrame",
+          "location": "<Vector (0.0000, 0.0000)>",
+          "inputs": [],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (0.0000, 0.0000)>",
+            "name": "프레임",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "NodeFrame",
+            "bl_label": "Frame",
+            "bl_description": "Collect related nodes together in a common area. Useful for organization when the re-usability of a node group is not required",
+            "bl_icon": "NONE",
+            "bl_width_default": 150.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 3.4028234663852886e+38,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "text": null,
+            "shrink": true,
+            "label_size": 20
+          }
+        },
+        {
+          "name": "매테리얼 출력",
+          "type": "ShaderNodeOutputMaterial",
+          "location": "<Vector (480.0000, 0.0000)>",
+          "inputs": [
+            {
+              "name": "Surface",
+              "type": "NodeSocketShader",
+              "default": null
+            },
+            {
+              "name": "Volume",
+              "type": "NodeSocketShader",
+              "default": null
+            },
+            {
+              "name": "Displacement",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Thickness",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (480.0000, 0.0000)>",
+            "name": "매테리얼 출력",
+            "parent": "프레임",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeOutputMaterial",
+            "bl_label": "Material Output",
+            "bl_description": "Output surface material information for use in rendering",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "is_active_output": true,
+            "target": "EEVEE"
+          }
+        },
+        {
+          "name": "프린시플드 BSDF",
+          "type": "ShaderNodeBsdfPrincipled",
+          "location": "<Vector (0.0000, 0.0000)>",
+          "inputs": [
+            {
+              "name": "Base Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Metallic",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.4000000059604645
+            },
+            {
+              "name": "IOR",
+              "type": "NodeSocketFloat",
+              "default": 1.5
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.0
+            },
+            {
+              "name": "Normal",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Weight",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Diffuse Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Subsurface Weight",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Subsurface Radius",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Subsurface Scale",
+              "type": "NodeSocketFloatDistance",
+              "default": 0.05000000074505806
+            },
+            {
+              "name": "Subsurface IOR",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.399999976158142
+            },
+            {
+              "name": "Subsurface Anisotropy",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Specular IOR Level",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "Specular Tint",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Anisotropic",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Anisotropic Rotation",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Tangent",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Transmission Weight",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Coat Weight",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Coat Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.029999999329447746
+            },
+            {
+              "name": "Coat IOR",
+              "type": "NodeSocketFloat",
+              "default": 1.5
+            },
+            {
+              "name": "Coat Tint",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Coat Normal",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Sheen Weight",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Sheen Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "Sheen Tint",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Emission Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Emission Strength",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Thin Film Thickness",
+              "type": "NodeSocketFloatWavelength",
+              "default": 0.0
+            },
+            {
+              "name": "Thin Film IOR",
+              "type": "NodeSocketFloat",
+              "default": 1.3300000429153442
+            }
+          ],
+          "outputs": [
+            {
+              "name": "BSDF",
+              "type": "NodeSocketShader"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (0.0000, 0.0000)>",
+            "name": "프린시플드 BSDF",
+            "parent": "프레임",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeBsdfPrincipled",
+            "bl_label": "Principled BSDF",
+            "bl_description": "Physically-based, easy-to-use shader for rendering surface materials, based on the OpenPBR model",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "distribution": "MULTI_GGX",
+            "subsurface_method": "RANDOM_WALK"
+          }
+        },
+        {
+          "name": "매테리얼 출력.001",
+          "type": "ShaderNodeOutputMaterial",
+          "location": "<Vector (450.0000, 0.0000)>",
+          "inputs": [
+            {
+              "name": "Surface",
+              "type": "NodeSocketShader",
+              "default": null
+            },
+            {
+              "name": "Volume",
+              "type": "NodeSocketShader",
+              "default": null
+            },
+            {
+              "name": "Displacement",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Thickness",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (450.0000, 0.0000)>",
+            "name": "매테리얼 출력.001",
+            "parent": "프레임",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeOutputMaterial",
+            "bl_label": "Material Output",
+            "bl_description": "Output surface material information for use in rendering",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "is_active_output": false,
+            "target": "CYCLES"
+          }
+        },
+        {
+          "name": "확산 BSDF",
+          "type": "ShaderNodeBsdfDiffuse",
+          "location": "<Vector (0.0000, 0.0000)>",
+          "inputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Normal",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Weight",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "BSDF",
+              "type": "NodeSocketShader"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (0.0000, 0.0000)>",
+            "name": "확산 BSDF",
+            "parent": "프레임",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeBsdfDiffuse",
+            "bl_label": "Diffuse BSDF",
+            "bl_description": "Lambertian and Oren-Nayar diffuse reflection",
+            "bl_icon": "NONE",
+            "bl_width_default": 150.0,
+            "bl_width_min": 120.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        }
+      ],
+      "links": [
+        {
+          "from_node": "프린시플드 BSDF",
+          "from_socket": "BSDF",
+          "to_node": "매테리얼 출력",
+          "to_socket": "Surface"
+        },
+        {
+          "from_node": "확산 BSDF",
+          "from_socket": "BSDF",
+          "to_node": "매테리얼 출력.001",
+          "to_socket": "Surface"
+        }
+      ]
+    },
+    {
+      "name": "Shader Nodetree",
+      "nodes": [
+        {
+          "name": "Frame",
+          "type": "NodeFrame",
+          "location": "<Vector (-2584.1208, 847.9951)>",
+          "inputs": [],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (-2584.1208, 847.9951)>",
+            "name": "Frame",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "NodeFrame",
+            "bl_label": "Frame",
+            "bl_description": "Collect related nodes together in a common area. Useful for organization when the re-usability of a node group is not required",
+            "bl_icon": "NONE",
+            "bl_width_default": 150.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 3.4028234663852886e+38,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "text": null,
+            "shrink": false,
+            "label_size": 36
+          }
+        },
+        {
+          "name": "Frame.001",
+          "type": "NodeFrame",
+          "location": "<Vector (-0.6876, 1337.5796)>",
+          "inputs": [],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (-0.6876, 1337.5796)>",
+            "name": "Frame.001",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "NodeFrame",
+            "bl_label": "Frame",
+            "bl_description": "Collect related nodes together in a common area. Useful for organization when the re-usability of a node group is not required",
+            "bl_icon": "NONE",
+            "bl_width_default": 150.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 3.4028234663852886e+38,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "text": null,
+            "shrink": false,
+            "label_size": 36
+          }
+        },
+        {
+          "name": "Frame.002",
+          "type": "NodeFrame",
+          "location": "<Vector (-7.7969, 558.5100)>",
+          "inputs": [],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (-7.7969, 558.5100)>",
+            "name": "Frame.002",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "NodeFrame",
+            "bl_label": "Frame",
+            "bl_description": "Collect related nodes together in a common area. Useful for organization when the re-usability of a node group is not required",
+            "bl_icon": "NONE",
+            "bl_width_default": 150.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 3.4028234663852886e+38,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "text": null,
+            "shrink": false,
+            "label_size": 36
+          }
+        },
+        {
+          "name": "Mix",
+          "type": "ShaderNodeMix",
+          "location": "<Vector (2203.5159, 808.9315)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.0
+            },
+            {
+              "name": "Factor",
+              "type": "NodeSocketVectorFactor",
+              "default": "<bpy_float[3], NodeSocketVectorFactor.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketRotation",
+              "default": "<Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketRotation",
+              "default": "<Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Result",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketRotation"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (2203.5159, 808.9315)>",
+            "name": "Mix",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMix",
+            "bl_label": "Mix",
+            "bl_description": "Mix values by a factor",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "data_type": "RGBA",
+            "factor_mode": "UNIFORM",
+            "blend_type": "MULTIPLY",
+            "clamp_factor": true,
+            "clamp_result": false
+          }
+        },
+        {
+          "name": "Texture Coordinate",
+          "type": "ShaderNodeTexCoord",
+          "location": "<Vector (218.4814, -335.3455)>",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Generated",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Normal",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "UV",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Object",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Camera",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Window",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Reflection",
+              "type": "NodeSocketVector"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-2365.6394, 512.6497)>",
+            "name": "Texture Coordinate",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeTexCoord",
+            "bl_label": "Texture Coordinate",
+            "bl_description": "Retrieve multiple types of texture coordinates.\nTypically used as inputs for texture nodes",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "object": null,
+            "from_instancer": false
+          }
+        },
+        {
+          "name": "Vector Math.001",
+          "type": "ShaderNodeVectorMath",
+          "location": "<Vector (531.1978, -297.8282)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Scale",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-2052.9231, 550.1669)>",
+            "name": "Vector Math.001",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeVectorMath",
+            "bl_label": "Vector Math",
+            "bl_description": "Perform vector math operation",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "operation": "ADD"
+          }
+        },
+        {
+          "name": "Math.003",
+          "type": "ShaderNodeMath",
+          "location": "<Vector (1234.4760, -539.6463)>",
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1349.6449, 308.3488)>",
+            "name": "Math.003",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMath",
+            "bl_label": "Math",
+            "bl_description": "Perform math operations",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "operation": "MULTIPLY",
+            "use_clamp": false
+          }
+        },
+        {
+          "name": "Math.005",
+          "type": "ShaderNodeMath",
+          "location": "<Vector (1234.4760, -367.5022)>",
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1349.6449, 480.4929)>",
+            "name": "Math.005",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMath",
+            "bl_label": "Math",
+            "bl_description": "Perform math operations",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "operation": "MULTIPLY",
+            "use_clamp": false
+          }
+        },
+        {
+          "name": "Math",
+          "type": "ShaderNodeMath",
+          "location": "<Vector (1234.4760, -198.5167)>",
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1349.6449, 649.4784)>",
+            "name": "Math",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMath",
+            "bl_label": "Math",
+            "bl_description": "Perform math operations",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "operation": "MULTIPLY",
+            "use_clamp": false
+          }
+        },
+        {
+          "name": "Combine XYZ",
+          "type": "ShaderNodeCombineXYZ",
+          "location": "<Vector (1454.4761, -368.1752)>",
+          "inputs": [
+            {
+              "name": "X",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Y",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Z",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1129.6448, 479.8199)>",
+            "name": "Combine XYZ",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeCombineXYZ",
+            "bl_label": "Combine XYZ",
+            "bl_description": "Create a vector from X, Y, and Z components",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Noise Texture.002",
+          "type": "ShaderNodeTexNoise",
+          "location": "<Vector (1013.2733, -721.2735)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "W",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Scale",
+              "type": "NodeSocketFloat",
+              "default": 8.5
+            },
+            {
+              "name": "Detail",
+              "type": "NodeSocketFloat",
+              "default": 2.0
+            },
+            {
+              "name": "Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "Lacunarity",
+              "type": "NodeSocketFloat",
+              "default": 2.0
+            },
+            {
+              "name": "Offset",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Gain",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            },
+            {
+              "name": "Distortion",
+              "type": "NodeSocketFloat",
+              "default": 2.1399998664855957
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1570.8475, 126.7216)>",
+            "name": "Noise Texture.002",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeTexNoise",
+            "bl_label": "Noise Texture",
+            "bl_description": "Generate fractal Perlin noise",
+            "bl_icon": "NONE",
+            "bl_width_default": 145.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "noise_dimensions": "3D",
+            "noise_type": "FBM",
+            "normalize": true
+          }
+        },
+        {
+          "name": "Noise Texture.001",
+          "type": "ShaderNodeTexNoise",
+          "location": "<Vector (1014.4760, -432.5329)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "W",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Scale",
+              "type": "NodeSocketFloat",
+              "default": 5.900000095367432
+            },
+            {
+              "name": "Detail",
+              "type": "NodeSocketFloat",
+              "default": 2.0
+            },
+            {
+              "name": "Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "Lacunarity",
+              "type": "NodeSocketFloat",
+              "default": 2.0
+            },
+            {
+              "name": "Offset",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Gain",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            },
+            {
+              "name": "Distortion",
+              "type": "NodeSocketFloat",
+              "default": 2.499999761581421
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1569.6449, 415.4622)>",
+            "name": "Noise Texture.001",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeTexNoise",
+            "bl_label": "Noise Texture",
+            "bl_description": "Generate fractal Perlin noise",
+            "bl_icon": "NONE",
+            "bl_width_default": 145.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "noise_dimensions": "3D",
+            "noise_type": "FBM",
+            "normalize": true
+          }
+        },
+        {
+          "name": "Noise Texture",
+          "type": "ShaderNodeTexNoise",
+          "location": "<Vector (1014.4760, -143.2777)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "W",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Scale",
+              "type": "NodeSocketFloat",
+              "default": 3.6600000858306885
+            },
+            {
+              "name": "Detail",
+              "type": "NodeSocketFloat",
+              "default": 16.0
+            },
+            {
+              "name": "Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "Lacunarity",
+              "type": "NodeSocketFloat",
+              "default": 2.0
+            },
+            {
+              "name": "Offset",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Gain",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            },
+            {
+              "name": "Distortion",
+              "type": "NodeSocketFloat",
+              "default": 2.4099998474121094
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1569.6449, 704.7174)>",
+            "name": "Noise Texture",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": true,
+            "bl_idname": "ShaderNodeTexNoise",
+            "bl_label": "Noise Texture",
+            "bl_description": "Generate fractal Perlin noise",
+            "bl_icon": "NONE",
+            "bl_width_default": 145.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "noise_dimensions": "3D",
+            "noise_type": "FBM",
+            "normalize": true
+          }
+        },
+        {
+          "name": "Geometry",
+          "type": "ShaderNodeNewGeometry",
+          "location": "<Vector (1451.9155, -522.8023)>",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Position",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Normal",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Tangent",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "True Normal",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Incoming",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Parametric",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Backfacing",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Pointiness",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Random Per Island",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1132.2053, 325.1928)>",
+            "name": "Geometry",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeNewGeometry",
+            "bl_label": "Geometry",
+            "bl_description": "Retrieve geometric information about the current shading point",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Reroute.001",
+          "type": "NodeReroute",
+          "location": "<Vector (739.1942, -329.9473)>",
+          "inputs": [
+            {
+              "name": "Input",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Output",
+              "type": "NodeSocketVector"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1844.9266, 518.0479)>",
+            "name": "Reroute.001",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "NodeReroute",
+            "bl_label": "Reroute",
+            "bl_description": "A single-socket organization tool that supports one input and multiple outputs",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "socket_idname": "NodeSocketVector"
+          }
+        },
+        {
+          "name": "Vector Math",
+          "type": "ShaderNodeVectorMath",
+          "location": "<Vector (1748.9377, -314.0109)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Scale",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-835.1831, 533.9843)>",
+            "name": "Vector Math",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeVectorMath",
+            "bl_label": "Vector Math",
+            "bl_description": "Perform vector math operation",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "operation": "ADD"
+          }
+        },
+        {
+          "name": "Value",
+          "type": "ShaderNodeValue",
+          "location": "<Vector (535.4690, -169.5181)>",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-2048.6519, 678.4771)>",
+            "name": "Value",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeValue",
+            "bl_label": "Value",
+            "bl_description": "Input numerical values to other nodes in the tree",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Reroute.002",
+          "type": "NodeReroute",
+          "location": "<Vector (820.0790, -204.9705)>",
+          "inputs": [
+            {
+              "name": "Input",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Output",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1764.0419, 643.0247)>",
+            "name": "Reroute.002",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "NodeReroute",
+            "bl_label": "Reroute",
+            "bl_description": "A single-socket organization tool that supports one input and multiple outputs",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "socket_idname": "NodeSocketFloat"
+          }
+        },
+        {
+          "name": "Principled BSDF.001",
+          "type": "ShaderNodeBsdfPrincipled",
+          "location": "<Vector (141.8779, -77.5560)>",
+          "inputs": [
+            {
+              "name": "Base Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Metallic",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "IOR",
+              "type": "NodeSocketFloat",
+              "default": 1.4500000476837158
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.0
+            },
+            {
+              "name": "Normal",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Weight",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Diffuse Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Subsurface Weight",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Subsurface Radius",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Subsurface Scale",
+              "type": "NodeSocketFloatDistance",
+              "default": 0.05000000074505806
+            },
+            {
+              "name": "Subsurface IOR",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.399999976158142
+            },
+            {
+              "name": "Subsurface Anisotropy",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Specular IOR Level",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "Specular Tint",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Anisotropic",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Anisotropic Rotation",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Tangent",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Transmission Weight",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Coat Weight",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Coat Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.029999999329447746
+            },
+            {
+              "name": "Coat IOR",
+              "type": "NodeSocketFloat",
+              "default": 1.5
+            },
+            {
+              "name": "Coat Tint",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Coat Normal",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Sheen Weight",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Sheen Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "Sheen Tint",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Emission Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Emission Strength",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            },
+            {
+              "name": "Thin Film Thickness",
+              "type": "NodeSocketFloatWavelength",
+              "default": 0.0
+            },
+            {
+              "name": "Thin Film IOR",
+              "type": "NodeSocketFloat",
+              "default": 1.3300000429153442
+            }
+          ],
+          "outputs": [
+            {
+              "name": "BSDF",
+              "type": "NodeSocketShader"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (141.1904, 1260.0236)>",
+            "name": "Principled BSDF.001",
+            "parent": "Frame.001",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeBsdfPrincipled",
+            "bl_label": "Principled BSDF",
+            "bl_description": "Physically-based, easy-to-use shader for rendering surface materials, based on the OpenPBR model",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "distribution": "GGX",
+            "subsurface_method": "BURLEY"
+          }
+        },
+        {
+          "name": "Shader to RGB.001",
+          "type": "ShaderNodeShaderToRGB",
+          "location": "<Vector (437.2565, -119.9532)>",
+          "inputs": [
+            {
+              "name": "Shader",
+              "type": "NodeSocketShader",
+              "default": null
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (436.5689, 1217.6263)>",
+            "name": "Shader to RGB.001",
+            "parent": "Frame.001",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeShaderToRGB",
+            "bl_label": "Shader to RGB",
+            "bl_description": "Convert rendering effect (such as light and shadow) to color. Typically used for non-photorealistic rendering, to apply additional effects on the output of BSDFs.\nNote: only supported in EEVEE",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Layer Weight.001",
+          "type": "ShaderNodeLayerWeight",
+          "location": "<Vector (149.3398, -206.1558)>",
+          "inputs": [
+            {
+              "name": "Blend",
+              "type": "NodeSocketFloat",
+              "default": 0.20000000298023224
+            },
+            {
+              "name": "Normal",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Fresnel",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Facing",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (141.5429, 352.3542)>",
+            "name": "Layer Weight.001",
+            "parent": "Frame.002",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeLayerWeight",
+            "bl_label": "Layer Weight",
+            "bl_description": "Produce a blending factor depending on the angle between the surface normal and the view direction.\nTypically used for layering shaders with the Mix Shader node",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Math.006",
+          "type": "ShaderNodeMath",
+          "location": "<Vector (765.8777, -156.4588)>",
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (758.0809, 402.0512)>",
+            "name": "Math.006",
+            "parent": "Frame.002",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMath",
+            "bl_label": "Math",
+            "bl_description": "Perform math operations",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "operation": "MULTIPLY",
+            "use_clamp": false
+          }
+        },
+        {
+          "name": "Mix.001",
+          "type": "ShaderNodeMix",
+          "location": "<Vector (1942.8466, 504.3725)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.0
+            },
+            {
+              "name": "Factor",
+              "type": "NodeSocketVectorFactor",
+              "default": "<bpy_float[3], NodeSocketVectorFactor.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketRotation",
+              "default": "<Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketRotation",
+              "default": "<Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Result",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketRotation"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (1942.8466, 504.3725)>",
+            "name": "Mix.001",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMix",
+            "bl_label": "Mix",
+            "bl_description": "Mix values by a factor",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "data_type": "RGBA",
+            "factor_mode": "UNIFORM",
+            "blend_type": "MULTIPLY",
+            "clamp_factor": true,
+            "clamp_result": false
+          }
+        },
+        {
+          "name": "Group",
+          "type": "ShaderNodeGroup",
+          "location": "<Vector (1683.2864, 337.7609)>",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (1683.2864, 337.7609)>",
+            "name": "Group",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeGroup",
+            "bl_label": "Group",
+            "bl_description": "",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 60.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "node_tree": "Paper Texture"
+          }
+        },
+        {
+          "name": "Material Output",
+          "type": "ShaderNodeOutputMaterial",
+          "location": "<Vector (2635.7361, 840.0844)>",
+          "inputs": [
+            {
+              "name": "Surface",
+              "type": "NodeSocketShader",
+              "default": null
+            },
+            {
+              "name": "Volume",
+              "type": "NodeSocketShader",
+              "default": null
+            },
+            {
+              "name": "Displacement",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Thickness",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (2635.7361, 840.0844)>",
+            "name": "Material Output",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeOutputMaterial",
+            "bl_label": "Material Output",
+            "bl_description": "Output surface material information for use in rendering",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "is_active_output": true,
+            "target": "ALL"
+          }
+        },
+        {
+          "name": "ColorRamp.004",
+          "type": "ShaderNodeValToRGB",
+          "location": "<Vector (640.9920, -143.2419)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (640.3044, 1194.3376)>",
+            "name": "ColorRamp.004",
+            "parent": "Frame.001",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeValToRGB",
+            "bl_label": "Color Ramp",
+            "bl_description": "Map values to colors with the use of a gradient",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "ColorRamp",
+          "type": "ShaderNodeValToRGB",
+          "location": "<Vector (369.3398, -184.1824)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (361.5429, 374.3276)>",
+            "name": "ColorRamp",
+            "parent": "Frame.002",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeValToRGB",
+            "bl_label": "Color Ramp",
+            "bl_description": "Map values to colors with the use of a gradient",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "ColorRamp.006",
+          "type": "ShaderNodeValToRGB",
+          "location": "<Vector (370.4075, -416.3232)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (362.6106, 142.1868)>",
+            "name": "ColorRamp.006",
+            "parent": "Frame.002",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeValToRGB",
+            "bl_label": "Color Ramp",
+            "bl_description": "Map values to colors with the use of a gradient",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Emission.001",
+          "type": "ShaderNodeEmission",
+          "location": "<Vector (2423.5159, 812.0824)>",
+          "inputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Strength",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            },
+            {
+              "name": "Weight",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Emission",
+              "type": "NodeSocketShader"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (2423.5159, 812.0824)>",
+            "name": "Emission.001",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeEmission",
+            "bl_label": "Emission",
+            "bl_description": "Lambertian emission shader",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "ColorRamp.008",
+          "type": "ShaderNodeValToRGB",
+          "location": "<Vector (1031.2576, -137.0884)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (1023.4607, 421.4216)>",
+            "name": "ColorRamp.008",
+            "parent": "Frame.002",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeValToRGB",
+            "bl_label": "Color Ramp",
+            "bl_description": "Map values to colors with the use of a gradient",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "ColorRamp.005",
+          "type": "ShaderNodeValToRGB",
+          "location": "<Vector (967.9387, -153.5663)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (967.2511, 1184.0133)>",
+            "name": "ColorRamp.005",
+            "parent": "Frame.001",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeValToRGB",
+            "bl_label": "Color Ramp",
+            "bl_description": "Map values to colors with the use of a gradient",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        }
+      ],
+      "links": [
+        {
+          "from_node": "Layer Weight.001",
+          "from_socket": "Fresnel",
+          "to_node": "ColorRamp",
+          "to_socket": "Factor"
+        },
+        {
+          "from_node": "Noise Texture",
+          "from_socket": "Factor",
+          "to_node": "Math",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Noise Texture.001",
+          "from_socket": "Factor",
+          "to_node": "Math.005",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Noise Texture.002",
+          "from_socket": "Factor",
+          "to_node": "Math.003",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Combine XYZ",
+          "from_socket": "Vector",
+          "to_node": "Vector Math",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Texture Coordinate",
+          "from_socket": "Generated",
+          "to_node": "Vector Math.001",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Vector Math",
+          "from_socket": "Vector",
+          "to_node": "Layer Weight.001",
+          "to_socket": "Normal"
+        },
+        {
+          "from_node": "Geometry",
+          "from_socket": "Normal",
+          "to_node": "Vector Math",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Math",
+          "from_socket": "Value",
+          "to_node": "Combine XYZ",
+          "to_socket": "X"
+        },
+        {
+          "from_node": "Math.005",
+          "from_socket": "Value",
+          "to_node": "Combine XYZ",
+          "to_socket": "Y"
+        },
+        {
+          "from_node": "Math.003",
+          "from_socket": "Value",
+          "to_node": "Combine XYZ",
+          "to_socket": "Z"
+        },
+        {
+          "from_node": "Value",
+          "from_socket": "Value",
+          "to_node": "Reroute.002",
+          "to_socket": "Input"
+        },
+        {
+          "from_node": "Vector Math.001",
+          "from_socket": "Vector",
+          "to_node": "Reroute.001",
+          "to_socket": "Input"
+        },
+        {
+          "from_node": "Texture Coordinate",
+          "from_socket": "Window",
+          "to_node": "Vector Math.001",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Layer Weight.001",
+          "from_socket": "Fresnel",
+          "to_node": "ColorRamp.006",
+          "to_socket": "Factor"
+        },
+        {
+          "from_node": "ColorRamp",
+          "from_socket": "Color",
+          "to_node": "Math.006",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "ColorRamp.006",
+          "from_socket": "Color",
+          "to_node": "Math.006",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Vector Math",
+          "from_socket": "Vector",
+          "to_node": "Principled BSDF.001",
+          "to_socket": "Normal"
+        },
+        {
+          "from_node": "Principled BSDF.001",
+          "from_socket": "BSDF",
+          "to_node": "Shader to RGB.001",
+          "to_socket": "Shader"
+        },
+        {
+          "from_node": "Shader to RGB.001",
+          "from_socket": "Color",
+          "to_node": "ColorRamp.004",
+          "to_socket": "Factor"
+        },
+        {
+          "from_node": "ColorRamp.004",
+          "from_socket": "Color",
+          "to_node": "ColorRamp.005",
+          "to_socket": "Factor"
+        },
+        {
+          "from_node": "Mix",
+          "from_socket": "Result",
+          "to_node": "Emission.001",
+          "to_socket": "Color"
+        },
+        {
+          "from_node": "Math.006",
+          "from_socket": "Value",
+          "to_node": "ColorRamp.008",
+          "to_socket": "Factor"
+        },
+        {
+          "from_node": "Group",
+          "from_socket": "Color",
+          "to_node": "Mix.001",
+          "to_socket": "B"
+        },
+        {
+          "from_node": "Mix.001",
+          "from_socket": "Result",
+          "to_node": "Mix",
+          "to_socket": "B"
+        },
+        {
+          "from_node": "ColorRamp.005",
+          "from_socket": "Color",
+          "to_node": "Mix",
+          "to_socket": "A"
+        },
+        {
+          "from_node": "ColorRamp.008",
+          "from_socket": "Color",
+          "to_node": "Mix.001",
+          "to_socket": "A"
+        },
+        {
+          "from_node": "Reroute.002",
+          "from_socket": "Output",
+          "to_node": "Math",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Reroute.002",
+          "from_socket": "Output",
+          "to_node": "Math.005",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Reroute.002",
+          "from_socket": "Output",
+          "to_node": "Math.003",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Reroute.001",
+          "from_socket": "Output",
+          "to_node": "Noise Texture",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Reroute.001",
+          "from_socket": "Output",
+          "to_node": "Noise Texture.001",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Reroute.001",
+          "from_socket": "Output",
+          "to_node": "Noise Texture.002",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Emission.001",
+          "from_socket": "Emission",
+          "to_node": "Material Output",
+          "to_socket": "Surface"
+        }
+      ]
+    },
+    {
+      "name": "Shader Nodetree",
+      "nodes": [
+        {
+          "name": "Frame",
+          "type": "NodeFrame",
+          "location": "<Vector (-2584.1208, 847.9951)>",
+          "inputs": [],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (-2584.1208, 847.9951)>",
+            "name": "Frame",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "NodeFrame",
+            "bl_label": "Frame",
+            "bl_description": "Collect related nodes together in a common area. Useful for organization when the re-usability of a node group is not required",
+            "bl_icon": "NONE",
+            "bl_width_default": 150.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 3.4028234663852886e+38,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "text": null,
+            "shrink": false,
+            "label_size": 36
+          }
+        },
+        {
+          "name": "Frame.001",
+          "type": "NodeFrame",
+          "location": "<Vector (-0.6876, 1337.5796)>",
+          "inputs": [],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (-0.6876, 1337.5796)>",
+            "name": "Frame.001",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "NodeFrame",
+            "bl_label": "Frame",
+            "bl_description": "Collect related nodes together in a common area. Useful for organization when the re-usability of a node group is not required",
+            "bl_icon": "NONE",
+            "bl_width_default": 150.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 3.4028234663852886e+38,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "text": null,
+            "shrink": false,
+            "label_size": 36
+          }
+        },
+        {
+          "name": "Frame.002",
+          "type": "NodeFrame",
+          "location": "<Vector (-7.7969, 558.5100)>",
+          "inputs": [],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (-7.7969, 558.5100)>",
+            "name": "Frame.002",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "NodeFrame",
+            "bl_label": "Frame",
+            "bl_description": "Collect related nodes together in a common area. Useful for organization when the re-usability of a node group is not required",
+            "bl_icon": "NONE",
+            "bl_width_default": 150.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 3.4028234663852886e+38,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "text": null,
+            "shrink": false,
+            "label_size": 36
+          }
+        },
+        {
+          "name": "Material Output",
+          "type": "ShaderNodeOutputMaterial",
+          "location": "<Vector (2635.7361, 840.0844)>",
+          "inputs": [
+            {
+              "name": "Surface",
+              "type": "NodeSocketShader",
+              "default": null
+            },
+            {
+              "name": "Volume",
+              "type": "NodeSocketShader",
+              "default": null
+            },
+            {
+              "name": "Displacement",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Thickness",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (2635.7361, 840.0844)>",
+            "name": "Material Output",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeOutputMaterial",
+            "bl_label": "Material Output",
+            "bl_description": "Output surface material information for use in rendering",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "is_active_output": true,
+            "target": "ALL"
+          }
+        },
+        {
+          "name": "Mix",
+          "type": "ShaderNodeMix",
+          "location": "<Vector (2203.5159, 808.9315)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.0
+            },
+            {
+              "name": "Factor",
+              "type": "NodeSocketVectorFactor",
+              "default": "<bpy_float[3], NodeSocketVectorFactor.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketRotation",
+              "default": "<Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketRotation",
+              "default": "<Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Result",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketRotation"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (2203.5159, 808.9315)>",
+            "name": "Mix",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMix",
+            "bl_label": "Mix",
+            "bl_description": "Mix values by a factor",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "data_type": "RGBA",
+            "factor_mode": "UNIFORM",
+            "blend_type": "MULTIPLY",
+            "clamp_factor": true,
+            "clamp_result": false
+          }
+        },
+        {
+          "name": "Emission",
+          "type": "ShaderNodeEmission",
+          "location": "<Vector (2423.5159, 812.0824)>",
+          "inputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Strength",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            },
+            {
+              "name": "Weight",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Emission",
+              "type": "NodeSocketShader"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (2423.5159, 812.0824)>",
+            "name": "Emission",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeEmission",
+            "bl_label": "Emission",
+            "bl_description": "Lambertian emission shader",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Texture Coordinate",
+          "type": "ShaderNodeTexCoord",
+          "location": "<Vector (218.4814, -335.3455)>",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Generated",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Normal",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "UV",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Object",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Camera",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Window",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Reflection",
+              "type": "NodeSocketVector"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-2365.6394, 512.6497)>",
+            "name": "Texture Coordinate",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeTexCoord",
+            "bl_label": "Texture Coordinate",
+            "bl_description": "Retrieve multiple types of texture coordinates.\nTypically used as inputs for texture nodes",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "object": null,
+            "from_instancer": false
+          }
+        },
+        {
+          "name": "Vector Math.001",
+          "type": "ShaderNodeVectorMath",
+          "location": "<Vector (531.1978, -297.8282)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Scale",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-2052.9231, 550.1669)>",
+            "name": "Vector Math.001",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeVectorMath",
+            "bl_label": "Vector Math",
+            "bl_description": "Perform vector math operation",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "operation": "ADD"
+          }
+        },
+        {
+          "name": "Math.002",
+          "type": "ShaderNodeMath",
+          "location": "<Vector (1234.4760, -539.6463)>",
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1349.6449, 308.3488)>",
+            "name": "Math.002",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMath",
+            "bl_label": "Math",
+            "bl_description": "Perform math operations",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "operation": "MULTIPLY",
+            "use_clamp": false
+          }
+        },
+        {
+          "name": "Math.001",
+          "type": "ShaderNodeMath",
+          "location": "<Vector (1234.4760, -367.5022)>",
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1349.6449, 480.4929)>",
+            "name": "Math.001",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMath",
+            "bl_label": "Math",
+            "bl_description": "Perform math operations",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "operation": "MULTIPLY",
+            "use_clamp": false
+          }
+        },
+        {
+          "name": "Math",
+          "type": "ShaderNodeMath",
+          "location": "<Vector (1234.4760, -198.5167)>",
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1349.6449, 649.4784)>",
+            "name": "Math",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMath",
+            "bl_label": "Math",
+            "bl_description": "Perform math operations",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "operation": "MULTIPLY",
+            "use_clamp": false
+          }
+        },
+        {
+          "name": "Combine XYZ",
+          "type": "ShaderNodeCombineXYZ",
+          "location": "<Vector (1454.4761, -368.1752)>",
+          "inputs": [
+            {
+              "name": "X",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Y",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Z",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1129.6448, 479.8199)>",
+            "name": "Combine XYZ",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeCombineXYZ",
+            "bl_label": "Combine XYZ",
+            "bl_description": "Create a vector from X, Y, and Z components",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Noise Texture.002",
+          "type": "ShaderNodeTexNoise",
+          "location": "<Vector (1014.4760, -677.9482)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "W",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Scale",
+              "type": "NodeSocketFloat",
+              "default": 8.5
+            },
+            {
+              "name": "Detail",
+              "type": "NodeSocketFloat",
+              "default": 2.0
+            },
+            {
+              "name": "Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "Lacunarity",
+              "type": "NodeSocketFloat",
+              "default": 2.0
+            },
+            {
+              "name": "Offset",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Gain",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            },
+            {
+              "name": "Distortion",
+              "type": "NodeSocketFloat",
+              "default": 2.1399998664855957
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1569.6449, 170.0468)>",
+            "name": "Noise Texture.002",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": true,
+            "bl_idname": "ShaderNodeTexNoise",
+            "bl_label": "Noise Texture",
+            "bl_description": "Generate fractal Perlin noise",
+            "bl_icon": "NONE",
+            "bl_width_default": 145.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "noise_dimensions": "3D",
+            "noise_type": "FBM",
+            "normalize": true
+          }
+        },
+        {
+          "name": "Noise Texture.001",
+          "type": "ShaderNodeTexNoise",
+          "location": "<Vector (1014.4760, -412.0738)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "W",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Scale",
+              "type": "NodeSocketFloat",
+              "default": 5.900000095367432
+            },
+            {
+              "name": "Detail",
+              "type": "NodeSocketFloat",
+              "default": 2.0
+            },
+            {
+              "name": "Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "Lacunarity",
+              "type": "NodeSocketFloat",
+              "default": 2.0
+            },
+            {
+              "name": "Offset",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Gain",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            },
+            {
+              "name": "Distortion",
+              "type": "NodeSocketFloat",
+              "default": 2.499999761581421
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1569.6449, 435.9213)>",
+            "name": "Noise Texture.001",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeTexNoise",
+            "bl_label": "Noise Texture",
+            "bl_description": "Generate fractal Perlin noise",
+            "bl_icon": "NONE",
+            "bl_width_default": 145.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "noise_dimensions": "3D",
+            "noise_type": "FBM",
+            "normalize": true
+          }
+        },
+        {
+          "name": "Noise Texture",
+          "type": "ShaderNodeTexNoise",
+          "location": "<Vector (1014.4760, -143.2777)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "W",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Scale",
+              "type": "NodeSocketFloat",
+              "default": 3.6600000858306885
+            },
+            {
+              "name": "Detail",
+              "type": "NodeSocketFloat",
+              "default": 16.0
+            },
+            {
+              "name": "Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "Lacunarity",
+              "type": "NodeSocketFloat",
+              "default": 2.0
+            },
+            {
+              "name": "Offset",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Gain",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            },
+            {
+              "name": "Distortion",
+              "type": "NodeSocketFloat",
+              "default": 2.4099998474121094
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1569.6449, 704.7174)>",
+            "name": "Noise Texture",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeTexNoise",
+            "bl_label": "Noise Texture",
+            "bl_description": "Generate fractal Perlin noise",
+            "bl_icon": "NONE",
+            "bl_width_default": 145.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "noise_dimensions": "3D",
+            "noise_type": "FBM",
+            "normalize": true
+          }
+        },
+        {
+          "name": "Geometry",
+          "type": "ShaderNodeNewGeometry",
+          "location": "<Vector (1451.9155, -522.8023)>",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Position",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Normal",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Tangent",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "True Normal",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Incoming",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Parametric",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Backfacing",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Pointiness",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Random Per Island",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1132.2053, 325.1928)>",
+            "name": "Geometry",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeNewGeometry",
+            "bl_label": "Geometry",
+            "bl_description": "Retrieve geometric information about the current shading point",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Reroute.001",
+          "type": "NodeReroute",
+          "location": "<Vector (739.1942, -329.9473)>",
+          "inputs": [
+            {
+              "name": "Input",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Output",
+              "type": "NodeSocketVector"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1844.9266, 518.0479)>",
+            "name": "Reroute.001",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "NodeReroute",
+            "bl_label": "Reroute",
+            "bl_description": "A single-socket organization tool that supports one input and multiple outputs",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "socket_idname": "NodeSocketVector"
+          }
+        },
+        {
+          "name": "Vector Math",
+          "type": "ShaderNodeVectorMath",
+          "location": "<Vector (1748.9377, -314.0109)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Scale",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-835.1831, 533.9843)>",
+            "name": "Vector Math",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeVectorMath",
+            "bl_label": "Vector Math",
+            "bl_description": "Perform vector math operation",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "operation": "ADD"
+          }
+        },
+        {
+          "name": "Value",
+          "type": "ShaderNodeValue",
+          "location": "<Vector (535.4690, -169.5181)>",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-2048.6519, 678.4771)>",
+            "name": "Value",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeValue",
+            "bl_label": "Value",
+            "bl_description": "Input numerical values to other nodes in the tree",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Reroute",
+          "type": "NodeReroute",
+          "location": "<Vector (820.0790, -204.9705)>",
+          "inputs": [
+            {
+              "name": "Input",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Output",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-1764.0419, 643.0247)>",
+            "name": "Reroute",
+            "parent": "Frame",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "NodeReroute",
+            "bl_label": "Reroute",
+            "bl_description": "A single-socket organization tool that supports one input and multiple outputs",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "socket_idname": "NodeSocketFloat"
+          }
+        },
+        {
+          "name": "Principled BSDF",
+          "type": "ShaderNodeBsdfPrincipled",
+          "location": "<Vector (141.8779, -77.5560)>",
+          "inputs": [
+            {
+              "name": "Base Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Metallic",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "IOR",
+              "type": "NodeSocketFloat",
+              "default": 1.4500000476837158
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.0
+            },
+            {
+              "name": "Normal",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Weight",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "Diffuse Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Subsurface Weight",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Subsurface Radius",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Subsurface Scale",
+              "type": "NodeSocketFloatDistance",
+              "default": 0.05000000074505806
+            },
+            {
+              "name": "Subsurface IOR",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.399999976158142
+            },
+            {
+              "name": "Subsurface Anisotropy",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Specular IOR Level",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "Specular Tint",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Anisotropic",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Anisotropic Rotation",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Tangent",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Transmission Weight",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Coat Weight",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Coat Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.029999999329447746
+            },
+            {
+              "name": "Coat IOR",
+              "type": "NodeSocketFloat",
+              "default": 1.5
+            },
+            {
+              "name": "Coat Tint",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Coat Normal",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Sheen Weight",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.0
+            },
+            {
+              "name": "Sheen Roughness",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "Sheen Tint",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Emission Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Emission Strength",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            },
+            {
+              "name": "Thin Film Thickness",
+              "type": "NodeSocketFloatWavelength",
+              "default": 0.0
+            },
+            {
+              "name": "Thin Film IOR",
+              "type": "NodeSocketFloat",
+              "default": 1.3300000429153442
+            }
+          ],
+          "outputs": [
+            {
+              "name": "BSDF",
+              "type": "NodeSocketShader"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (141.1904, 1260.0236)>",
+            "name": "Principled BSDF",
+            "parent": "Frame.001",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeBsdfPrincipled",
+            "bl_label": "Principled BSDF",
+            "bl_description": "Physically-based, easy-to-use shader for rendering surface materials, based on the OpenPBR model",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "distribution": "GGX",
+            "subsurface_method": "BURLEY"
+          }
+        },
+        {
+          "name": "Shader to RGB",
+          "type": "ShaderNodeShaderToRGB",
+          "location": "<Vector (437.2565, -119.9532)>",
+          "inputs": [
+            {
+              "name": "Shader",
+              "type": "NodeSocketShader",
+              "default": null
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (436.5689, 1217.6263)>",
+            "name": "Shader to RGB",
+            "parent": "Frame.001",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeShaderToRGB",
+            "bl_label": "Shader to RGB",
+            "bl_description": "Convert rendering effect (such as light and shadow) to color. Typically used for non-photorealistic rendering, to apply additional effects on the output of BSDFs.\nNote: only supported in EEVEE",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "ColorRamp.002",
+          "type": "ShaderNodeValToRGB",
+          "location": "<Vector (640.9920, -143.2419)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (640.3044, 1194.3376)>",
+            "name": "ColorRamp.002",
+            "parent": "Frame.001",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeValToRGB",
+            "bl_label": "Color Ramp",
+            "bl_description": "Map values to colors with the use of a gradient",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "ColorRamp.003",
+          "type": "ShaderNodeValToRGB",
+          "location": "<Vector (974.4742, -156.4758)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (973.7866, 1181.1038)>",
+            "name": "ColorRamp.003",
+            "parent": "Frame.001",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeValToRGB",
+            "bl_label": "Color Ramp",
+            "bl_description": "Map values to colors with the use of a gradient",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Layer Weight",
+          "type": "ShaderNodeLayerWeight",
+          "location": "<Vector (149.3398, -206.1558)>",
+          "inputs": [
+            {
+              "name": "Blend",
+              "type": "NodeSocketFloat",
+              "default": 0.20000000298023224
+            },
+            {
+              "name": "Normal",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Fresnel",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Facing",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (141.5429, 352.3542)>",
+            "name": "Layer Weight",
+            "parent": "Frame.002",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeLayerWeight",
+            "bl_label": "Layer Weight",
+            "bl_description": "Produce a blending factor depending on the angle between the surface normal and the view direction.\nTypically used for layering shaders with the Mix Shader node",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "ColorRamp",
+          "type": "ShaderNodeValToRGB",
+          "location": "<Vector (369.3398, -184.1824)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (361.5429, 374.3276)>",
+            "name": "ColorRamp",
+            "parent": "Frame.002",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeValToRGB",
+            "bl_label": "Color Ramp",
+            "bl_description": "Map values to colors with the use of a gradient",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "ColorRamp.001",
+          "type": "ShaderNodeValToRGB",
+          "location": "<Vector (370.4075, -416.3232)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (362.6106, 142.1868)>",
+            "name": "ColorRamp.001",
+            "parent": "Frame.002",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeValToRGB",
+            "bl_label": "Color Ramp",
+            "bl_description": "Map values to colors with the use of a gradient",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Math.003",
+          "type": "ShaderNodeMath",
+          "location": "<Vector (765.8777, -156.4588)>",
+          "inputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (758.0809, 402.0512)>",
+            "name": "Math.003",
+            "parent": "Frame.002",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMath",
+            "bl_label": "Math",
+            "bl_description": "Perform math operations",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "operation": "MULTIPLY",
+            "use_clamp": false
+          }
+        },
+        {
+          "name": "ColorRamp.004",
+          "type": "ShaderNodeValToRGB",
+          "location": "<Vector (1016.2183, -150.8975)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (1008.4214, 407.6125)>",
+            "name": "ColorRamp.004",
+            "parent": "Frame.002",
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeValToRGB",
+            "bl_label": "Color Ramp",
+            "bl_description": "Map values to colors with the use of a gradient",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Mix.001",
+          "type": "ShaderNodeMix",
+          "location": "<Vector (1942.8466, 504.3725)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.0
+            },
+            {
+              "name": "Factor",
+              "type": "NodeSocketVectorFactor",
+              "default": "<bpy_float[3], NodeSocketVectorFactor.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketRotation",
+              "default": "<Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketRotation",
+              "default": "<Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Result",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketRotation"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (1942.8466, 504.3725)>",
+            "name": "Mix.001",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMix",
+            "bl_label": "Mix",
+            "bl_description": "Mix values by a factor",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "data_type": "RGBA",
+            "factor_mode": "UNIFORM",
+            "blend_type": "MULTIPLY",
+            "clamp_factor": true,
+            "clamp_result": false
+          }
+        },
+        {
+          "name": "Group",
+          "type": "ShaderNodeGroup",
+          "location": "<Vector (1683.2864, 337.7609)>",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (1683.2864, 337.7609)>",
+            "name": "Group",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeGroup",
+            "bl_label": "Group",
+            "bl_description": "",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 60.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "node_tree": "Paper Texture"
+          }
+        }
+      ],
+      "links": [
+        {
+          "from_node": "Emission",
+          "from_socket": "Emission",
+          "to_node": "Material Output",
+          "to_socket": "Surface"
+        },
+        {
+          "from_node": "Layer Weight",
+          "from_socket": "Fresnel",
+          "to_node": "ColorRamp",
+          "to_socket": "Factor"
+        },
+        {
+          "from_node": "Noise Texture",
+          "from_socket": "Factor",
+          "to_node": "Math",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Noise Texture.001",
+          "from_socket": "Factor",
+          "to_node": "Math.001",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Noise Texture.002",
+          "from_socket": "Factor",
+          "to_node": "Math.002",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Combine XYZ",
+          "from_socket": "Vector",
+          "to_node": "Vector Math",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Texture Coordinate",
+          "from_socket": "Generated",
+          "to_node": "Vector Math.001",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Vector Math",
+          "from_socket": "Vector",
+          "to_node": "Layer Weight",
+          "to_socket": "Normal"
+        },
+        {
+          "from_node": "Geometry",
+          "from_socket": "Normal",
+          "to_node": "Vector Math",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Math",
+          "from_socket": "Value",
+          "to_node": "Combine XYZ",
+          "to_socket": "X"
+        },
+        {
+          "from_node": "Math.001",
+          "from_socket": "Value",
+          "to_node": "Combine XYZ",
+          "to_socket": "Y"
+        },
+        {
+          "from_node": "Math.002",
+          "from_socket": "Value",
+          "to_node": "Combine XYZ",
+          "to_socket": "Z"
+        },
+        {
+          "from_node": "Value",
+          "from_socket": "Value",
+          "to_node": "Reroute",
+          "to_socket": "Input"
+        },
+        {
+          "from_node": "Vector Math.001",
+          "from_socket": "Vector",
+          "to_node": "Reroute.001",
+          "to_socket": "Input"
+        },
+        {
+          "from_node": "Texture Coordinate",
+          "from_socket": "Window",
+          "to_node": "Vector Math.001",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Layer Weight",
+          "from_socket": "Fresnel",
+          "to_node": "ColorRamp.001",
+          "to_socket": "Factor"
+        },
+        {
+          "from_node": "ColorRamp",
+          "from_socket": "Color",
+          "to_node": "Math.003",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "ColorRamp.001",
+          "from_socket": "Color",
+          "to_node": "Math.003",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Vector Math",
+          "from_socket": "Vector",
+          "to_node": "Principled BSDF",
+          "to_socket": "Normal"
+        },
+        {
+          "from_node": "Principled BSDF",
+          "from_socket": "BSDF",
+          "to_node": "Shader to RGB",
+          "to_socket": "Shader"
+        },
+        {
+          "from_node": "Shader to RGB",
+          "from_socket": "Color",
+          "to_node": "ColorRamp.002",
+          "to_socket": "Factor"
+        },
+        {
+          "from_node": "ColorRamp.002",
+          "from_socket": "Color",
+          "to_node": "ColorRamp.003",
+          "to_socket": "Factor"
+        },
+        {
+          "from_node": "Mix",
+          "from_socket": "Result",
+          "to_node": "Emission",
+          "to_socket": "Color"
+        },
+        {
+          "from_node": "Math.003",
+          "from_socket": "Value",
+          "to_node": "ColorRamp.004",
+          "to_socket": "Factor"
+        },
+        {
+          "from_node": "Group",
+          "from_socket": "Color",
+          "to_node": "Mix.001",
+          "to_socket": "B"
+        },
+        {
+          "from_node": "Mix.001",
+          "from_socket": "Result",
+          "to_node": "Mix",
+          "to_socket": "B"
+        },
+        {
+          "from_node": "ColorRamp.003",
+          "from_socket": "Color",
+          "to_node": "Mix",
+          "to_socket": "A"
+        },
+        {
+          "from_node": "ColorRamp.004",
+          "from_socket": "Color",
+          "to_node": "Mix.001",
+          "to_socket": "A"
+        },
+        {
+          "from_node": "Reroute",
+          "from_socket": "Output",
+          "to_node": "Math",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Reroute",
+          "from_socket": "Output",
+          "to_node": "Math.001",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Reroute",
+          "from_socket": "Output",
+          "to_node": "Math.002",
+          "to_socket": "Value"
+        },
+        {
+          "from_node": "Reroute.001",
+          "from_socket": "Output",
+          "to_node": "Noise Texture",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Reroute.001",
+          "from_socket": "Output",
+          "to_node": "Noise Texture.001",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Reroute.001",
+          "from_socket": "Output",
+          "to_node": "Noise Texture.002",
+          "to_socket": "Vector"
+        }
+      ]
+    }
+  ],
+  "worlds": [
+    {
+      "name": "Shader Nodetree",
+      "nodes": [
+        {
+          "name": "Background",
+          "type": "ShaderNodeBackground",
+          "location": "<Vector (1359.0728, 333.4994)>",
+          "inputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "Strength",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            },
+            {
+              "name": "Weight",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Background",
+              "type": "NodeSocketShader"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (1359.0728, 333.4994)>",
+            "name": "Background",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeBackground",
+            "bl_label": "Background",
+            "bl_description": "Add background light emission.\nNote: This node should only be used for the world surface output",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "World Output",
+          "type": "ShaderNodeOutputWorld",
+          "location": "<Vector (1649.0728, 333.4994)>",
+          "inputs": [
+            {
+              "name": "Surface",
+              "type": "NodeSocketShader",
+              "default": null
+            },
+            {
+              "name": "Volume",
+              "type": "NodeSocketShader",
+              "default": null
+            }
+          ],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (1649.0728, 333.4994)>",
+            "name": "World Output",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeOutputWorld",
+            "bl_label": "World Output",
+            "bl_description": "Output light color information to the scene's World",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "is_active_output": true,
+            "target": "ALL"
+          }
+        },
+        {
+          "name": "Mix",
+          "type": "ShaderNodeMix",
+          "location": "<Vector (1019.3570, 480.0415)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 0.5
+            },
+            {
+              "name": "Factor",
+              "type": "NodeSocketVectorFactor",
+              "default": "<bpy_float[3], NodeSocketVectorFactor.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketFloat",
+              "default": 0.0
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "A",
+              "type": "NodeSocketRotation",
+              "default": "<Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>"
+            },
+            {
+              "name": "B",
+              "type": "NodeSocketRotation",
+              "default": "<Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Result",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Result",
+              "type": "NodeSocketRotation"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (1019.3570, 480.0415)>",
+            "name": "Mix",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMix",
+            "bl_label": "Mix",
+            "bl_description": "Mix values by a factor",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "data_type": "RGBA",
+            "factor_mode": "UNIFORM",
+            "blend_type": "MIX",
+            "clamp_factor": true,
+            "clamp_result": false
+          }
+        },
+        {
+          "name": "Light Path",
+          "type": "ShaderNodeLightPath",
+          "location": "<Vector (780.4667, 723.2510)>",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Is Camera Ray",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Is Shadow Ray",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Is Diffuse Ray",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Is Glossy Ray",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Is Singular Ray",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Is Reflection Ray",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Is Transmission Ray",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Is Volume Scatter Ray",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Ray Length",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Ray Depth",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Diffuse Depth",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Glossy Depth",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Transparent Depth",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Transmission Depth",
+              "type": "NodeSocketFloat"
+            },
+            {
+              "name": "Portal Depth",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (780.4667, 723.2510)>",
+            "name": "Light Path",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeLightPath",
+            "bl_label": "Light Path",
+            "bl_description": "Retrieve the type of incoming ray for which the shader is being executed.\nTypically used for non-physically-based tricks",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Group",
+          "type": "ShaderNodeGroup",
+          "location": "<Vector (695.5095, 361.4542)>",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (695.5095, 361.4542)>",
+            "name": "Group",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeGroup",
+            "bl_label": "Group",
+            "bl_description": "",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 60.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "node_tree": "Paper Texture"
+          }
+        }
+      ],
+      "links": [
+        {
+          "from_node": "Background",
+          "from_socket": "Background",
+          "to_node": "World Output",
+          "to_socket": "Surface"
+        },
+        {
+          "from_node": "Mix",
+          "from_socket": "Result",
+          "to_node": "Background",
+          "to_socket": "Color"
+        },
+        {
+          "from_node": "Group",
+          "from_socket": "Color",
+          "to_node": "Mix",
+          "to_socket": "B"
+        },
+        {
+          "from_node": "Light Path",
+          "from_socket": "Is Camera Ray",
+          "to_node": "Mix",
+          "to_socket": "Factor"
+        }
+      ]
+    }
+  ],
+  "node_groups": [
+    {
+      "name": "Paper Texture",
+      "nodes": [
+        {
+          "name": "Image Texture",
+          "type": "ShaderNodeTexImage",
+          "location": "<Vector (-102.7932, -37.5151)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-102.7932, -37.5151)>",
+            "name": "Image Texture",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": true,
+            "bl_idname": "ShaderNodeTexImage",
+            "bl_label": "Image Texture",
+            "bl_description": "Sample an image file as a texture",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "image": "스크린샷 2026-01-22 124352.png",
+            "projection": "FLAT",
+            "interpolation": "Linear",
+            "projection_blend": 0.0,
+            "extension": "REPEAT"
+          }
+        },
+        {
+          "name": "Mapping",
+          "type": "ShaderNodeMapping",
+          "location": "<Vector (-335.1943, 37.6745)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Location",
+              "type": "NodeSocketVectorTranslation",
+              "default": "<Vector (0.6100, 0.0000, 0.0000)>"
+            },
+            {
+              "name": "Rotation",
+              "type": "NodeSocketVectorEuler",
+              "default": "<Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>"
+            },
+            {
+              "name": "Scale",
+              "type": "NodeSocketVectorXYZ",
+              "default": "<Vector (2.0000, 2.0000, 2.0000)>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-335.1943, 37.6745)>",
+            "name": "Mapping",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMapping",
+            "bl_label": "Mapping",
+            "bl_description": "Transform the input vector by applying translation, rotation, and scale",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "vector_type": "POINT"
+          }
+        },
+        {
+          "name": "Texture Coordinate",
+          "type": "ShaderNodeTexCoord",
+          "location": "<Vector (-607.8545, -25.3596)>",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Generated",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Normal",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "UV",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Object",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Camera",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Window",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Reflection",
+              "type": "NodeSocketVector"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-607.8545, -25.3596)>",
+            "name": "Texture Coordinate",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeTexCoord",
+            "bl_label": "Texture Coordinate",
+            "bl_description": "Retrieve multiple types of texture coordinates.\nTypically used as inputs for texture nodes",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "object": null,
+            "from_instancer": false
+          }
+        },
+        {
+          "name": "Hue Saturation Value",
+          "type": "ShaderNodeHueSaturation",
+          "location": "<Vector (343.0178, -37.6745)>",
+          "inputs": [
+            {
+              "name": "Hue",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Saturation",
+              "type": "NodeSocketFloat",
+              "default": 0.10000000149011612
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            },
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.0
+            },
+            {
+              "name": "Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (343.0178, -37.6745)>",
+            "name": "Hue Saturation Value",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeHueSaturation",
+            "bl_label": "Hue/Saturation/Value",
+            "bl_description": "Apply a color transformation in the HSV color model",
+            "bl_icon": "NONE",
+            "bl_width_default": 150.0,
+            "bl_width_min": 120.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "RGB Curves",
+          "type": "ShaderNodeRGBCurve",
+          "location": "<Vector (607.8545, 22.8878)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.0
+            },
+            {
+              "name": "Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (607.8545, 22.8878)>",
+            "name": "RGB Curves",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeRGBCurve",
+            "bl_label": "RGB Curves",
+            "bl_description": "Apply color corrections for each color channel",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Group Output",
+          "type": "NodeGroupOutput",
+          "location": "<Vector (1084.1632, 34.9646)>",
+          "inputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "",
+              "type": "NodeSocketVirtual",
+              "default": null
+            }
+          ],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (1084.1632, 34.9646)>",
+            "name": "Group Output",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "NodeGroupOutput",
+            "bl_label": "Group Output",
+            "bl_description": "Output data from inside of a node group",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 80.0,
+            "bl_width_max": 400.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "is_active_output": true
+          }
+        }
+      ],
+      "links": [
+        {
+          "from_node": "Image Texture",
+          "from_socket": "Color",
+          "to_node": "Hue Saturation Value",
+          "to_socket": "Color"
+        },
+        {
+          "from_node": "Texture Coordinate",
+          "from_socket": "Window",
+          "to_node": "Mapping",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Mapping",
+          "from_socket": "Vector",
+          "to_node": "Image Texture",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Hue Saturation Value",
+          "from_socket": "Color",
+          "to_node": "RGB Curves",
+          "to_socket": "Color"
+        },
+        {
+          "from_node": "RGB Curves",
+          "from_socket": "Color",
+          "to_node": "Group Output",
+          "to_socket": "Color"
+        }
+      ]
+    },
+    {
+      "name": "Paper Texture.001",
+      "nodes": [
+        {
+          "name": "Image Texture",
+          "type": "ShaderNodeTexImage",
+          "location": "<Vector (-102.7932, -37.5151)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            },
+            {
+              "name": "Alpha",
+              "type": "NodeSocketFloat"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-102.7932, -37.5151)>",
+            "name": "Image Texture",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": true,
+            "bl_idname": "ShaderNodeTexImage",
+            "bl_label": "Image Texture",
+            "bl_description": "Sample an image file as a texture",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "image": null,
+            "projection": "FLAT",
+            "interpolation": "Linear",
+            "projection_blend": 0.0,
+            "extension": "REPEAT"
+          }
+        },
+        {
+          "name": "Mapping",
+          "type": "ShaderNodeMapping",
+          "location": "<Vector (-335.1943, 37.6745)>",
+          "inputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector",
+              "default": "<bpy_float[3], NodeSocketVector.default_value>"
+            },
+            {
+              "name": "Location",
+              "type": "NodeSocketVectorTranslation",
+              "default": "<Vector (0.6100, 0.0000, 0.0000)>"
+            },
+            {
+              "name": "Rotation",
+              "type": "NodeSocketVectorEuler",
+              "default": "<Euler (x=0.0000, y=0.0000, z=0.0000), order='XYZ'>"
+            },
+            {
+              "name": "Scale",
+              "type": "NodeSocketVectorXYZ",
+              "default": "<Vector (2.0000, 2.0000, 2.0000)>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Vector",
+              "type": "NodeSocketVector"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-335.1943, 37.6745)>",
+            "name": "Mapping",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeMapping",
+            "bl_label": "Mapping",
+            "bl_description": "Transform the input vector by applying translation, rotation, and scale",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "vector_type": "POINT"
+          }
+        },
+        {
+          "name": "Texture Coordinate",
+          "type": "ShaderNodeTexCoord",
+          "location": "<Vector (-607.8545, -25.3596)>",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "Generated",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Normal",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "UV",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Object",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Camera",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Window",
+              "type": "NodeSocketVector"
+            },
+            {
+              "name": "Reflection",
+              "type": "NodeSocketVector"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (-607.8545, -25.3596)>",
+            "name": "Texture Coordinate",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeTexCoord",
+            "bl_label": "Texture Coordinate",
+            "bl_description": "Retrieve multiple types of texture coordinates.\nTypically used as inputs for texture nodes",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 100.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "object": null,
+            "from_instancer": false
+          }
+        },
+        {
+          "name": "Hue Saturation Value",
+          "type": "ShaderNodeHueSaturation",
+          "location": "<Vector (343.0178, -37.6745)>",
+          "inputs": [
+            {
+              "name": "Hue",
+              "type": "NodeSocketFloat",
+              "default": 0.5
+            },
+            {
+              "name": "Saturation",
+              "type": "NodeSocketFloat",
+              "default": 0.10000000149011612
+            },
+            {
+              "name": "Value",
+              "type": "NodeSocketFloat",
+              "default": 1.0
+            },
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.0
+            },
+            {
+              "name": "Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (343.0178, -37.6745)>",
+            "name": "Hue Saturation Value",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeHueSaturation",
+            "bl_label": "Hue/Saturation/Value",
+            "bl_description": "Apply a color transformation in the HSV color model",
+            "bl_icon": "NONE",
+            "bl_width_default": 150.0,
+            "bl_width_min": 120.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "RGB Curves",
+          "type": "ShaderNodeRGBCurve",
+          "location": "<Vector (607.8545, 22.8878)>",
+          "inputs": [
+            {
+              "name": "Factor",
+              "type": "NodeSocketFloatFactor",
+              "default": 1.0
+            },
+            {
+              "name": "Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor"
+            }
+          ],
+          "props": {
+            "location_absolute": "<Vector (607.8545, 22.8878)>",
+            "name": "RGB Curves",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "ShaderNodeRGBCurve",
+            "bl_label": "RGB Curves",
+            "bl_description": "Apply color corrections for each color channel",
+            "bl_icon": "NONE",
+            "bl_width_default": 240.0,
+            "bl_width_min": 140.0,
+            "bl_width_max": 700.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0
+          }
+        },
+        {
+          "name": "Group Output",
+          "type": "NodeGroupOutput",
+          "location": "<Vector (1084.1632, 34.9646)>",
+          "inputs": [
+            {
+              "name": "Color",
+              "type": "NodeSocketColor",
+              "default": "<bpy_float[4], NodeSocketColor.default_value>"
+            },
+            {
+              "name": "",
+              "type": "NodeSocketVirtual",
+              "default": null
+            }
+          ],
+          "outputs": [],
+          "props": {
+            "location_absolute": "<Vector (1084.1632, 34.9646)>",
+            "name": "Group Output",
+            "parent": null,
+            "warning_propagation": "ALL",
+            "use_custom_color": false,
+            "color": "<Color (r=0.6080, g=0.6080, b=0.6080)>",
+            "show_options": true,
+            "show_preview": false,
+            "hide": false,
+            "show_texture": false,
+            "bl_idname": "NodeGroupOutput",
+            "bl_label": "Group Output",
+            "bl_description": "Output data from inside of a node group",
+            "bl_icon": "NONE",
+            "bl_width_default": 140.0,
+            "bl_width_min": 80.0,
+            "bl_width_max": 400.0,
+            "bl_height_default": 100.0,
+            "bl_height_min": 30.0,
+            "bl_height_max": 30.0,
+            "is_active_output": true
+          }
+        }
+      ],
+      "links": [
+        {
+          "from_node": "Image Texture",
+          "from_socket": "Color",
+          "to_node": "Hue Saturation Value",
+          "to_socket": "Color"
+        },
+        {
+          "from_node": "Texture Coordinate",
+          "from_socket": "Window",
+          "to_node": "Mapping",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Mapping",
+          "from_socket": "Vector",
+          "to_node": "Image Texture",
+          "to_socket": "Vector"
+        },
+        {
+          "from_node": "Hue Saturation Value",
+          "from_socket": "Color",
+          "to_node": "RGB Curves",
+          "to_socket": "Color"
+        },
+        {
+          "from_node": "RGB Curves",
+          "from_socket": "Color",
+          "to_node": "Group Output",
+          "to_socket": "Color"
+        }
+      ]
+    }
+  ]
+}
