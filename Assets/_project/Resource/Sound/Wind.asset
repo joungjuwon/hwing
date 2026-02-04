@@ -25,5 +25,5 @@ MonoBehaviour:
   useRandomVariance: 1
   volumeVariance: 0.1
   pitchVariance: 0.1
-  useRandomLoop: 1
+  useRandomLoop: 0
   loopDelay: 2.2

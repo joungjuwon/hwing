@@ -87,8 +87,11 @@ Shader "Hwing/SimpleDissolve"
                 v2f OUT;
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-                OUT.worldPosition = v.vertex;
-                OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
+                // World Position 계산 수정 (Local -> World)
+                OUT.worldPosition = mul(unity_ObjectToWorld, v.vertex);
+                // UI 셰이더는 ClipPos 계산 시 v.vertex(local)를 사용할 수도, worldPosition을 사용할 수도 있음.
+                // UnityObjectToClipPos는 Object Space 입력이 필요하므로 v.vertex 사용
+                OUT.vertex = UnityObjectToClipPos(v.vertex);
 
                 OUT.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
                 OUT.color = v.color * _Color;

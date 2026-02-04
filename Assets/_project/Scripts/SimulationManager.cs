@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.UI; // 버튼 기능을 위해 추가
+using UnityEngine.UI; 
 #if UNITY_6000_0_OR_NEWER
-using Unity.Cinemachine; // Unity 6용 시네머신
+using Unity.Cinemachine; 
 #else
-using Cinemachine; // 구버전 시네머신
+using Cinemachine; 
 #endif
 
 public class SimulationManager : MonoBehaviour
@@ -27,8 +27,12 @@ public class SimulationManager : MonoBehaviour
     public float dayCycleDuration = 60f;
 
     [Header("Respawn Settings")]
-    [Tooltip("리스폰할 플레이어 프리팹")]
-    public GameObject playerPrefab;
+    [Tooltip("리스폰할 플레이어 프리팹 리스트 (Intro와 인덱스 일치시켜야 함)")]
+    public GameObject[] playerPrefabs; 
+    
+    [Tooltip("다음에 스폰될 씨앗의 인덱스")]
+    public int currentSeedIndex = 0;
+
     [Tooltip("랜덤 위치에 생성될 UI 프리팹 (World Space Canvas 권장)")]
     public GameObject spawnUiPrefab;
     public Vector2 spawnAreaSize = new Vector2(40f, 40f); // 스폰 랜덤 범위 (가로, 세로)
@@ -40,13 +44,21 @@ public class SimulationManager : MonoBehaviour
     public float spawnOffset = 0.1f;
     public LayerMask groundLayer; // 바닥 감지용 레이어
 
+    [Header("Game Flow")]
+    [Tooltip("게임 시작 시 자동으로 인트로 재생 (시작하자마자 떨어짐)")]
+    public bool autoStartIntro = true;
+
+    [Header("Reference")]
+    [Tooltip("인트로 컨트롤러 (자동으로 못 찾으면 여기에 연결)")]
+    public IntroSequenceController introController;
+
     private GameObject currentSpawnUi; // 현재 생성된 스폰 UI 인스턴스
     private bool isSimulationActive = false; // 시뮬레이션 모드 활성화 여부
     private float currentDayTime = 0f; // 현재 시간 흐름
 
     private void Start()
     {
-        // 게임 시작 시 초기 상태 강제 설정: 플레이어 카메라 활성화, 시뮬레이션 카메라 비활성화
+        // 게임 시작 시 초기 상태 강제 설정
         if (playerCamera != null) playerCamera.SetActive(true);
         if (simulationCamera != null) simulationCamera.SetActive(false);
 
@@ -55,115 +67,106 @@ public class SimulationManager : MonoBehaviour
         if (simulationUI != null) simulationUI.SetActive(false);
         isSimulationActive = false;
 
-        // 게임 시작 시 씬에 있는 초기 플레이어(씨앗)를 찾아 이벤트 연결
-        // 이렇게 하면 인스펙터에서 일일이 연결하지 않아도 첫 번째 죽음 시 시뮬레이션 뷰로 전환됩니다.
-        var initialPlayer = FindAnyObjectByType<PlayerLifeCycle>();
-        if (initialPlayer != null)
+        // 자동 시작 로직
+        if (autoStartIntro)
         {
-            initialPlayer.onSprout.AddListener(EnableSimulationMode);
+            // 이미 씬에 배치된 플레이어가 있다면 제거 (중복 방지)
+            var existingPlayer = FindAnyObjectByType<PlayerLifeCycle>();
+            if (existingPlayer != null) Destroy(existingPlayer.gameObject);
+
+            // 랜덤 위치에서 리스폰(인트로) 시작
+            // GetRandomPositionOnMap()이 안전하지 않을 수 있다면(Invoke 필요?), 여기서 바로 호출.
+            // 하지만 Start에서도 동작해야 함.
+            RespawnPlayer(GetRandomPositionOnMap());
+        }
+        else
+        {
+            // 자동 시작 아님: 씬에 있는 배치된 플레이어 사용
+            var initialPlayer = FindAnyObjectByType<PlayerLifeCycle>();
+            if (initialPlayer != null)
+            {
+                initialPlayer.onSprout.AddListener(EnableSimulationMode);
+            }
+        }
+    }
+
+    private void Update()
+    {
+        // 시간 흐름 처리
+        currentDayTime += Time.deltaTime;
+        if (dayTimeSlider != null && dayCycleDuration > 0)
+        {
+            dayTimeSlider.value = (currentDayTime % dayCycleDuration) / dayCycleDuration;
+        }
+
+        // 리스폰 UI 빌보드 효과
+        if (currentSpawnUi != null && simulationCamera != null)
+        {
+            currentSpawnUi.transform.rotation = simulationCamera.transform.rotation;
         }
     }
 
     // PlayerLifeCycle의 OnSprout 이벤트에 연결할 메서드
     public void EnableSimulationMode(Vector3 targetPosition)
     {
-        Debug.Log($"[SimulationManager] 시뮬레이션 모드 전환: 위치 {targetPosition}");
-
-        // 1. 카메라 전환
-        // Cinemachine은 활성화된 가상 카메라 중 우선순위가 높은 것을 사용하므로,
-        // 플레이어 카메라를 끄고 시뮬레이션 카메라를 켜면 자연스럽게 전환됩니다.
+        // 1. 카메라 전환 (Sim 켜고 Player 끄기)
         if (playerCamera != null) playerCamera.SetActive(false);
-        if (simulationCamera != null) 
-        {
-            simulationCamera.SetActive(true);
-            
-            // 선택 사항: 시뮬레이션 카메라가 싹이 튼 위치를 바라보게 하거나 위치를 이동
-            // 예: simulationCamera.transform.position = targetPosition + new Vector3(0, 10, -10);
-        }
+        if (simulationCamera != null) simulationCamera.SetActive(true);
 
         // 2. UI 전환
         if (playerUI != null) playerUI.SetActive(false);
         if (simulationUI != null) simulationUI.SetActive(true);
         
-        isSimulationActive = true; // 시뮬레이션 로직 활성화
+        isSimulationActive = true; 
 
-        // 3. 커서 잠금 해제 (시뮬레이션 조작을 위해)
+        // 3. 커서 잠금 해제
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // 4. 랜덤 위치에 리스폰 UI 생성
+        // 4. 랜덤 리스폰 UI 생성
         SpawnRandomRespawnUI();
-    }
-
-    private void Update()
-    {
-        // 모드와 상관없이 시간 흐름 처리 (슬라이더 업데이트)
-        currentDayTime += Time.deltaTime;
-        if (dayTimeSlider != null && dayCycleDuration > 0)
-        {
-            // 0~1 사이 값으로 반복 (왼쪽 -> 오른쪽 이동)
-            dayTimeSlider.value = (currentDayTime % dayCycleDuration) / dayCycleDuration;
-        }
-
-        // 리스폰 UI가 활성화되어 있을 때 항상 카메라를 바라보도록 설정 (빌보드 효과)
-        if (currentSpawnUi != null && simulationCamera != null)
-        {
-            // World Space Canvas는 카메라와 회전값이 같을 때 정면을 보게 됨
-            currentSpawnUi.transform.rotation = simulationCamera.transform.rotation;
-        }
     }
 
     private void SpawnRandomRespawnUI()
     {
         if (spawnUiPrefab == null) return;
 
-        // 기존 UI가 있다면 제거
         if (currentSpawnUi != null) Destroy(currentSpawnUi);
 
-        // 랜덤 위치 계산 (바닥 높이 찾기)
         Vector3 randomPos = GetRandomPositionOnMap();
 
-        // UI 생성
         currentSpawnUi = Instantiate(spawnUiPrefab, randomPos, Quaternion.identity);
 
-        // 생성 즉시 카메라를 바라보도록 초기 회전 설정
         if (simulationCamera != null)
         {
             currentSpawnUi.transform.rotation = simulationCamera.transform.rotation;
         }
 
-        // 버튼 클릭 이벤트 연결
         Button btn = currentSpawnUi.GetComponentInChildren<Button>();
         if (btn != null)
         {
-            // 클릭 시 해당 위치에 리스폰하도록 람다식으로 연결
             btn.onClick.AddListener(() => RespawnPlayer(randomPos));
         }
     }
 
     private Vector3 GetRandomPositionOnMap()
     {
-        // 설정된 범위 내에서 랜덤 좌표 생성
         float randomX = Random.Range(-spawnAreaSize.x / 2f, spawnAreaSize.x / 2f);
         float randomZ = Random.Range(-spawnAreaSize.y / 2f, spawnAreaSize.y / 2f);
         
-        // SimulationManager 오브젝트의 위치를 중심으로 랜덤 좌표 계산
         Vector3 center = transform.position;
-        
-        // 하늘(현재 높이 + raycastHeight)에서 아래로 레이를 쏘아 바닥 위치를 찾음
         Vector3 searchPos = new Vector3(center.x + randomX, center.y + raycastHeight, center.z + randomZ);
+
         if (Physics.Raycast(searchPos, Vector3.down, out RaycastHit hit, raycastDistance, groundLayer))
         {
             return hit.point + Vector3.up * spawnOffset;
         }
-        return new Vector3(center.x + randomX, center.y + spawnOffset, center.z + randomZ); // 바닥을 못 찾으면 기준 높이 반환
+        return new Vector3(center.x + randomX, center.y + spawnOffset, center.z + randomZ); 
     }
 
-    // 에디터에서 스폰 범위를 눈으로 확인하기 위한 기즈모 추가
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        // 현재 위치를 중심으로 스폰 범위 박스 그리기 (높이는 raycastDistance로 표시하여 탐색 범위 시각화)
         Vector3 center = transform.position;
         Vector3 boxCenter = new Vector3(center.x, center.y + raycastHeight - (raycastDistance * 0.5f), center.z);
         Gizmos.DrawWireCube(boxCenter, new Vector3(spawnAreaSize.x, raycastDistance, spawnAreaSize.y));
@@ -171,63 +174,87 @@ public class SimulationManager : MonoBehaviour
 
     public void RespawnPlayer(Vector3 spawnPos)
     {
-        if (playerPrefab == null) return;
+        if (introController == null)
+        {
+            introController = FindAnyObjectByType<IntroSequenceController>();
+        }
 
-        // 인트로 컨트롤러 찾기
-        var introController = FindAnyObjectByType<IntroSequenceController>();
+        // 1. 플레이어 캐릭터 먼저 생성 (위치는 나중에 IntroController가 덮어씌움)
+        if (playerPrefabs == null || playerPrefabs.Length == 0) return;
+        int index = Mathf.Clamp(currentSeedIndex, 0, playerPrefabs.Length - 1);
+        GameObject selectedPrefab = playerPrefabs[index];
+        if (selectedPrefab == null) return;
 
-        // 인트로가 있다면 인트로 재생 후 스폰, 없다면 즉시 스폰
+        GameObject newPlayer = Instantiate(selectedPrefab, spawnPos, Quaternion.identity);
+
+        // 2. 조작 및 물리 비활성화 (낙하 연출 중 조작 방지)
+        var controller = newPlayer.GetComponent<TPSController>();
+        var lifeCycle = newPlayer.GetComponent<PlayerLifeCycle>();
+        var rb = newPlayer.GetComponent<Rigidbody>();
+
+        if (controller != null) controller.enabled = false;
+        if (lifeCycle != null) lifeCycle.enabled = false;
+        if (rb != null) rb.isKinematic = true; // 물리 영향 받지 않도록 고정도 고려 (연출 스타일에 따라 다름)
+
+        // 3. 인트로 시작
         if (introController != null)
         {
-            // 인트로 카메라와 간섭 없도록 UI/카메라 정리 먼저 수행
+            // 인트로 카메라와 간섭 없도록 정리
             if (simulationCamera != null) simulationCamera.SetActive(false);
             if (simulationUI != null) simulationUI.SetActive(false);
             
-            // 인트로 시작! (콜백으로 실제 스폰 로직 전달)
-            introController.PlayIntro(spawnPos, () => 
+            // 실제 플레이어 객체를 넘겨줌
+            introController.PlayIntro(newPlayer, spawnPos, () => 
             {
-                SpawnPlayerLogic(spawnPos);
+                OnIntroFinished(newPlayer);
             });
         }
         else
         {
-            SpawnPlayerLogic(spawnPos);
+            // 인트로 없으면 바로 시작
+            OnIntroFinished(newPlayer);
         }
     }
 
-    // 실제 플레이어 생성 및 설정 로직 (인트로 종료 후 또는 즉시 실행)
-    private void SpawnPlayerLogic(Vector3 spawnPos)
+    // 인트로 종료 후 호출: 플레이어 조작 활성화 및 게임 시작
+    private void OnIntroFinished(GameObject player)
     {
-        // 플레이어 생성
-        GameObject newPlayer = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
+        if (player == null) return;
 
-        // 중요: 새로 생성된 플레이어의 사망(싹틔우기) 이벤트에 시뮬레이션 모드 전환 기능을 다시 연결합니다.
-        var lifeCycle = newPlayer.GetComponent<PlayerLifeCycle>();
-        if (lifeCycle != null)
+        // 1. 조작 및 물리 활성화
+        var controller = player.GetComponent<TPSController>();
+        var lifeCycle = player.GetComponent<PlayerLifeCycle>();
+        var rb = player.GetComponent<Rigidbody>();
+
+        if (rb != null) rb.isKinematic = false; // 물리 켜기
+        if (controller != null) controller.enabled = true;
+        if (lifeCycle != null) 
         {
+            lifeCycle.enabled = true;
+            // 중요: 사망 시 시뮬레이션 모드 전환 연결
             lifeCycle.onSprout.AddListener(EnableSimulationMode);
         }
 
-        // 플레이어 카메라가 새 플레이어를 따라가도록 설정
+        // 2. 플레이어 카메라 연결
         if (playerCamera != null)
         {
             // Unity 6 (Unity.Cinemachine) 또는 구버전 호환
             var vcam = playerCamera.GetComponent<CinemachineCamera>(); 
             if (vcam != null)
             {
-                vcam.Follow = newPlayer.transform;
-                vcam.LookAt = newPlayer.transform;
+                vcam.Follow = player.transform;
+                vcam.LookAt = player.transform;
             }
         }
 
-        // 시뮬레이션 모드 종료 및 플레이어 모드 복귀(이미 꺼져있을 수 있지만 확실하게)
+        // 3. 모드 정리 (Player Mode ON)
         if (simulationCamera != null) simulationCamera.SetActive(false);
         if (playerCamera != null) playerCamera.SetActive(true);
         if (simulationUI != null) simulationUI.SetActive(false);
         if (playerUI != null) playerUI.SetActive(true);
-        isSimulationActive = false; // 시뮬레이션 로직 비활성화
+        isSimulationActive = false; 
 
-        // 커서 잠금 및 스폰 UI 제거
+        // 4. 커서 및 UI 정리
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         if (currentSpawnUi != null) Destroy(currentSpawnUi);

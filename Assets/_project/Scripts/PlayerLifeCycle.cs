@@ -46,6 +46,7 @@ public class PlayerLifeCycle : MonoBehaviour
         if (controller != null && controller.IsGrounded)
         {
             currentLifeTime -= Time.fixedDeltaTime;
+            
             if (currentLifeTime <= 0f)
             {
                 Die();

@@ -15,6 +15,16 @@ public class UIMeshSplitter : BaseMeshEffect
     [Tooltip("세로 분할 개수")]
     public int gridY = 50;
 
+    /// <summary>
+    /// 분할 해상도를 동적으로 설정합니다.
+    /// </summary>
+    public void Configure(int x, int y)
+    {
+        gridX = x;
+        gridY = y;
+        if (graphic != null) graphic.SetVerticesDirty();
+    }
+
     public override void ModifyMesh(VertexHelper vh)
     {
         if (!IsActive()) return;
@@ -70,30 +80,32 @@ public class UIMeshSplitter : BaseMeshEffect
                 // 4개 버텍스 생성 (Quad)
                 UIVertex[] quad = new UIVertex[4];
                 
-                // BL
-                quad[0] = CreateVertex(xPos, yPos, uPos, vPos, centerUV);
-                // TL
-                quad[1] = CreateVertex(xPos, yPos + cellH, uPos, vPos + uvH, centerUV);
-                // TR
-                quad[2] = CreateVertex(xPos + cellW, yPos + cellH, uPos + uvW, vPos + uvH, centerUV);
-                // BR
-                quad[3] = CreateVertex(xPos + cellW, yPos, uPos + uvW, vPos, centerUV);
+                // BL (Local UV: 0,0)
+                quad[0] = CreateVertex(xPos, yPos, uPos, vPos, centerUV, new Vector2(0, 0));
+                // TL (Local UV: 0,1)
+                quad[1] = CreateVertex(xPos, yPos + cellH, uPos, vPos + uvH, centerUV, new Vector2(0, 1));
+                // TR (Local UV: 1,1)
+                quad[2] = CreateVertex(xPos + cellW, yPos + cellH, uPos + uvW, vPos + uvH, centerUV, new Vector2(1, 1));
+                // BR (Local UV: 1,0)
+                quad[3] = CreateVertex(xPos + cellW, yPos, uPos + uvW, vPos, centerUV, new Vector2(1, 0));
 
                 vh.AddUIVertexQuad(quad);
             }
         }
     }
 
-    private UIVertex CreateVertex(float x, float y, float u, float v, Vector2 centerUV)
+    private UIVertex CreateVertex(float x, float y, float u, float v, Vector2 centerUV, Vector2 localUV)
     {
         UIVertex vert = UIVertex.simpleVert;
         vert.position = new Vector3(x, y, 0);
         vert.uv0 = new Vector2(u, v);
         
-        // ★ 중요: uv1에 "이 조각의 중심점 UV"를 저장해서
-        // 셰이더가 4개의 점을 같은 방향으로 날려보낼 수 있게 함.
+        // ★ 중요: uv1에 "이 조각의 중심점 UV"를 저장 (Movement Pivot)
         vert.uv1 = centerUV; 
         
+        // ★ 중요: uv2에 "이 조각(Cell) 내부의 로컬 UV(0~1)"를 저장 (SubTex Mapping용)
+        vert.uv2 = localUV;
+
         vert.color = GetComponent<Graphic>().color;
         
         return vert;

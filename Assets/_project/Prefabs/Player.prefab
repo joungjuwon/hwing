@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 3945191205796151168}
   - component: {fileID: 2449218805230744002}
   - component: {fileID: 7572842050540717156}
+  - component: {fileID: 2319107241917117154}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -215,25 +216,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ca88c71b20dbd4db4d85544e7dd38a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLifeCycle
-  maxLifeTime: 5
+  maxLifeTime: 30
   deathSpawnPrefab: {fileID: 7207991665247980607, guid: ab9da033673c1ef45ad05a33ab96d114, type: 3}
   playerVisuals: {fileID: 6821408077786863926}
   deathStopDamping: 5
   onSprout:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SimulationManager, Assembly-CSharp
-        m_MethodName: EnableSimulationMode
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+--- !u!114 &2319107241917117154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6821408077786863926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f2f42819328515438297278640be308, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 8907696177444119508, guid: 7e2b957ac2dc9aa46a0a89a01954ea70, type: 3}
 --- !u!1001 &6397046236243082211
 PrefabInstance:
   m_ObjectHideFlags: 0

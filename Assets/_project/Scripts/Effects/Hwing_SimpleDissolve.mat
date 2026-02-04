@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Hwing_ScatterDissolve
-  m_Shader: {fileID: 4800000, guid: a4aa5d9569fa8fe45ba27ab78e9dcfb1, type: 3}
+  m_Name: Hwing_SimpleDissolve
+  m_Shader: {fileID: 4800000, guid: 28d0bf8b2b0d65a4baf134020b461319, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -27,18 +27,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _NoiseTex:
-        m_Texture: {fileID: 2800000, guid: b4f56bfa6b609564688560b9bd86ef02, type: 3}
-        m_Scale: {x: 2, y: 2}
-        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _ColorMask: 15
     - _DissolveAmount: 1.5
-    - _EdgeWidth: 0.1
-    - _Gravity: 50
-    - _NoiseScale: 20
-    - _ScatterDistance: 500
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -46,7 +38,5 @@ Material:
     - _StencilWriteMask: 255
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _FadeColor: {r: 0.9433962, g: 0.33374864, b: 0.64269316, a: 0.22745098}
-    - _WindDirection: {r: 1, g: 0.5, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

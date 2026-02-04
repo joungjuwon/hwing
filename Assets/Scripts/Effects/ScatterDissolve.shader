@@ -3,15 +3,19 @@ Shader "Hwing/ScatterDissolve"
     Properties
     {
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
+        _NoiseTex ("Noise Texture (Dissolve Pattern)", 2D) = "white" {}
+        _FadeColor ("Fade Color", Color) = (1, 1, 1, 0)
         _Color ("Tint", Color) = (1,1,1,1)
+        
         _DissolveAmount ("Dissolve Amount", Range(0, 1.5)) = 0
         
         // Scatter Settings
-        _ScatterDistance ("Scatter Distance", Float) = 200.0
+        _ScatterDistance ("Scatter Distance", Float) = 500.0
         _Gravity ("Gravity", Float) = 50.0
-        _NoiseScale ("Noise Scale (Size)", Float) = 50.0
-        _EdgeWidth ("Edge Width", Range(0, 1)) = 0.02
-
+        _WindDirection ("Wind Direction (X,Y)", Vector) = (1.0, 0.5, 0, 0)
+        _NoiseScale ("Noise Scale (Size)", Float) = 20.0
+        _EdgeWidth ("Edge Width", Range(0, 1)) = 0.1
+        
         // UI Stencil support
         _StencilComp ("Stencil Comparison", Float) = 8
         _Stencil ("Stencil ID", Float) = 0
@@ -71,11 +75,14 @@ Shader "Hwing/ScatterDissolve"
             {
                 float4 vertex   : SV_POSITION;
                 fixed4 color    : COLOR;
-                float2 texcoord  : TEXCOORD0;
-                float4 worldPosition : TEXCOORD1;
+                float2 texcoord : TEXCOORD0;
+                float flyFactor : TEXCOORD1; 
             };
 
             sampler2D _MainTex;
+            sampler2D _NoiseTex; 
+            float4 _NoiseTex_ST;
+            
             fixed4 _Color;
             fixed4 _TextureSampleAdd;
             float4 _ClipRect;
@@ -85,12 +92,14 @@ Shader "Hwing/ScatterDissolve"
             float _Gravity;
             float _NoiseScale;
             float _EdgeWidth;
+            
+            float4 _WindDirection;
+            fixed4 _FadeColor; // 사라질 때 변할 색상
+
+            // Simple Hash Noise
             float random (float2 uv)
             {
-                // sin 없는 해시 함수 (안정성 확보)
-                float3 p3  = frac(float3(uv.xyx) * .1031);
-                p3 += dot(p3, p3.yzx + 33.33);
-                return frac((p3.x + p3.y) * p3.z);
+                return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453123);
             }
 
             v2f vert(appdata_t v)
@@ -98,43 +107,46 @@ Shader "Hwing/ScatterDissolve"
                 v2f OUT;
                 UNITY_SETUP_INSTANCE_ID(v);
                 
-                // 1. Calculate seed
-                // UIMeshSplitter가 건네준 uvCenter(각 조각의 중심)를 그대로 시드로 사용
-                // floor를 제거하여 경계선 부근의 정밀도 문제(일렁임) 해결
-                float rand = random(v.uvCenter); 
+                // 1. Calculate Threshold using Noise Texture
+                float noiseVal = tex2Dlod(_NoiseTex, float4(v.uvCenter * _NoiseScale, 0, 0)).r;
+                float threshold = noiseVal; 
                 
-                // 2. Progress
-                float threshold = v.uvCenter.x + (rand * _EdgeWidth);
-                
-                // 3. Move logic
-                float flyFactor = max(0, _DissolveAmount - threshold);
-                
+                float flyFactor = max(0, _DissolveAmount * 1.2 - threshold);
+                OUT.flyFactor = flyFactor; 
+
                 float3 offset = float3(0,0,0);
                 
                 if (flyFactor > 0)
                 {
-                    float angle = rand * 6.283185;
-                    float2 dir = float2(cos(angle), sin(angle));
+                    float2 seed = v.uvCenter * 12.9898; 
+                    float rand = random(floor(seed)); 
+
+                    // 기본 바람 방향
+                    float2 baseDir = normalize(_WindDirection.xy + float2(0.001, 0.001)); 
                     
-                    offset.xy = dir * flyFactor * _ScatterDistance;
-                    offset.y -= flyFactor * flyFactor * _Gravity; // Parabolic
-                    offset.z = -flyFactor * 10; // Z를 너무 많이 쓰면 일렁임(Sort) 원인이 됨 (100 -> 10)
+                    // 랜덤 분산
+                    float angleVar = (rand - 0.5) * 1.0; 
+                    float c = cos(angleVar);
+                    float s = sin(angleVar);
+                    
+                    float2 finalDir = float2(
+                        baseDir.x * c - baseDir.y * s,
+                        baseDir.x * s + baseDir.y * c
+                    );
+                    
+                    offset.xy = finalDir * flyFactor * _ScatterDistance;
+                    offset.y -= flyFactor * flyFactor * _Gravity; 
+                    offset.z = -flyFactor * 10; 
                 }
 
                 float4 localPos = v.vertex;
                 localPos.xyz += offset;
 
-                OUT.worldPosition = localPos;
                 OUT.vertex = UnityObjectToClipPos(localPos);
-
                 OUT.texcoord = v.texcoord;
-
-                // 4. Alpha Fade
-                // 날아갈수록 투명해짐 (Blur 느낌 방지를 위해 비교적 단단하게 끊음)
-                float alphaFade = 1.0 - smoothstep(0.0, 0.5, flyFactor); 
+                OUT.flyFactor = flyFactor;
                 OUT.color = v.color * _Color;
-                OUT.color.a *= alphaFade;
-
+                
                 return OUT;
             }
 
@@ -142,10 +154,15 @@ Shader "Hwing/ScatterDissolve"
             {
                 half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
 
-                #ifdef UNITY_UI_CLIP_RECT
-                color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-                #endif
+                // Color Tint Fade (날아가기 시작하면 지정한 색으로 변함)
+                // 0.0 ~ 0.3 사이에서 서서히 FadeColor로 전환
+                float tintAmount = smoothstep(0.0, 0.3, IN.flyFactor);
+                color.rgb = lerp(color.rgb, _FadeColor.rgb, tintAmount * _FadeColor.a);
 
+                // Alpha Fade (그리고 나서 투명해짐)
+                float alphaFade = 1.0 - smoothstep(0.4, 1.2, IN.flyFactor); 
+                color.a *= alphaFade;
+                
                 #ifdef UNITY_UI_ALPHACLIP
                 clip (color.a - 0.001);
                 #endif
