@@ -4783,6 +4783,11 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4804,6 +4809,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -4832,10 +4838,8 @@ ParticleSystemRenderer:
   m_TrailVertexStreams: 00010304
   m_Mesh: {fileID: -5237478126645527859, guid: 8af04b96565ad44449c9f6e2a20d8a79, type: 3}
   m_Mesh1: {fileID: 9161529466668514574, guid: 8af04b96565ad44449c9f6e2a20d8a79, type: 3}
-  m_Mesh2: {fileID: -3155532812412357367, guid: 8af04b96565ad44449c9f6e2a20d8a79,
-    type: 3}
-  m_Mesh3: {fileID: -7796888058489164486, guid: 8af04b96565ad44449c9f6e2a20d8a79,
-    type: 3}
+  m_Mesh2: {fileID: -3155532812412357367, guid: 8af04b96565ad44449c9f6e2a20d8a79, type: 3}
+  m_Mesh3: {fileID: -7796888058489164486, guid: 8af04b96565ad44449c9f6e2a20d8a79, type: 3}
   m_MeshWeighting: 1
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1

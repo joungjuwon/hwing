@@ -1,8 +1,12 @@
-Shader "Custom/Watercolour"
+Shader "Custom/Watercolour_Erosion"
 {
     Properties
     {
-        [MainColor] _BaseColor("Colour", Color) = (0.5, 0.95, 0.6, 1)
+        [Header(Base Colors)]
+        [MainColor] _BaseColor("Grass Colour", Color) = (0.5, 0.95, 0.6, 1)
+        // [수정사항 1] 흙 색상 속성 추가
+        _GroundColor("Ground Colour", Color) = (0.35, 0.25, 0.2, 1) 
+
         _ShadowColor("Shadow Colour", Color) = (0.3, 0.59, 0.61, 1)
         _DeepShadowColor("Deep Shadow Colour", Color) = (0.1, 0.3, 0.4, 1)
         
@@ -68,13 +72,12 @@ Shader "Custom/Watercolour"
             Name "ForwardLit"
             Tags { "LightMode" = "UniversalForward" }
             
-            ZWrite On // Force Depth Write to prevent Outline overdraw
+            ZWrite On 
 
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             
-            // Unity 6 / URP Keywords
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
@@ -89,7 +92,9 @@ Shader "Custom/Watercolour"
                 float4 positionOS : POSITION;
                 float3 normalOS : NORMAL;
                 float2 uv : TEXCOORD0;
-                float3 normalSmooth : TEXCOORD3; // Smoothed Normals
+                // [수정사항 2] 스크립트에서 보내주는 Vertex Color(Mask) 수신
+                float4 color : COLOR; 
+                float3 normalSmooth : TEXCOORD3; 
             };
 
             struct Varyings
@@ -98,12 +103,15 @@ Shader "Custom/Watercolour"
                 float3 positionWS : TEXCOORD1;
                 float3 normalWS : NORMAL;
                 float2 uv : TEXCOORD0;
+                // [수정사항 3] Fragment Shader로 색상 데이터 전달
+                float4 color : TEXCOORD5; 
                 float fogFactor : TEXCOORD3;
-                float3 normalSmoothWS : TEXCOORD4; // Passed to Frag
+                float3 normalSmoothWS : TEXCOORD4; 
             };
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseColor;
+                float4 _GroundColor; // [수정사항 4] 변수 선언 추가
                 float4 _ShadowColor;
                 float4 _DeepShadowColor;
                 float4 _NoiseMap_ST;
@@ -128,7 +136,6 @@ Shader "Custom/Watercolour"
                 float4 _SpecularColor;
                 float _Glossiness;
                 
-                // Inner Outline Properties (Added for ForwardLit integration)
                 float _UseInnerOutline;
                 float _InnerOutlineAlpha;
                 float _InnerOutlineThreshold;
@@ -138,21 +145,13 @@ Shader "Custom/Watercolour"
                 float _UseTextureAsMask;
                 float4 _OutlineTexture_ST;
                 
-                // OccaSoftware Properties
                 float _USE_SMOOTHED_NORMALS_ENABLED;
             CBUFFER_END
 
-            TEXTURE2D(_NoiseMap);
-            SAMPLER(sampler_NoiseMap);
-            TEXTURE2D(_ShadowMap);
-            SAMPLER(sampler_ShadowMap);
-            TEXTURE2D(_DeepShadowMap);
-            SAMPLER(sampler_DeepShadowMap);
-            
-            TEXTURE2D(_OutlineTexture);
-            SAMPLER(sampler_OutlineTexture);
-
-            // URP already provides SafeNormalize in Core.hlsl
+            TEXTURE2D(_NoiseMap); SAMPLER(sampler_NoiseMap);
+            TEXTURE2D(_ShadowMap); SAMPLER(sampler_ShadowMap);
+            TEXTURE2D(_DeepShadowMap); SAMPLER(sampler_DeepShadowMap);
+            TEXTURE2D(_OutlineTexture); SAMPLER(sampler_OutlineTexture);
 
             Varyings vert(Attributes input)
             {
@@ -161,150 +160,104 @@ Shader "Custom/Watercolour"
                 output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
                 output.normalWS = TransformObjectToWorldNormal(input.normalOS);
                 
-                // Pass Smoothed Normals (or fallback to regular)
                 if (_USE_SMOOTHED_NORMALS_ENABLED > 0.5)
-                {
                     output.normalSmoothWS = TransformObjectToWorldNormal(input.normalSmooth);
-                }
                 else
-                {
                     output.normalSmoothWS = output.normalWS;
-                }
 
-                output.uv = input.uv; // Pass raw UVs, transform in Frag
+                output.uv = input.uv;
+                
+                // [수정사항 5] Vertex Color 데이터 전달
+                output.color = input.color; 
+                
                 output.fogFactor = ComputeFogFactor(output.positionCS.z);
                 return output;
             }
 
             half4 frag(Varyings input) : SV_Target
             {
-                // Use SafeNormalize to prevent NaN from degenerate normals
                 float3 normalWS = SafeNormalize(input.normalWS);
                 float3 viewDirWS = SafeNormalize(GetWorldSpaceNormalizeViewDir(input.positionWS));
+
+                // --- [수정사항 6] 블렌딩 로직 구현 (핵심) ---
+                // Vertex Color의 Red 채널을 마스크로 사용 (0:잔디, 1:흙)
+                float mask = input.color.r;
+                
+                // 잔디색(_BaseColor)과 흙색(_GroundColor)을 마스크 비율로 섞음
+                float3 baseTarget = lerp(_BaseColor.rgb, _GroundColor.rgb, mask);
 
                 // --- Lighting Calculation ---
                 float4 shadowCoord = TransformWorldToShadowCoord(input.positionWS);
                 Light mainLight = GetMainLight(shadowCoord);
                 
                 float NdotL = dot(normalWS, mainLight.direction);
-                float lightIntensity = saturate(NdotL);
-                
-                // Shadow Attenuation
                 float shadowAtten = mainLight.shadowAttenuation;
-                lightIntensity *= shadowAtten;
 
-                // --- UV Calculations ---
-                // Calculate separate UVs for each texture to allow independent Tiling/Offset
                 float2 noiseUV = TRANSFORM_TEX(input.uv, _NoiseMap);
                 float2 shadowUV = TRANSFORM_TEX(input.uv, _ShadowMap);
                 float2 deepShadowUV = TRANSFORM_TEX(input.uv, _DeepShadowMap);
 
-                // --- Noise Sampling ---
                 half4 noiseSample = SAMPLE_TEXTURE2D(_NoiseMap, sampler_NoiseMap, noiseUV);
                 float noiseVal = noiseSample.r;
                 
-                // Sample Shadow Texture
                 half4 shadowTexSample = SAMPLE_TEXTURE2D(_ShadowMap, sampler_ShadowMap, shadowUV);
                 float3 shadowPattern = shadowTexSample.rgb;
 
-                // Sample Deep Shadow Texture
                 half4 deepShadowTexSample = SAMPLE_TEXTURE2D(_DeepShadowMap, sampler_DeepShadowMap, deepShadowUV);
                 float3 deepShadowPattern = deepShadowTexSample.rgb;
 
-                // --- Color Definitions ---
-                // Mix the texture with white based on strength before multiplying
-                // or lerp the result: lerp(Color, Color * Texture, Strength)
-                
                 float3 shadowTexMixed = lerp(float3(1,1,1), shadowPattern, _ShadowMapStrength);
                 float3 effectiveShadow = _ShadowColor.rgb * shadowTexMixed;
                 
                 float3 deepShadowTexMixed = lerp(float3(1,1,1), deepShadowPattern, _DeepShadowMapStrength);
                 float3 effectiveDeepShadow = _DeepShadowColor.rgb * deepShadowTexMixed;
 
-                // --- Specular Highlighting (Wet Paint Effect) ---
                 float3 halfDir = normalize(mainLight.direction + viewDirWS);
                 float NdotH = saturate(dot(normalWS, halfDir));
                 float specular = pow(NdotH, _Glossiness * 128.0);
                 float3 specularColor = specular * _SpecularColor.rgb;
 
-                // --- Lighting Calculation (Cel Shading Gradient) ---
-                // We use NdotL directly for the gradient
-                // Note: We DO NOT multiply shadowAtten here anymore.
-                // We want the gradient to be based on the object's form (Self-Shadow).
-                // Cast shadows will be applied as a "Force Dark" override later.
                 float noisyNdotL = NdotL + (noiseVal - 0.5) * _NoiseStrength;
 
-                // --- Global Shading (Deep Shadow) ---
-                // Apply Spread (Offset) and Falloff (Power) to the gradient
                 float gradientInput = noisyNdotL + _DeepShadowSpread;
-                float remappedGradient = saturate(gradientInput * 0.5 + 0.5); // 0..1
+                float remappedGradient = saturate(gradientInput * 0.5 + 0.5);
                 float globalShading = pow(remappedGradient, _DeepShadowFalloff);
 
-                // 2. Two-Tone Shadow (Cel Shading Step)
-                // This adds the stylized "Shadow" band
                 float shadowEdge = _ShadowThreshold;
                 float shadowSmooth = _ShadowSmoothness;
                 float shadowFactor = smoothstep(shadowEdge - shadowSmooth, shadowEdge + shadowSmooth, noisyNdotL);
                 
-                // --- Apply Cast Shadows (Shadow Attenuation) ---
-                // Cast shadows should force the surface into Shadow and then Deep Shadow.
-                // We apply shadowAtten to the factors.
-                // If shadowAtten is 0 (Dark), factors go to 0 (Dark state).
                 shadowFactor = min(shadowFactor, shadowAtten);
                 globalShading = min(globalShading, shadowAtten);
                 
-                // Calculate Cel Shading Base (Base vs Shadow)
-                float3 celColor = lerp(effectiveShadow, _BaseColor.rgb, shadowFactor);
-                
-                // Combine Global Shading (Deep Shadow) with Cel Shading
-                // We use the global gradient (globalShading) to interpolate towards Deep Shadow
-                // globalShading: 1 = Lightest (use celColor), 0 = Darkest (use Deep Shadow)
+                // [수정사항 7] 원본 _BaseColor 대신 블렌딩된 baseTarget 사용
+                float3 celColor = lerp(effectiveShadow, baseTarget, shadowFactor);
                 float3 mixedBase = lerp(effectiveDeepShadow, celColor, globalShading);
                 
-                // Apply Brightness from Noise (Watercolour paper effect) - subtle overlay
                 float3 finalColor = mixedBase + (noiseVal - 0.5) * _NoiseBrighten * 0.5;
-
-                // Add Specular
                 finalColor += specularColor;
 
-                // --- Fresnel Effect (Hard Rim Light) ---
                 float NdotV = saturate(dot(normalWS, viewDirWS));
                 float fresnelBase = pow(1.0 - NdotV, _FresnelPower);
-                
-                // Apply smoothstep for Hard Fresnel
-                // _FresnelThreshold controls where the rim starts
-                // _FresnelSmoothness controls how sharp the edge is
                 float fresnel = smoothstep(_FresnelThreshold, _FresnelThreshold + _FresnelSmoothness, fresnelBase);
                 
-                finalColor += fresnel * _FresnelAmount * _BaseColor.rgb; // Add fresnel glow
+                // [수정사항 8] 프레넬 색상도 블렌딩된 색상 기준으로 적용
+                finalColor += fresnel * _FresnelAmount * baseTarget; 
 
-                // Apply Fog
                 MixFog(finalColor, input.fogFactor);
 
-                // --- Inner Outline Overlay (Integrated into Main Pass) ---
                 if (_UseInnerOutline > 0.5)
                 {
-                    // Calculate UVs for Outline Texture
                     float2 outlineUV = TRANSFORM_TEX(input.uv, _OutlineTexture);
                     half4 outlineTexColor = SAMPLE_TEXTURE2D(_OutlineTexture, sampler_OutlineTexture, outlineUV);
                     
-                    // Fresnel Fade (Fade Inwards) using Smoothed Normals
                     float3 viewDir = SafeNormalize(GetWorldSpaceNormalizeViewDir(input.positionWS));
                     float3 smoothNormal = SafeNormalize(input.normalSmoothWS);
                     float NdotV_inner = saturate(dot(smoothNormal, viewDir));
                     
-                    // 1. Base Gradient (0 at center, 1 at edge)
                     float fresnelBaseInner = 1.0 - NdotV_inner;
-                    
-                    // 2. Apply Noise Distortion (Blotchy Edge)
-                    // Use the texture to perturb the gradient
                     fresnelBaseInner += (outlineTexColor.r - 0.5) * _InnerOutlineNoiseStrength;
-                    
-                    // 3. Apply Threshold & Smoothness (with minimum to prevent artifacts)
                     float innerFresnel = smoothstep(_InnerOutlineThreshold, _InnerOutlineThreshold + max(_InnerOutlineSmoothness, 0.001), fresnelBaseInner);
-                    
-                    // 4. Apply Edge Power (Coffee Ring Effect) with clamped input
-                    // Makes the edge darker and center fade faster
                     float edgePower = max(_InnerOutlineEdgePower, 0.1);
                     innerFresnel = pow(max(innerFresnel, 0.0), edgePower);
                     
@@ -313,19 +266,14 @@ Shader "Custom/Watercolour"
                     
                     if (_UseTextureAsMask > 0.5)
                     {
-                        // Mask Mode: Use Texture Brightness (R) as Alpha
-                        // Ignore Texture Color (use Outline Color only)
                         overlayAlpha = outlineTexColor.r * _InnerOutlineAlpha * innerFresnel;
                         overlayColor = _OutlineColor.rgb;
                     }
                     else
                     {
-                        // Standard Mode: Use Texture Alpha and Color
                         overlayAlpha = outlineTexColor.a * _InnerOutlineAlpha * innerFresnel;
                         overlayColor = _OutlineColor.rgb * outlineTexColor.rgb;
                     }
-                    
-                    // Blend Outline Color on top of Final Color
                     finalColor = lerp(finalColor, overlayColor, overlayAlpha);
                 }
 
@@ -334,14 +282,11 @@ Shader "Custom/Watercolour"
             ENDHLSL
         }
         
-        // Outline Pass (Inverted Hull) - OccaSoftware Logic Integrated
-        // Outline Pass (Combined Outer & Inner)
-        // Outline Pass (Outer Only - Inverted Hull)
+        // --- Outline Pass (변동 없음) ---
         Pass
         {
             Name "Outline"
             Tags { "LightMode" = "SRPDefaultUnlit" }
-
             Cull Front
             ZWrite On
             ZTest LEqual
@@ -349,22 +294,16 @@ Shader "Custom/Watercolour"
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
-            // --- OccaSoftware Logic Start ---
-            float nrand(float2 uv)
-            {
-                return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
-            }
-            // --------------------------------
+            float nrand(float2 uv) { return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453); }
 
             struct Attributes
             {
                 float4 positionOS : POSITION;
                 float3 normalOS : NORMAL;
-                float4 color : COLOR;
-                float3 normalSmooth : TEXCOORD3; // Smoothed Normals
+                float4 color : COLOR; // Outline pass에서도 일단 받아둠 (사용은 안함)
+                float3 normalSmooth : TEXCOORD3; 
                 float2 texcoord : TEXCOORD0;
             };
 
@@ -377,93 +316,65 @@ Shader "Custom/Watercolour"
             CBUFFER_START(UnityPerMaterial)
                 float4 _OutlineColor;
                 float _OutlineWidth;
-                
-                // OccaSoftware Properties
                 float _USE_SMOOTHED_NORMALS_ENABLED;
                 float4 _OutlineNoiseTexture_ST;
                 float _OutlineNoiseFrequency;
                 float _OutlineNoiseFramerate;
                 float _RANDOM_OFFSETS_ENABLED;
-                
                 float4 _OutlineTexture_ST;
                 float _UseInnerOutline;
                 float _InnerOutlineAlpha;
             CBUFFER_END
             
-            TEXTURE2D(_OutlineNoiseTexture);
-            SAMPLER(sampler_OutlineNoiseTexture);
-            
-            TEXTURE2D(_OutlineTexture);
-            SAMPLER(sampler_OutlineTexture);
+            TEXTURE2D(_OutlineNoiseTexture); SAMPLER(sampler_OutlineNoiseTexture);
+            TEXTURE2D(_OutlineTexture); SAMPLER(sampler_OutlineTexture);
 
             Varyings vert(Attributes input)
             {
                 Varyings output;
-                
-                // 1. Normal Calculation
                 float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
-                if(_USE_SMOOTHED_NORMALS_ENABLED > 0.5)
-                {
-                    normalWS = TransformObjectToWorldNormal(input.normalSmooth);
-                }
+                if(_USE_SMOOTHED_NORMALS_ENABLED > 0.5) normalWS = TransformObjectToWorldNormal(input.normalSmooth);
                 
                 float3 positionWS = TransformObjectToWorld(input.positionOS.xyz);
-                
-                // 2. Thickness Calculation
                 float thickness = max(_OutlineWidth, 0);
-                
-                // Noise Control
                 float dist = length(input.positionOS.xyz);
                 float r = _Time.y * _OutlineNoiseFramerate;
-                if(_RANDOM_OFFSETS_ENABLED > 0.5)
-                {
-                    r = nrand(floor(r));
-                }
+                if(_RANDOM_OFFSETS_ENABLED > 0.5) r = nrand(floor(r));
                 
-                // Sample Noise
                 float noiseVal = SAMPLE_TEXTURE2D_LOD(_OutlineNoiseTexture, sampler_OutlineNoiseTexture, float2(r + (dist * _OutlineNoiseFrequency), 0), 0).r;
                 thickness *= noiseVal;
-
-                // 3. Extrusion
                 positionWS += normalWS * thickness;
-                
                 output.positionCS = TransformWorldToHClip(positionWS);
-                
-                // Pass Data to Fragment
                 output.uv = TRANSFORM_TEX(input.texcoord, _OutlineTexture);
-                
                 return output;
             }
 
             half4 frag(Varyings input) : SV_Target
             {
-                // Outer Outline is always solid (or uses texture color but opaque alpha)
                 half4 texColor = SAMPLE_TEXTURE2D(_OutlineTexture, sampler_OutlineTexture, input.uv);
                 return float4(_OutlineColor.rgb * texColor.rgb, _OutlineColor.a);
             }
             ENDHLSL
         }
 
-
+        // --- DepthNormals Pass (변동 없음) ---
         Pass
         {
             Name "DepthNormals"
             Tags { "LightMode" = "DepthNormals" }
-
             ZWrite On
             ZTest LEqual
 
             HLSLPROGRAM
             #pragma vertex DepthNormalsVertex
             #pragma fragment DepthNormalsFragment
-
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             struct Attributes
             {
                 float4 positionOS : POSITION;
                 float3 normalOS : NORMAL;
-                float3 normalSmooth : TEXCOORD3; // Smoothed Normals
+                float3 normalSmooth : TEXCOORD3;
             };
 
             struct Varyings
@@ -479,40 +390,27 @@ Shader "Custom/Watercolour"
             Varyings DepthNormalsVertex(Attributes input)
             {
                 Varyings output;
-                
-                // 1. Normal Calculation
                 float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
-                
-                // Use Smoothed Normals if enabled
-                if(_USE_SMOOTHED_NORMALS_ENABLED > 0.5)
-                {
-                    normalWS = TransformObjectToWorldNormal(input.normalSmooth);
-                }
-                
+                if(_USE_SMOOTHED_NORMALS_ENABLED > 0.5) normalWS = TransformObjectToWorldNormal(input.normalSmooth);
                 output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
                 output.normalWS = NormalizeNormalPerVertex(normalWS);
-                
                 return output;
             }
 
             float4 DepthNormalsFragment(Varyings input) : SV_Target
             {
                 float3 normalWS = normalize(input.normalWS);
-                // URP expects view-space normals encoded properly
-                // Convert to view space and encode
                 float3 normalVS = TransformWorldToViewNormal(normalWS);
-                // Pack normal: remap from [-1,1] to [0,1]
                 return float4(normalVS * 0.5 + 0.5, 0.0);
             }
             ENDHLSL
         }
 
-        // Shadow Caster Pass
+        // --- ShadowCaster Pass (변동 없음) ---
         Pass
         {
             Name "ShadowCaster"
             Tags { "LightMode" = "ShadowCaster" }
-
             ZWrite On
             ZTest LEqual
             ColorMask 0
@@ -520,7 +418,6 @@ Shader "Custom/Watercolour"
             HLSLPROGRAM
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
-
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
@@ -545,22 +442,15 @@ Shader "Custom/Watercolour"
             {
                 Varyings output;
                 output.uv = input.texcoord;
-
                 float3 positionWS = TransformObjectToWorld(input.positionOS.xyz);
                 float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
-
-                // Apply Shadow Bias to prevent shadow acne (self-shadowing artifacts)
-                // This uses the Depth Bias and Normal Bias settings from the URP Asset
                 float3 biasedPositionWS = ApplyShadowBias(positionWS, normalWS, _LightDirection);
-                
                 output.positionCS = TransformWorldToHClip(biasedPositionWS);
-
                 #if UNITY_REVERSED_Z
                     output.positionCS.z = min(output.positionCS.z, output.positionCS.w * UNITY_NEAR_CLIP_VALUE);
                 #else
                     output.positionCS.z = max(output.positionCS.z, output.positionCS.w * UNITY_NEAR_CLIP_VALUE);
                 #endif
-
                 return output;
             }
 
