@@ -901,7 +901,7 @@ PrefabInstance:
     - target: {fileID: 5922868413498109815, guid: 0d7396d643f85aa41b6b7713f86f912b, type: 3}
       propertyPath: m_MaterialTemplate
       value: 
-      objectReference: {fileID: 2100000, guid: 5941ae53f21b5e6468503d506891c3f2, type: 2}
+      objectReference: {fileID: -876546973899608171, guid: 0adff5c508c3c9e4cabae51b88ad5db2, type: 3}
     - target: {fileID: 6922764393439729157, guid: 0d7396d643f85aa41b6b7713f86f912b, type: 3}
       propertyPath: m_Name
       value: Terrain

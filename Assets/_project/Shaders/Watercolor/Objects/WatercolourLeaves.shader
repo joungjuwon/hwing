@@ -27,6 +27,9 @@ Shader "Watercolor/URP/Leaves"
         _WindSpeed("Wind Speed", Float) = 1.0
         _WindStrength("Wind Strength", Range(0, 1)) = 0.1
         _WindFrequency("Wind Frequency", Float) = 1.0
+        _WindGust("Wind Gust", Float) = 0.5
+        _WindHeightStart("Wind Height Start", Float) = 0.0
+        _WindHeightPower("Wind Height Power", Range(0.1, 10)) = 3.0
         
         [Header(Complex Watercolor)]
         _RampLightingA("Ramp Lighting A", 2D) = "white" {}
@@ -108,6 +111,9 @@ Shader "Watercolor/URP/Leaves"
                 float _WindSpeed;
                 float _WindStrength;
                 float _WindFrequency;
+                float _WindGust;
+                float _WindHeightStart;
+                float _WindHeightPower;
                 
                 float _LayerBlend;
                 float _WC_PaletteStrength;
@@ -145,16 +151,26 @@ Shader "Watercolor/URP/Leaves"
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
                 float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
-                float windMask = input.color.r; 
-                float windTime = _Time.y * _WindSpeed;
-                float3 windOffset = float3(0,0,0);
-                
-                windOffset.x = sin(windTime + worldPos.x * _WindFrequency) + sin(windTime * 0.5 + worldPos.z * 0.5);
-                windOffset.z = cos(windTime * 0.8 + worldPos.x * 0.3);
-                windOffset.y = sin(windTime * 1.5 + worldPos.x) * 0.2;
-                
-                windOffset *= _WindStrength * windMask;
-                input.positionOS.xyz += TransformWorldToObjectDir(windOffset);
+                // Synced Wind Logic (Gust + Height Mask)
+                if (_WindStrength > 0.001)
+                {
+                    float height = max(0, input.positionOS.y - _WindHeightStart);
+                    float windMask = pow(height, _WindHeightPower);
+
+                    float windTime = _Time.y * _WindSpeed;
+                    float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
+                    
+                    float gust = sin(worldPos.x * 0.1 + windTime * 0.5) * 0.5 + 0.5;
+                    float strength = _WindStrength * (1.0 + gust * _WindGust);
+
+                    float3 windOffset;
+                    windOffset.x = sin(windTime + worldPos.x * _WindFrequency) * strength;
+                    windOffset.z = cos(windTime * 0.8 + worldPos.z * _WindFrequency) * strength;
+                    windOffset.y = sin(windTime * 1.5 + worldPos.x) * 0.2 * strength; 
+                    
+                    windOffset *= windMask;
+                    input.positionOS.xyz += TransformWorldToObjectDir(windOffset);
+                }
 
                 VertexPositionInputs posInputs = GetVertexPositionInputs(input.positionOS.xyz);
                 VertexNormalInputs normInputs = GetVertexNormalInputs(input.normalOS);
@@ -307,6 +323,9 @@ Shader "Watercolor/URP/Leaves"
                 float _WindSpeed;
                 float _WindStrength;
                 float _WindFrequency;
+                float _WindGust;
+                float _WindHeightStart;
+                float _WindHeightPower;
             CBUFFER_END
 
             TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
@@ -326,15 +345,26 @@ Shader "Watercolor/URP/Leaves"
                 UNITY_TRANSFER_INSTANCE_ID(input, o);
 
                 // Apply same wind offset as Forward pass
-                float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
-                float windMask = input.color.r;
-                float windTime = _Time.y * _WindSpeed;
-                float3 windOffset;
-                windOffset.x = sin(windTime + worldPos.x * _WindFrequency) + sin(windTime * 0.5 + worldPos.z * 0.5);
-                windOffset.z = cos(windTime * 0.8 + worldPos.x * 0.3);
-                windOffset.y = sin(windTime * 1.5 + worldPos.x) * 0.2;
-                windOffset *= _WindStrength * windMask;
-                input.positionOS.xyz += TransformWorldToObjectDir(windOffset);
+                // Synced Wind Logic
+                if (_WindStrength > 0.001)
+                {
+                    float height = max(0, input.positionOS.y - _WindHeightStart);
+                    float windMask = pow(height, _WindHeightPower);
+
+                    float windTime = _Time.y * _WindSpeed;
+                    float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
+                    
+                    float gust = sin(worldPos.x * 0.1 + windTime * 0.5) * 0.5 + 0.5;
+                    float strength = _WindStrength * (1.0 + gust * _WindGust);
+
+                    float3 windOffset;
+                    windOffset.x = sin(windTime + worldPos.x * _WindFrequency) * strength;
+                    windOffset.z = cos(windTime * 0.8 + worldPos.z * _WindFrequency) * strength;
+                    windOffset.y = sin(windTime * 1.5 + worldPos.x) * 0.2 * strength;
+                    
+                    windOffset *= windMask;
+                    input.positionOS.xyz += TransformWorldToObjectDir(windOffset);
+                }
 
                 VertexPositionInputs posInputs = GetVertexPositionInputs(input.positionOS.xyz);
                 VertexNormalInputs normInputs = GetVertexNormalInputs(input.normalOS);
@@ -394,6 +424,9 @@ Shader "Watercolor/URP/Leaves"
                 float _WindSpeed;
                 float _WindStrength;
                 float _WindFrequency;
+                float _WindGust;
+                float _WindHeightStart;
+                float _WindHeightPower;
             CBUFFER_END
 
             TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
@@ -405,15 +438,26 @@ Shader "Watercolor/URP/Leaves"
                 UNITY_TRANSFER_INSTANCE_ID(input, o);
 
                 // Apply same wind offset as Forward pass
-                float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
-                float windMask = input.color.r;
-                float windTime = _Time.y * _WindSpeed;
-                float3 windOffset;
-                windOffset.x = sin(windTime + worldPos.x * _WindFrequency) + sin(windTime * 0.5 + worldPos.z * 0.5);
-                windOffset.z = cos(windTime * 0.8 + worldPos.x * 0.3);
-                windOffset.y = sin(windTime * 1.5 + worldPos.x) * 0.2;
-                windOffset *= _WindStrength * windMask;
-                input.positionOS.xyz += TransformWorldToObjectDir(windOffset);
+                // Synced Wind Logic
+                if (_WindStrength > 0.001)
+                {
+                    float height = max(0, input.positionOS.y - _WindHeightStart);
+                    float windMask = pow(height, _WindHeightPower);
+
+                    float windTime = _Time.y * _WindSpeed;
+                    float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
+                    
+                    float gust = sin(worldPos.x * 0.1 + windTime * 0.5) * 0.5 + 0.5;
+                    float strength = _WindStrength * (1.0 + gust * _WindGust);
+
+                    float3 windOffset;
+                    windOffset.x = sin(windTime + worldPos.x * _WindFrequency) * strength;
+                    windOffset.z = cos(windTime * 0.8 + worldPos.z * _WindFrequency) * strength;
+                    windOffset.y = sin(windTime * 1.5 + worldPos.x) * 0.2 * strength;
+                    
+                    windOffset *= windMask;
+                    input.positionOS.xyz += TransformWorldToObjectDir(windOffset);
+                }
 
                 VertexPositionInputs posInputs = GetVertexPositionInputs(input.positionOS.xyz);
                 o.positionCS = posInputs.positionCS;

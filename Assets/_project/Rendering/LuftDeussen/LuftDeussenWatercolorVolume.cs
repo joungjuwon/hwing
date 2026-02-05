@@ -24,11 +24,11 @@ public class LuftDeussenWatercolorVolume : VolumeComponent, IPostProcessComponen
     [Tooltip("UV distortion strength for hand-drawn look. 0 = no wobble.")]
     public ClampedFloatParameter wobbleStrength = new ClampedFloatParameter(0.5f, 0.0f, 2.0f);
     
-    [Header("Color Quantization (Toon Steps)")]
-    [Tooltip("Number of color bands. Higher = more colors, smoother. Lower = more toon-like.")]
+    [Header("Color Quantization (Disabled)")]
+    [Tooltip("(Disabled) Kept for compatibility with older profiles/materials.")]
     public ClampedIntParameter colorSteps = new ClampedIntParameter(8, 2, 32);
-    [Tooltip("Enable/Disable color quantization.")]
-    public BoolParameter enableQuantization = new BoolParameter(true);
+    [Tooltip("(Disabled) This toggle is ignored by the shader.")]
+    public BoolParameter enableQuantization = new BoolParameter(false);
     
     [Header("Blur")]
     public ClampedFloatParameter blurSize = new ClampedFloatParameter(1.0f, 0.0f, 4.0f);

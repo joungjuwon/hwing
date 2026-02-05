@@ -107,4 +107,56 @@ void WatercolorCoreEx_float(
     OutColor = mixedBase * LightColor;
 }
 
+
+// Dummy Functions to fix Legacy Shader Compilation
+void WatercolorBlenderNormals_float(
+    float3 PositionOS,
+    float3 NormalOS,
+    float Offset,
+    float3 Scale,
+    float3 Amplitude,
+    out float3 OutNormal
+)
+{
+    OutNormal = NormalOS;
+}
+
+void WatercolorBlenderLighting_float(
+    float3 NormalWS, 
+    float3 LightDir, 
+    float3 BaseColor, 
+    float3 ShadowColor, 
+    float RampThresh, 
+    float RampSmooth, 
+    out float3 OutColor
+)
+{
+    OutColor = BaseColor;
+}
+
+void WatercolorBlenderEdges_float(
+    float3 NormalWS, 
+    float3 ViewDirWS, 
+    float EdgeThresh, 
+    float EdgeSmooth, 
+    out float Factor
+)
+{
+    Factor = 0.0;
+}
+
+void WatercolorPaperTexture_float(
+    float2 UV, 
+    float2 Tiling, 
+    Texture2D Tex, 
+    SamplerState SS, 
+    float Hue, 
+    float Sat, 
+    float Val, 
+    out float3 OutColor
+)
+{
+    OutColor = float3(1,1,1);
+}
+
 #endif

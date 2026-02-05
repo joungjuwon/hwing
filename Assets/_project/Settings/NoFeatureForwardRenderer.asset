@@ -27,9 +27,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: 1316232980798419994}
   - {fileID: 9193686558111390991}
-  - {fileID: 2615670089148264727}
   - {fileID: 3582379534592228493}
-  m_RendererFeatureMap: 1ab4241eec3244120f5d83e03689967f17f14b7116ba4c248dbcffd9342bb731
+  m_RendererFeatureMap: 1ab4241eec3244120f5d83e03689967f8dbcffd9342bb731
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -70,35 +69,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3535f62ae750048bfb2e0af8f8467a, type: 3}
   m_Name: LuftDeussenWatercolorFeature
   m_EditorClassIdentifier: Assembly-CSharp::LuftDeussenWatercolorFeature
-  m_Active: 0
+  m_Active: 1
   settings:
     renderPassEvent: 550
     shader: {fileID: 4800000, guid: 27893c2c557e71146ab25aa190e03242, type: 3}
-    paperTexture: {fileID: 2800000, guid: 518aac5a13492ff40b85cd545f7d4eb2, type: 3}
+    paperTexture: {fileID: 0}
     turbulenceTexture: {fileID: 0}
     dispersal1Texture: {fileID: 2800000, guid: 10e9d686769e62f4a8b00833232b0827, type: 3}
-    dispersal2Texture: {fileID: 2800000, guid: 283f897e4925411ebbaa758b4cb13fc2, type: 3}
+    dispersal2Texture: {fileID: 2800000, guid: 2d15b67ab1ece4d6e96772d635e2e9b8, type: 3}
     halfResolution: 0
---- !u!114 &2615670089148264727
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f0b3b79dad0a704c9e679d4baed15f9, type: 3}
-  m_Name: InnerLineFrontRenderFeature
-  m_EditorClassIdentifier: Assembly-CSharp::InnerLineFrontRenderFeature
-  m_Active: 0
-  settings:
-    passEvent: 300
-    layerMask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    renderQueue: 0
-    shaderTag: InnerLineFront
 --- !u!114 &3582379534592228493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,14 +90,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbb041dc07de2d5459eeadead8be7f3d, type: 3}
   m_Name: InnerEdgeRenderFeature
   m_EditorClassIdentifier: Assembly-CSharp::InnerEdgeRenderFeature
-  m_Active: 1
+  m_Active: 0
   settings:
     passEvent: 300
     layerMask:
       serializedVersion: 2
       m_Bits: 4294967295
     stencilShaderTag: WCStencil
-    edgeMaterial: {fileID: 0}
+    edgeMaterial: {fileID: 2100000, guid: 2513472c3e3384c43a6debb020a2cff9, type: 2}
     edgeMaterialPass: 0
 --- !u!114 &9193686558111390991
 MonoBehaviour:
@@ -132,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35cb3a2e0b6ac0c4db0446e6cc38d3dc, type: 3}
   m_Name: KuwaharaTestRenderFeature
   m_EditorClassIdentifier: Assembly-CSharp::KuwaharaTestRenderFeature
-  m_Active: 0
+  m_Active: 1
   settings:
     renderPassEvent: 500
     material: {fileID: 2100000, guid: 58e22f6477a86864b8e23e6e4f8fb076, type: 2}

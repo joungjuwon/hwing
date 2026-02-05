@@ -11,6 +11,7 @@ public class InnerEdgeRenderFeature : ScriptableRendererFeature
     [System.Serializable]
     public class Settings
     {
+        // Stencil is written after opaques; edge composite works best after transparents.
         public RenderPassEvent passEvent = RenderPassEvent.AfterRenderingOpaques;
         public LayerMask layerMask = ~0;
 
@@ -58,6 +59,11 @@ public class InnerEdgeRenderFeature : ScriptableRendererFeature
         public EdgePass(Settings s)
         {
             _settings = s;
+
+            // Force URP to render into an intermediate color texture so we can safely blit/composite.
+#if UNITY_6000_0_OR_NEWER
+            requiresIntermediateTexture = true;
+#endif
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
@@ -69,6 +75,12 @@ public class InnerEdgeRenderFeature : ScriptableRendererFeature
             var src = renderer.cameraColorTargetHandle;
             if (src == null || src.rt == null)
                 return;
+
+            // Skip cameras that can't provide a valid color target to blit back into.
+            if (renderingData.cameraData.isSceneViewCamera && !Application.isPlaying)
+            {
+                // SceneView can behave differently depending on editor settings; still allow, but keep guard above.
+            }
 
             var cmd = CommandBufferPool.Get("InnerEdge");
 
@@ -96,14 +108,16 @@ public class InnerEdgeRenderFeature : ScriptableRendererFeature
 
     public override void Create()
     {
+        // 1) Write stencil right after opaques.
         _stencilPass = new StencilPass(settings)
         {
-            renderPassEvent = settings.passEvent
+            renderPassEvent = RenderPassEvent.AfterRenderingOpaques
         };
 
+        // 2) Composite edges after transparents so the final look matches what you see.
         _edgePass = new EdgePass(settings)
         {
-            renderPassEvent = settings.passEvent + 1 // right after stencil
+            renderPassEvent = RenderPassEvent.AfterRenderingTransparents
         };
     }
 

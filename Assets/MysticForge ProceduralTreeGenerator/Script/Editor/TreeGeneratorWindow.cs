@@ -534,6 +534,21 @@ namespace ProceduralTreeGeneratorByMysticForge
                 trunkMaterial.SetColor("_ShadowPatternColor", shadowPatternColor);
 
                 trunkMaterial.SetFloat("_ShadowStep", EditorGUILayout.Slider("Shadow Step", trunkMaterial.GetFloat("_ShadowStep"), 0f, 1f));
+
+                // Wind (for custom shaders like Watercolor/URP/Watercolour)
+                if (trunkMaterial.HasProperty("_WindStrength"))
+                {
+                    EditorGUILayout.Space();
+                    GUILayout.Label("Wind", EditorStyles.centeredGreyMiniLabel);
+
+                    if (trunkMaterial.HasProperty("_WindSpeed"))
+                        trunkMaterial.SetFloat("_WindSpeed", EditorGUILayout.FloatField("Wind Speed", trunkMaterial.GetFloat("_WindSpeed")));
+
+                    trunkMaterial.SetFloat("_WindStrength", EditorGUILayout.Slider("Wind Strength", trunkMaterial.GetFloat("_WindStrength"), 0f, 1f));
+
+                    if (trunkMaterial.HasProperty("_WindFrequency"))
+                        trunkMaterial.SetFloat("_WindFrequency", EditorGUILayout.FloatField("Wind Frequency", trunkMaterial.GetFloat("_WindFrequency")));
+                }
             }
         }
         else

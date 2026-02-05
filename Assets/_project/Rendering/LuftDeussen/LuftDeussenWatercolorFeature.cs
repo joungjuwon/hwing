@@ -96,8 +96,11 @@ public class LuftDeussenWatercolorFeature : ScriptableRendererFeature
             
             // Wobble and Quantization parameters
             material.SetFloat("_WobbleStrength", volume.wobbleStrength.value);
+
+            // Quantization / posterization is intentionally disabled in the shader.
+            // Keep the params for compatibility but force it off.
             material.SetFloat("_ColorSteps", (float)volume.colorSteps.value);
-            material.SetFloat("_EnableQuantization", volume.enableQuantization.value ? 1.0f : 0.0f);
+            material.SetFloat("_EnableQuantization", 0.0f);
             
             // Pass 0: Edge Detection & Density Map
             if (densityTexture != null)
