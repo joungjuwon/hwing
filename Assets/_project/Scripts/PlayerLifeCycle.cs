@@ -7,6 +7,9 @@ public class PlayerLifeCycle : MonoBehaviour
     [System.Serializable]
     public class SproutEvent : UnityEvent<Vector3> { }
 
+    [System.Serializable]
+    public class FloatEvent : UnityEvent<float> { }
+
     [Header("Life Settings")]
     public float maxLifeTime = 24.0f; // 최대 생존 시간
     public GameObject deathSpawnPrefab; // 죽을 때 생성할 오브젝트
@@ -17,11 +20,15 @@ public class PlayerLifeCycle : MonoBehaviour
     [Tooltip("싹이 트고 환경이 변하기 시작할 때 호출되는 이벤트")]
     public SproutEvent onSprout; // 위치 정보를 포함하여 이벤트를 호출하도록 변경
 
+    [Tooltip("수명이 33%, 66%, 100% 진행될 때마다 호출 (전달값: 0~1)")]
+    public FloatEvent onLifePhaseChanged;
+
     private TPSController controller;
     private Rigidbody rb;
     private float currentLifeTime;
     private bool isDead = false;
     private bool hasSpawnedDeathObject = false;
+    private int lastPhaseIndex = 0; // 현재 수명 단계 (0 ~ 3)
 
     private void Awake()
     {
@@ -32,6 +39,7 @@ public class PlayerLifeCycle : MonoBehaviour
     private void Start()
     {
         currentLifeTime = maxLifeTime;
+        lastPhaseIndex = 0;
     }
 
     private void FixedUpdate()
@@ -47,6 +55,8 @@ public class PlayerLifeCycle : MonoBehaviour
         {
             currentLifeTime -= Time.fixedDeltaTime;
             
+            CheckLifePhase(); // 수명 단계 체크
+
             if (currentLifeTime <= 0f)
             {
                 Die();
@@ -54,6 +64,36 @@ public class PlayerLifeCycle : MonoBehaviour
         }
     }
 
+    // 수명 진행도에 따라 단계별 이벤트 발생
+    private void CheckLifePhase()
+    {
+        // 소모된 비율 (0.0 ~ 1.0)
+        float lossRatio = 1f - (currentLifeTime / maxLifeTime);
+        int currentPhase = 0;
+
+        if (lossRatio >= 0.99f) currentPhase = 3;
+        else if (lossRatio >= 0.66f) currentPhase = 2;
+        else if (lossRatio >= 0.33f) currentPhase = 1;
+
+        // 단계가 올라갔을 때만 이벤트 실행
+        if (currentPhase > lastPhaseIndex)
+        {
+            lastPhaseIndex = currentPhase;
+            float targetGrowth = 0f;
+            
+            // 3단계 (33% 씩 증가)
+            switch (currentPhase)
+            {
+                case 1: targetGrowth = 0.33f; break;
+                case 2: targetGrowth = 0.66f; break;
+                case 3: targetGrowth = 1.0f; break;
+            }
+            
+            Debug.Log($"[PlayerLifeCycle] Life Phase Updated: {currentPhase} (Target Growth: {targetGrowth})");
+            onLifePhaseChanged?.Invoke(targetGrowth);
+        }
+    }
+    
     // 사망 처리
     public void Die()
     {

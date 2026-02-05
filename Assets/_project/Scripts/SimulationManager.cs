@@ -51,6 +51,8 @@ public class SimulationManager : MonoBehaviour
     [Header("Reference")]
     [Tooltip("인트로 컨트롤러 (자동으로 못 찾으면 여기에 연결)")]
     public IntroSequenceController introController;
+    [Tooltip("씬에 있는 덩굴 효과 컨트롤러 (플레이어 생성 시 자동 연결용)")]
+    public VineGrowthController vineController;
 
     private GameObject currentSpawnUi; // 현재 생성된 스폰 UI 인스턴스
     private bool isSimulationActive = false; // 시뮬레이션 모드 활성화 여부
@@ -86,6 +88,11 @@ public class SimulationManager : MonoBehaviour
             if (initialPlayer != null)
             {
                 initialPlayer.onSprout.AddListener(EnableSimulationMode);
+                // 기존 플레이어에게도 덩굴 연결 시도
+                if (vineController != null)
+                {
+                    initialPlayer.onLifePhaseChanged.AddListener(vineController.SetGrowthTarget);
+                }
             }
         }
     }
@@ -109,6 +116,14 @@ public class SimulationManager : MonoBehaviour
     // PlayerLifeCycle의 OnSprout 이벤트에 연결할 메서드
     public void EnableSimulationMode(Vector3 targetPosition)
     {
+        Debug.Log($"[SimManager] EnableSimulationMode called at {targetPosition}");
+
+        // 덩굴 효과 초기화 (부드럽게 사라지게 함)
+        if (vineController != null)
+        {
+            vineController.SetGrowthTarget(0f);
+        }
+
         // 1. 카메라 전환 (Sim 켜고 Player 끄기)
         if (playerCamera != null) playerCamera.SetActive(false);
         if (simulationCamera != null) simulationCamera.SetActive(true);
@@ -129,7 +144,12 @@ public class SimulationManager : MonoBehaviour
 
     private void SpawnRandomRespawnUI()
     {
-        if (spawnUiPrefab == null) return;
+        Debug.Log("[SimManager] Spawning Respawn UI...");
+        if (spawnUiPrefab == null) 
+        {
+            Debug.LogError("[SimManager] spawnUiPrefab is NULL!");
+            return;
+        }
 
         if (currentSpawnUi != null) Destroy(currentSpawnUi);
 
@@ -145,7 +165,16 @@ public class SimulationManager : MonoBehaviour
         Button btn = currentSpawnUi.GetComponentInChildren<Button>();
         if (btn != null)
         {
-            btn.onClick.AddListener(() => RespawnPlayer(randomPos));
+            Debug.Log("[SimManager] Button found in UI. Adding listener.");
+            btn.onClick.AddListener(() => 
+            {
+                Debug.Log("[SimManager] Respawn Button Clicked!");
+                RespawnPlayer(randomPos);
+            });
+        }
+        else
+        {
+            Debug.LogError("[SimManager] Button component NOT found in spawnUiPrefab children!");
         }
     }
 
@@ -174,6 +203,7 @@ public class SimulationManager : MonoBehaviour
 
     public void RespawnPlayer(Vector3 spawnPos)
     {
+        Debug.Log($"[SimManager] RespawnPlayer called at {spawnPos}");
         if (introController == null)
         {
             introController = FindAnyObjectByType<IntroSequenceController>();
@@ -233,6 +263,13 @@ public class SimulationManager : MonoBehaviour
             lifeCycle.enabled = true;
             // 중요: 사망 시 시뮬레이션 모드 전환 연결
             lifeCycle.onSprout.AddListener(EnableSimulationMode);
+
+            // [NEW] 덩굴 효과 연결 (프리팹 문제를 해결하기 위해 여기서 코드로 연결)
+            if (vineController != null)
+            {
+                // 이전 이벤트 리스너가 있다면 중복 방지가 어렵지만, 새 플레이어 객체이므로 괜찮음.
+                lifeCycle.onLifePhaseChanged.AddListener(vineController.SetGrowthTarget);
+            }
         }
 
         // 2. 플레이어 카메라 연결
@@ -244,6 +281,7 @@ public class SimulationManager : MonoBehaviour
             {
                 vcam.Follow = player.transform;
                 vcam.LookAt = player.transform;
+                // 필요하다면 여기서 SmartTerrainCamera 등의 설정을 갱신할 수도 있음
             }
         }
 

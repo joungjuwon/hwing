@@ -85,6 +85,15 @@ public class VineGrowthController : MonoBehaviour
     }
 
     /// <summary>
+    /// 목표 성장치를 설정합니다. (부드럽게 이동)
+    /// </summary>
+    public void SetGrowthTarget(float value)
+    {
+        Debug.Log($"[VineController] Receiving Growth Target: {value}");
+        targetGrowth = Mathf.Clamp01(value);
+    }
+
+    /// <summary>
     /// 즉시 특정 상태로 설정합니다.
     /// </summary>
     public void SetImmediate(float value)
