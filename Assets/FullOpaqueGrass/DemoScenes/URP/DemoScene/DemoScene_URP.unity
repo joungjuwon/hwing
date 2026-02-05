@@ -918,6 +918,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -309.3
       objectReference: {fileID: 0}
+    - target: {fileID: 8511280301759070767, guid: 0d7396d643f85aa41b6b7713f86f912b, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 1348242627059868194, guid: 0d7396d643f85aa41b6b7713f86f912b, type: 3}
