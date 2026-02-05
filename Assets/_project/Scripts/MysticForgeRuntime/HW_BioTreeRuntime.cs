@@ -43,12 +43,18 @@ namespace MysticForgeRuntime
         [Header("Texture & Material")]
         public Material treeMaterial;
 
-        private MeshFilter meshFilter;
-        private MeshRenderer meshRenderer;
+        // Skinned Mesh Components
+        private SkinnedMeshRenderer skinnedMeshRenderer;
         
         // --- CACHED MESH RESOURCES (Performance) ---
-        private Mesh trunkMesh;
-        private Mesh leavesMesh;
+        private Mesh treeMesh; // Combined mesh for trunk + leaves
+
+        // --- SKELETAL DATA ---
+        private List<Transform> bones = new List<Transform>();
+        private List<Matrix4x4> bindPoses = new List<Matrix4x4>();
+        private List<BoneWeight> boneWeights = new List<BoneWeight>();
+        // New: Stiffness for animation
+        private List<float> stiffnessList = new List<float>();
 
         private class BioNode
         {
@@ -62,6 +68,11 @@ namespace MysticForgeRuntime
             public List<BioNode> sideChildren = new List<BioNode>();
             public int ringStartIndex = -1; 
             public float vCoord; // Accumulated texture V coordinate
+            
+            // Skeletal Info
+            public int boneIndex = -1;
+            public Transform boneRef;
+            public BioNode parent; // Reference to parent for hierarchy building
         }
 
         private struct BranchSpec 
@@ -73,27 +84,44 @@ namespace MysticForgeRuntime
         private BioNode rootNode;
         private List<Vector3> verts = new List<Vector3>();
         private List<Vector2> uvs = new List<Vector2>();
-        private List<int> tris = new List<int>();
-        private List<CombineInstance> leafInstances = new List<CombineInstance>();
-
-
+        
+        // Submesh Triangles
+        private List<int> trunkTris = new List<int>();
+        private List<int> foliageTris = new List<int>();
+        
+        // Helper lists to merge leaf meshes
+        private List<Vector3> leafVerts = new List<Vector3>();
+        private List<int> leafTris = new List<int>();
+        private List<Vector2> leafUVs = new List<Vector2>();
+        
         private int radialSegments = 12;
 
         private void OnEnable()
         {
-            InitializeMeshes();
+            InitializeComponents();
         }
 
-        private void InitializeMeshes()
+        private void InitializeComponents()
         {
-            if (meshFilter == null) meshFilter = GetComponent<MeshFilter>();
-            if (meshFilter == null) meshFilter = gameObject.AddComponent<MeshFilter>();
-            if (meshRenderer == null) meshRenderer = GetComponent<MeshRenderer>();
+            // Clean up old static mesh filters if they exist (migration)
+            MeshFilter mf = GetComponent<MeshFilter>();
+            if (mf != null) {
+                if(Application.isPlaying) Destroy(mf); else DestroyImmediate(mf);
+            }
+            MeshRenderer mr = GetComponent<MeshRenderer>();
+            if (mr != null) {
+                if(Application.isPlaying) Destroy(mr); else DestroyImmediate(mr);
+            }
+
+            // Ensure SkinnedMeshRenderer
+            skinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();
+            if (skinnedMeshRenderer == null) skinnedMeshRenderer = gameObject.AddComponent<SkinnedMeshRenderer>();
             
-            if (trunkMesh == null) { trunkMesh = new Mesh(); trunkMesh.name = "TrunkMesh"; trunkMesh.hideFlags = HideFlags.DontSave; }
-            if (leavesMesh == null) { leavesMesh = new Mesh(); leavesMesh.name = "LeavesMesh"; leavesMesh.hideFlags = HideFlags.DontSave; }
-            
-            meshFilter.sharedMesh = trunkMesh;
+            if (treeMesh == null) { 
+                treeMesh = new Mesh(); 
+                treeMesh.name = "ProceduralTreeMesh"; 
+                treeMesh.hideFlags = HideFlags.DontSave; 
+            }
         }
 
         private void Update()
@@ -123,50 +151,94 @@ namespace MysticForgeRuntime
         [ContextMenu("Generate")]
         public void GenerateTree()
         {
-            InitializeMeshes();
+            InitializeComponents();
             
             // USE A LOCAL SEED to avoid OnValidate feedback loops
             int masterSeed = (randomSeed == 0) ? GetHashCode() : randomSeed;
             Random.InitState(masterSeed);
             
             // CLEANUPS
-
-            leafInstances.Clear();
             verts.Clear();
             uvs.Clear();
-            tris.Clear();
+            trunkTris.Clear();
+            foliageTris.Clear();
+            boneWeights.Clear();
+            bones.Clear();
+            bindPoses.Clear();
+            stiffnessList.Clear();
+            
+            // Clear old bone hierarchy
+            Transform existingRoot = transform.Find("RootBone");
+            if (existingRoot != null)
+            {
+                if(Application.isPlaying) Destroy(existingRoot.gameObject);
+                else DestroyImmediate(existingRoot.gameObject);
+            }
 
-            // SKELETON GENERATION
+            // Clear Leaves container (legacy capability)
+            Transform existingLeaves = transform.Find("Leaves");
+            if(existingLeaves != null)
+            {
+                 if(Application.isPlaying) Destroy(existingLeaves.gameObject);
+                 else DestroyImmediate(existingLeaves.gameObject);
+            }
+
+            // SKELETON DATA GENERATION
             float height = maxTrunkHeight * growthCycle;
             float rootThick = maxTrunkThickness * Mathf.Clamp01(growthCycle);
             
-            rootNode = GenerateSkeletonNode(Vector3.zero, Vector3.up, height, rootThick, 0, 0, masterSeed, Quaternion.LookRotation(Vector3.up), true, rootThick, null, 0f);
+            rootNode = GenerateSkeletonNode(Vector3.zero, Vector3.up, height, rootThick, 0, 0, masterSeed, Quaternion.LookRotation(Vector3.up), true, rootThick, null, 0f, null);
 
             if (rootNode != null)
             {
-                // TRUNK MESH
-                BuildLimbMesh(rootNode);
-                trunkMesh.Clear();
-                trunkMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-                trunkMesh.SetVertices(verts);
-                trunkMesh.SetUVs(0, uvs);
-                trunkMesh.SetTriangles(tris, 0);
-                trunkMesh.RecalculateNormals();
-                if (treeMaterial != null) meshRenderer.sharedMaterial = treeMaterial;
+                // 1. CREATE BONE HIERARCHY (GameObjects)
+                CreateBoneHierarchy(rootNode, null);
+
+                // 2. TRUNK MESH GENERATION (Skinned)
+                BuildLimbMesh(rootNode); // This now populates boneWeights too
                 
-                // LEAF DATA COLLECTION
+                // 3. LEAF GENERATION (Merged Skinned)
                 int currentMaxGen = (int)(growthCycle * maxRecursion);
                 if (growthCycle >= 0.99f) currentMaxGen = maxRecursion;
 
                 if(leafPrefab != null)
                 {
-                    CollectLeafData(rootNode, masterSeed, currentMaxGen);
-                    BuildCombinedLeaves();
+                    CollectAndMergeLeaves(rootNode, masterSeed, currentMaxGen);
                 }
+
+                // 4. APPLY TO SKINNED MESH
+                treeMesh.Clear();
+                treeMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+                treeMesh.SetVertices(verts);
+                treeMesh.SetUVs(0, uvs);
+                treeMesh.boneWeights = boneWeights.ToArray();
+                treeMesh.bindposes = bindPoses.ToArray();
+                
+                // Submeshes: 0 = Trunk, 1 = Foliage
+                treeMesh.subMeshCount = 2;
+                treeMesh.SetTriangles(trunkTris, 0);
+                treeMesh.SetTriangles(foliageTris, 1);
+                
+                treeMesh.RecalculateNormals();
+                
+                skinnedMeshRenderer.sharedMesh = treeMesh;
+                skinnedMeshRenderer.bones = bones.ToArray();
+                skinnedMeshRenderer.rootBone = bones.Count > 0 ? bones[0] : null;
+
+                // Assign Materials
+                Material[] mats = new Material[2];
+                mats[0] = treeMaterial;
+                mats[1] = leafMaterial;
+                skinnedMeshRenderer.sharedMaterials = mats;
+                
+                // 5. ANIMATION BINDING
+                HW_ProceduralSway sway = GetComponent<HW_ProceduralSway>();
+                if(sway == null) sway = gameObject.AddComponent<HW_ProceduralSway>();
+                sway.BindBones(bones, stiffnessList);
             }
         }
 
-        private BioNode GenerateSkeletonNode(Vector3 pos, Vector3 dir, float length, float structuralRadius, int depth, int generation, int seed, Quaternion startRot, bool allowTrifurcation, float parentTipRadius, List<Vector3> avoidDirs, float vStart)
+        private BioNode GenerateSkeletonNode(Vector3 pos, Vector3 dir, float length, float structuralRadius, int depth, int generation, int seed, Quaternion startRot, bool allowTrifurcation, float parentTipRadius, List<Vector3> avoidDirs, float vStart, BioNode parent)
         {
             if (generation >= maxRecursion || structuralRadius < 0.002f) return null;
 
@@ -179,13 +251,12 @@ namespace MysticForgeRuntime
             float effectiveStartRadius = Mathf.Min(parentTipRadius, startRadiusCap);
             if (structuralRadius > parentTipRadius * 0.7f) effectiveStartRadius = parentTipRadius; 
             
-            BioNode firstNode = new BioNode { position = pos, direction = dir, radius = effectiveStartRadius, depth = depth, generation = generation, rotation = startRot, vCoord = vStart };
+            BioNode firstNode = new BioNode { position = pos, direction = dir, radius = effectiveStartRadius, depth = depth, generation = generation, rotation = startRot, vCoord = vStart, parent = parent };
             BioNode current = firstNode;
 
             Vector3 curPos = pos;
             Vector3 curDir = dir; 
 
-            
             for(int s=0; s<segments; s++)
             {
                 Vector3 nextDirChoice = curDir;
@@ -200,18 +271,13 @@ namespace MysticForgeRuntime
                 
                 if (generation < maxRecursion/2) nextDirChoice = Vector3.Lerp(nextDirChoice, Vector3.up, 0.1f * lengthDecay).normalized;
 
-                // Gravity/Droop Effect: thin & high-gen branches curve down like a bow
-                // Young trees (low growthCycle) have minimal droop since they're short and light
+                // Gravity/Droop Effect
                 if (generation > 0 && gravityStrength > 0.001f)
                 {
-                    // thinFactor: 0 when thick (radius = maxTrunkThickness), 1 when very thin
                     float thinFactor = 1f - Mathf.Clamp01(current.radius / maxTrunkThickness);
-                    // progressFactor: 0 at branch start, 1 at branch end (segment s out of total segments)
                     float progressFactor = (float)(s + 1) / segments;
-                    // genFactor: higher generations droop more
                     float genFactor = (float)generation / maxRecursion;
-                    // growthFactor: young trees (growthCycle < 0.5) have almost no droop
-                    float growthFactor = Mathf.Clamp01((growthCycle - 0.3f) * 2f); // 0 at cycle 0.3, 1 at cycle 0.8+
+                    float growthFactor = Mathf.Clamp01((growthCycle - 0.3f) * 2f); 
                     
                     float droopAmount = thinFactor * progressFactor * genFactor * growthFactor * gravityStrength * 0.5f;
                     nextDirChoice = Vector3.Lerp(nextDirChoice, Vector3.down, droopAmount).normalized;
@@ -221,23 +287,21 @@ namespace MysticForgeRuntime
                 Quaternion nextRot = bend * current.rotation;
                 Vector3 nextPos = curPos + nextDirChoice * segLen;
 
-                
-
-                
                 float targetR = structuralRadius * Mathf.Pow(0.98f, s+1);
-                float nextV = vStart + (s + 1) * segLen; // Map V to distance (1 unit = 1 meter approx)
-                BioNode nextNode = new BioNode { position = nextPos, direction = nextDirChoice, radius = targetR, depth = depth, generation = generation, rotation = nextRot, vCoord = nextV };
+                float nextV = vStart + (s + 1) * segLen; 
+                
+                BioNode nextNode = new BioNode { position = nextPos, direction = nextDirChoice, radius = targetR, depth = depth, generation = generation, rotation = nextRot, vCoord = nextV, parent = current };
                 current.mainChild = nextNode;
                 current = nextNode;
                 curPos = nextPos;
                 curDir = nextDirChoice;
             }
 
-            // Growth progression with smoother interpolation
+            // Growth progression
             float step = 1.0f / (maxRecursion + 1);
             float depthThreshold = generation * step;
-            float rawGrowth = Mathf.Clamp01((growthCycle - depthThreshold) / (step * 0.8f)); // Spread over ~80% of step
-            float localGrowth = rawGrowth * rawGrowth * (3f - 2f * rawGrowth); // Smoothstep for gradual easing 
+            float rawGrowth = Mathf.Clamp01((growthCycle - depthThreshold) / (step * 0.8f)); 
+            float localGrowth = rawGrowth * rawGrowth * (3f - 2f * rawGrowth); 
             
             if (localGrowth > 0.05f && generation < maxRecursion)
             {
@@ -249,7 +313,7 @@ namespace MysticForgeRuntime
                 Quaternion rollRot = Quaternion.AngleAxis((float)rng.NextDouble() * 360f, curDir);
                 Vector3 forkAxis = (rollRot * refRight).normalized;
 
-                // Avoidance Logic: If avoidDirs provided, rotate roll to avoid conflict (±15 degrees on normal plane)
+                // Avoidance Logic
                 if (avoidDirs != null && avoidDirs.Count > 0)
                 {
                     for(int attempt=0; attempt<36; attempt++) 
@@ -268,8 +332,6 @@ namespace MysticForgeRuntime
                             }
                         }
                         if(!conflict) break;
-                        
-                        // Rotate 10 degrees to find valid orientation
                         rollRot = Quaternion.AngleAxis(10f, curDir) * rollRot;
                         forkAxis = (rollRot * refRight).normalized;
                     }
@@ -278,18 +340,13 @@ namespace MysticForgeRuntime
                 bool isTrifurcation = allowTrifurcation && (rng.NextDouble() < 0.5);
                 List<BranchSpec> specList = new List<BranchSpec>();
                 
-                // SEED-BASED DIRECTION: Generate candidates with noise, pick one using RNG (deterministic)
-                // occupiedSpace is NOT used for selection - only seed determines the result
-
                 if (isTrifurcation)
                 {
                     specList.Add(new BranchSpec{ dir = Vector3.Lerp(curDir, Vector3.up, 0.2f).normalized, isMainRole = true });
                     
-                    // Generate candidates and pick one randomly (seed-based)
                     Vector3 baseDir1 = Quaternion.AngleAxis(branchingAngle, forkAxis) * curDir;
                     Vector3 baseDir2 = Quaternion.AngleAxis(-branchingAngle, forkAxis) * curDir;
                     
-                    // Pick candidate index using RNG
                     int pick1 = rng.Next(sensingSamples + 1);
                     int pick2 = rng.Next(sensingSamples + 1);
                     
@@ -330,18 +387,14 @@ namespace MysticForgeRuntime
                 }
 
                 float parentArea = current.radius * current.radius;
-                
-                // Calculate all child radii first
                 float[] childRadii = new float[specList.Count];
                 for(int i=0; i<specList.Count; i++){
                     float childArea = parentArea * (weights[i] / totalWeight);
                     childRadii[i] = Mathf.Sqrt(childArea) * 0.9f;
                 }
                 
-                // Near trunk: balance radii so thinner branch approaches 65% of thicker
-                // genFactor: 1 at trunk (gen 0), 0 at max recursion
                 float genFactor = 1f - ((float)generation / maxRecursion);
-                float balanceTarget = 0.65f; // Thinner becomes this fraction of thicker at most
+                float balanceTarget = 0.65f; 
                 
                 if(specList.Count >= 2) {
                     float maxR = Mathf.Max(childRadii[0], childRadii.Length > 1 ? childRadii[1] : 0);
@@ -356,14 +409,10 @@ namespace MysticForgeRuntime
                 bool mainAssigned = false;
                 for(int i=0; i<specList.Count; i++)
                 {
-                    // Smooth interpolation: new branches start thin and grow to full radius
                     float childR = childRadii[i] * Mathf.Lerp(0.1f, 1f, localGrowth);
                     int nDepth = specList[i].isMainRole ? depth : depth + 1;
-                    
-                    // DETERMINISTIC SEED: Use parent seed + child index to ensure structure stability
                     int childSeed = seed * 31 + i + generation * 7919;
                     
-                    // Pass side branch directions to main child if trifurcation
                     List<Vector3> nextAvoidDirs = null;
                     if (isTrifurcation && specList[i].isMainRole) {
                         nextAvoidDirs = new List<Vector3>();
@@ -371,7 +420,7 @@ namespace MysticForgeRuntime
                     }
 
                     BioNode childNode = GenerateSkeletonNode(curPos, specList[i].dir, baseNewLen, childR, nDepth, generation + 1, childSeed, 
-                        Quaternion.FromToRotation(curDir, specList[i].dir) * current.rotation, !specList[i].isMainRole, current.radius, nextAvoidDirs, current.vCoord);
+                        Quaternion.FromToRotation(curDir, specList[i].dir) * current.rotation, !specList[i].isMainRole, current.radius, nextAvoidDirs, current.vCoord, current);
                     
                     if(childNode != null)
                     {
@@ -382,129 +431,103 @@ namespace MysticForgeRuntime
             }
             return firstNode;
         }
-
-        private void CollectLeafData(BioNode node, int seed, int currentMaxGen)
-        {
-            if (node == null || leafPrefab == null) return;
-            MeshFilter mfStruct = leafPrefab.GetComponent<MeshFilter>();
-            if (mfStruct == null) return;
-            
-            System.Random rng = new System.Random(seed);
-            
-            BioNode w = node;
-            while(w.mainChild != null)
-            {
-                foreach(var c in w.sideChildren) CollectLeafData(c, rng.Next(), currentMaxGen);
-                
-                // Leaf Generation Rule
-                // leafLayers: how many layers from top get leaves, Clamp(max-1, 1, 3)
-                // Max 7: layers = Clamp(6,1,3) = 3 → leaves on top 3
-                // Max 2: layers = Clamp(1,1,3) = 1 → leaves on top 1
-                int leafLayers = Mathf.Clamp(maxRecursion - 1, 1, 3);
-                int startThreshold = maxRecursion - leafLayers;
-                
-                bool isThin = w.radius < (maxTrunkThickness * 0.05f);
-                bool isCanopy = (w.generation >= startThreshold);
-                
-                if (isThin || isCanopy) AddLeafInstances(w, w.mainChild, mfStruct.sharedMesh, rng);
-                w = w.mainChild;
-            }
-            AddLeafInstances(w, null, mfStruct.sharedMesh, rng);
-        }
-
-        private void AddLeafInstances(BioNode startNode, BioNode endNode, Mesh leafMesh, System.Random rng)
-        {
-             if(leavesPerBranch <= 0 || leafInstances.Count > 10000) return;
-             if(endNode == null) endNode = startNode; 
-
-             float growthFactor = Mathf.Clamp01((growthCycle - 0.05f) / 0.95f);
-             if(growthFactor <= 0.001f) return;
-
-             float currentScale = Mathf.Lerp(0.1f, 1.0f, growthFactor) * leafScale; 
-
-             for(int l=0; l<leavesPerBranch; l++)
-             {
-                 float t = (float)rng.NextDouble();
-                 Vector3 lPos = Vector3.Lerp(startNode.position, endNode.position, t);
-                 Vector3 surfNorm = (Quaternion.AngleAxis((float)rng.NextDouble()*360f, startNode.direction) * Vector3.up).normalized;
-                 
-                 Matrix4x4 m = Matrix4x4.TRS(lPos + surfNorm * startNode.radius, 
-                     Quaternion.LookRotation(surfNorm, startNode.direction) * Quaternion.Euler((float)rng.NextDouble()*30f-15f, (float)rng.NextDouble()*30f-15f, 0), 
-                     Vector3.one * currentScale);
-                 
-                 leafInstances.Add(new CombineInstance { mesh = leafMesh, transform = m });
-             }
-        }
         
-        private void BuildCombinedLeaves()
+        // --- SKELETON HIERARCHY ---
+        private void CreateBoneHierarchy(BioNode node, Transform parentInfo)
         {
-            Transform leavesRoot = transform.Find("Leaves");
-            if (leavesRoot == null) {
-                leavesRoot = new GameObject("Leaves").transform;
-                leavesRoot.SetParent(transform);
-                leavesRoot.localPosition = Vector3.zero;
-                leavesRoot.localRotation = Quaternion.identity;
-                leavesRoot.localScale = Vector3.one;
-            } 
-
-            // Clear legacy children immediately if switching modes
-            while(leavesRoot.childCount > 0) {
-                 if(Application.isPlaying) Destroy(leavesRoot.GetChild(0).gameObject);
-                 else DestroyImmediate(leavesRoot.GetChild(0).gameObject);
-            }
-
-            leavesMesh.Clear();
-            if (leafInstances.Count == 0) return;
-
-            leavesMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-            leavesMesh.CombineMeshes(leafInstances.ToArray(), true, true);
-            leavesMesh.RecalculateNormals();
+            if (node == null) return;
             
-            MeshFilter mf = leavesRoot.GetComponent<MeshFilter>();
-            if (mf == null) mf = leavesRoot.gameObject.AddComponent<MeshFilter>();
-            mf.sharedMesh = leavesMesh;
+            // Create bone GameObject
+            string boneName = (node.parent == null) ? "RootBone" : $"Bone_Gen{node.generation}_D{node.depth}";
+            GameObject boneGO = new GameObject(boneName);
+            Transform boneT = boneGO.transform;
+            
+            // Parent to correct hierarchy
+            if (parentInfo != null)
+                boneT.SetParent(parentInfo);
+            else
+                boneT.SetParent(this.transform);
 
-            MeshRenderer mr = leavesRoot.GetComponent<MeshRenderer>();
-            if (mr == null) mr = leavesRoot.gameObject.AddComponent<MeshRenderer>();
-            if (leafMaterial != null) mr.sharedMaterial = leafMaterial;
-            else mr.sharedMaterial = treeMaterial;
+            // FIX: node.position is Model Space (Absolute from tree root).
+            // Parenting adds transform. We must set position correctly.
+            // Simplest way: Transform Model Space -> World Space, set absolute position.
+            boneT.position = transform.TransformPoint(node.position);
+            
+            // Rotation is also absolute model space accumulation
+            // So we combine with tree rotation
+            boneT.rotation = transform.rotation * node.rotation;
+            
+            // Register Data
+            node.boneRef = boneT;
+            node.boneIndex = bones.Count;
+            bones.Add(boneT);
+            
+            // Calculate BindPose
+            bindPoses.Add(boneT.worldToLocalMatrix * transform.localToWorldMatrix);
+
+            // Calculate Stiffness
+            // Normalize radius against max thickness. Clamp 0..1
+            // Radius 0 = Stiffness 0 (Flexible)
+            // Radius Max = Stiffness 0.8-1 (Rigid)
+            float stiff = Mathf.Clamp01(node.radius / (maxTrunkThickness + 0.001f));
+            stiffnessList.Add(stiff);
+
+            // Traverse children
+            if (node.mainChild != null)
+            {
+                 CreateBoneHierarchy(node.mainChild, boneT);
+            }
+            foreach (var side in node.sideChildren)
+            {
+                CreateBoneHierarchy(side, boneT);
+            }
         }
+
+        // --- MESH GENERATION SKINNED ---
 
         private void BuildLimbMesh(BioNode node)
         {
             if (node == null) return;
             
-            // Count total segments in this limb to calculate taper
+            // Tapering Pass
+            BioNode temp = node;
             int totalSegments = 0;
-            BioNode counter = node;
-            while(counter != null) { totalSegments++; counter = counter.mainChild; }
+            while(temp != null) { totalSegments++; temp = temp.mainChild; }
             
-            // Generate rings with tapering applied
             int segmentIndex = 0;
             BioNode w = node;
-            float startRadius = node.radius; // Remember root radius
+            float startRadius = node.radius;
             
-            // First ring - convex taper (sqrt) for smoother trunk, sharper tip
+            // Apply Taper
             float t = (float)segmentIndex / totalSegments;
-            float taperFactor = Mathf.Sqrt(1f - t); // Convex curve: slow at top, fast at tip
+            float taperFactor = Mathf.Sqrt(1f - t); 
             w.radius = startRadius * Mathf.Max(taperFactor, 0.01f);
-            GenerateRing(w);
+            
+            // FIX SEAM CRACKING:
+            // If this node is a side child (branch), its start ring matches the parent surface.
+            // To prevent looking like a crack when the branch rotates, 
+            // the start ring must follow the PARENT's bone (weld to parent).
+            int startRingBone = w.boneIndex;
+            if (node.parent != null && node.parent.sideChildren.Contains(node))
+            {
+                startRingBone = node.parent.boneIndex;
+            }
+
+            GenerateRing(w, startRingBone); 
             
             while(w.mainChild != null)
             {
                 BioNode next = w.mainChild;
                 segmentIndex++;
                 
-                // Apply convex taper to next node's radius
                 t = (float)segmentIndex / totalSegments;
-                taperFactor = Mathf.Sqrt(1f - t); // Convex curve
+                taperFactor = Mathf.Sqrt(1f - t);
                 float originalRadius = next.radius;
                 next.radius = originalRadius * Mathf.Max(taperFactor, 0.01f);
                 
                 GenerateRing(next);
                 
-                // Restore original radius for structure (so children calculate correctly)
-                next.radius = originalRadius;
+                next.radius = originalRadius; // Restore
                 
                 foreach(var branch in w.sideChildren)
                 {
@@ -525,44 +548,135 @@ namespace MysticForgeRuntime
 
         private void CloseCap(BioNode node)
         {
-            // Taper tip: create a very small ring at the tip position, then close with a point
-            float tipRadius = Mathf.Max(node.radius * 0.01f, 0.001f); // 1% = nearly a point
-            Vector3 tipPos = node.position + node.direction * node.radius; // Extend by full radius length
+            float tipRadius = Mathf.Max(node.radius * 0.01f, 0.001f); 
+            Vector3 tipPos = node.position + node.direction * node.radius; 
             
-            // Generate tiny tip ring
             int tipRingStart = verts.Count;
             Vector3 arbitraryUp = (Mathf.Abs(Vector3.Dot(node.direction, Vector3.up)) < 0.99f) ? Vector3.up : Vector3.forward;
             Vector3 tipRight = Vector3.Cross(node.direction, arbitraryUp).normalized;
+            
+            // Tip Ring
             for(int s=0; s<=radialSegments; s++) {
                 float angle = (float)s / radialSegments * Mathf.PI * 2f;
                 Vector3 offset = Quaternion.AngleAxis(angle * Mathf.Rad2Deg, node.direction) * tipRight * tipRadius;
                 verts.Add(tipPos + offset);
                 uvs.Add(new Vector2((float)s / radialSegments, 1f));
+                
+                // Weight to tip bone
+                AddBoneWeight(node.boneIndex);
             }
             
-            // Bridge from last ring to tip ring
             for(int k=0; k<radialSegments; k++) AddQuad(node.ringStartIndex+k, node.ringStartIndex+k+1, tipRingStart+k+1, tipRingStart+k);
             
-            // Close with center point
+            // Center Point
             int centerIdx = verts.Count; 
             verts.Add(tipPos + node.direction * tipRadius); 
             uvs.Add(new Vector2(0.5f, 1f)); 
+            AddBoneWeight(node.boneIndex);
+            
             for(int s=0; s<radialSegments; s++) { 
-                tris.Add(centerIdx); 
-                tris.Add(tipRingStart + s + 1); 
-                tris.Add(tipRingStart + s);
+                trunkTris.Add(centerIdx); 
+                trunkTris.Add(tipRingStart + s + 1); 
+                trunkTris.Add(tipRingStart + s);
             }
         }
         
-        private void GenerateRing(BioNode node)
+        private void GenerateRing(BioNode node, int overrideBoneIndex = -1)
         {
             node.ringStartIndex = verts.Count;
             Quaternion rot = node.rotation;
+            int boneIdx = (overrideBoneIndex != -1) ? overrideBoneIndex : node.boneIndex;
+
             for(int s=0; s<=radialSegments; s++) { 
                  float a = (float)s / radialSegments * Mathf.PI * 2f; 
                  verts.Add(node.position + rot * new Vector3(Mathf.Cos(a), Mathf.Sin(a), 0) * node.radius); 
-                 uvs.Add(new Vector2((float)s/radialSegments, node.vCoord)); 
+                 uvs.Add(new Vector2((float)s/radialSegments, node.vCoord));
+                 
+                 // Assign Weight
+                 AddBoneWeight(boneIdx);
             }
+        }
+        
+        private void AddBoneWeight(int index)
+        {
+            BoneWeight bw = new BoneWeight();
+            bw.boneIndex0 = index;
+            bw.weight0 = 1.0f; 
+            boneWeights.Add(bw);
+        }
+
+        private void CollectAndMergeLeaves(BioNode node, int seed, int currentMaxGen)
+        {
+            if (node == null || leafPrefab == null) return;
+            MeshFilter mfStruct = leafPrefab.GetComponent<MeshFilter>();
+            if (mfStruct == null) return;
+            
+            // Cache leaf mesh data once
+            leafVerts.Clear(); leafTris.Clear(); leafUVs.Clear();
+            mfStruct.sharedMesh.GetVertices(leafVerts);
+            mfStruct.sharedMesh.GetTriangles(leafTris, 0);
+            mfStruct.sharedMesh.GetUVs(0, leafUVs);
+
+            System.Random rng = new System.Random(seed);
+            
+            BioNode w = node;
+            while(w.mainChild != null)
+            {
+                foreach(var c in w.sideChildren) CollectAndMergeLeaves(c, rng.Next(), currentMaxGen);
+                
+                int leafLayers = Mathf.Clamp(maxRecursion - 1, 1, 3);
+                int startThreshold = maxRecursion - leafLayers;
+                
+                bool isThin = w.radius < (maxTrunkThickness * 0.05f);
+                bool isCanopy = (w.generation >= startThreshold);
+                
+                if (isThin || isCanopy) MergeLeafInstances(w, w.mainChild, rng);
+                w = w.mainChild;
+            }
+            MergeLeafInstances(w, null, rng);
+        }
+
+        private void MergeLeafInstances(BioNode startNode, BioNode endNode, System.Random rng)
+        {
+             if(leavesPerBranch <= 0) return;
+             if(endNode == null) endNode = startNode; 
+
+             float growthFactor = Mathf.Clamp01((growthCycle - 0.05f) / 0.95f);
+             if(growthFactor <= 0.001f) return;
+
+             float currentScale = Mathf.Lerp(0.1f, 1.0f, growthFactor) * leafScale; 
+
+             for(int l=0; l<leavesPerBranch; l++)
+             {
+                 float t = (float)rng.NextDouble();
+                 Vector3 lPos = Vector3.Lerp(startNode.position, endNode.position, t);
+                 Vector3 surfNorm = (Quaternion.AngleAxis((float)rng.NextDouble()*360f, startNode.direction) * Vector3.up).normalized;
+                 
+                 // Create Transform Matrix for the leaf
+                 Matrix4x4 m = Matrix4x4.TRS(lPos + surfNorm * startNode.radius, 
+                     Quaternion.LookRotation(surfNorm, startNode.direction) * Quaternion.Euler((float)rng.NextDouble()*30f-15f, (float)rng.NextDouble()*30f-15f, 0), 
+                     Vector3.one * currentScale);
+                 
+                 // Decide which bone this leaf belongs to.
+                 // It's strictly attached to 'startNode' segment.
+                 int bindBoneIdx = startNode.boneIndex;
+
+                 // Merge vertices
+                 int baseV = verts.Count;
+                 for(int v=0; v<leafVerts.Count; v++)
+                 {
+                     Vector3 transformedPt = m.MultiplyPoint3x4(leafVerts[v]);
+                     verts.Add(transformedPt);
+                     uvs.Add(leafUVs[v]);
+                     AddBoneWeight(bindBoneIdx);
+                 }
+                 
+                 // Merge triangles
+                 for(int tri=0; tri<leafTris.Count; tri++)
+                 {
+                     foliageTris.Add(baseV + leafTris[tri]);
+                 }
+             }
         }
         
         private void BridgeHoleToBranch(int baseIdxA, int baseIdxB, int k, BioNode branch)
@@ -577,10 +691,10 @@ namespace MysticForgeRuntime
              {
                  int c1 = branchBase + (i + bestOffset) % radialSegments;
                  int c2 = branchBase + (i + bestOffset + 1) % radialSegments;
-                 tris.Add(a1); tris.Add(c2); tris.Add(c1);
+                 trunkTris.Add(a1); trunkTris.Add(c2); trunkTris.Add(c1);
              }
         }
-        private void AddQuad(int a, int b, int c, int d) { tris.Add(a); tris.Add(b); tris.Add(c); tris.Add(c); tris.Add(d); tris.Add(a); }
+        private void AddQuad(int a, int b, int c, int d) { trunkTris.Add(a); trunkTris.Add(b); trunkTris.Add(c); trunkTris.Add(c); trunkTris.Add(d); trunkTris.Add(a); }
         private Vector3 RandomVector(System.Random r) { return new Vector3((float)r.NextDouble()-0.5f, (float)r.NextDouble()-0.5f, (float)r.NextDouble()-0.5f); }
     }
 }

@@ -73,11 +73,11 @@ MonoBehaviour:
   settings:
     renderPassEvent: 550
     shader: {fileID: 4800000, guid: 27893c2c557e71146ab25aa190e03242, type: 3}
-    paperTexture: {fileID: 0}
+    paperTexture: {fileID: 2800000, guid: d72ab57ca73f214469cef852511e1f71, type: 3}
     turbulenceTexture: {fileID: 0}
     dispersal1Texture: {fileID: 2800000, guid: 10e9d686769e62f4a8b00833232b0827, type: 3}
     dispersal2Texture: {fileID: 2800000, guid: 2d15b67ab1ece4d6e96772d635e2e9b8, type: 3}
-    halfResolution: 0
+    halfResolution: 1
 --- !u!114 &3582379534592228493
 MonoBehaviour:
   m_ObjectHideFlags: 0

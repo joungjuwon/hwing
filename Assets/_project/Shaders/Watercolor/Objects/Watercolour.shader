@@ -38,13 +38,7 @@ Shader "Watercolor/URP/Watercolour"
         
         _LayerBlend("Edge Blend Strength", Range(0, 1)) = 0.2
 
-        [Header(Wind Animation)]
-        _WindSpeed("Wind Speed", Float) = 1.0
-        _WindStrength("Wind Strength", Range(0, 1)) = 0.0
-        _WindFrequency("Wind Frequency", Float) = 1.0
-        _WindGust("Wind Gust", Float) = 0.5
-        _WindHeightStart("Wind Height Start", Float) = 0.0
-        _WindHeightPower("Wind Height Power", Range(0.1, 10)) = 3.0
+
 
         [Header(Noise Distortion)]
         _NoiseStrength("Distortion Strength", Range(0, 1)) = 0.1
@@ -90,7 +84,10 @@ Shader "Watercolor/URP/Watercolour"
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile_fog
+            #pragma multi_compile_fog
             #pragma multi_compile_instancing
+            // Skinning support
+            #pragma multi_compile _ _SKINNING
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -104,6 +101,8 @@ Shader "Watercolor/URP/Watercolour"
                 float4 tangentOS : TANGENT;
                 float2 uv : TEXCOORD0;
                 float4 color : COLOR;
+                float4 boneWeights : BLENDWEIGHTS;
+                float4 boneIndices : BLENDINDICES;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -140,12 +139,7 @@ Shader "Watercolor/URP/Watercolour"
                 float _InnerOutlineThreshold;
                 float _InnerOutlineSmoothness;
 
-                float _WindSpeed;
-                float _WindStrength;
-                float _WindFrequency;
-                float _WindGust;
-                float _WindHeightStart;
-                float _WindHeightPower;
+
 
                 float _NoiseStrength;
                 float _NoiseScale;
@@ -180,27 +174,7 @@ Shader "Watercolor/URP/Watercolour"
 
                 // Wind (shared with leaves): uses vertex color R as mask.
                 // If the mesh has no vertex colors, mask tends to 0 and the object stays still.
-                if (_WindStrength > 0.001)
-                {
-                    // Height-based mask: (max(0, y - start) ^ power)
-                    float height = max(0, input.positionOS.y - _WindHeightStart);
-                    float windMask = pow(height, _WindHeightPower);
 
-                    float windTime = _Time.y * _WindSpeed;
-                    float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
-                    
-                    // Gust Logic from Grass Shader
-                    float gust = sin(worldPos.x * 0.1 + windTime * 0.5) * 0.5 + 0.5;
-                    float strength = _WindStrength * (1.0 + gust * _WindGust);
-
-                    float3 windOffset;
-                    windOffset.x = sin(windTime + worldPos.x * _WindFrequency) * strength;
-                    windOffset.z = cos(windTime * 0.8 + worldPos.z * _WindFrequency) * strength;
-                    windOffset.y = 0; // Trunks don't usually bob up/down
-                    
-                    windOffset *= windMask;
-                    input.positionOS.xyz += TransformWorldToObjectDir(windOffset);
-                }
 
                 VertexPositionInputs posInputs = GetVertexPositionInputs(input.positionOS.xyz);
                 VertexNormalInputs normInputs = GetVertexNormalInputs(input.normalOS, input.tangentOS);
@@ -424,27 +398,7 @@ Shader "Watercolor/URP/Watercolour"
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-                // --- Wind Logic (Synced with ForwardLit) ---
-                if (_WindStrength > 0.001)
-                {
-                   float height = max(0, input.positionOS.y - _WindHeightStart);
-                   float windMask = pow(height, _WindHeightPower);
 
-                   float windTime = _Time.y * _WindSpeed;
-                   float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
-                   
-                   float gust = sin(worldPos.x * 0.1 + windTime * 0.5) * 0.5 + 0.5;
-                   float strength = _WindStrength * (1.0 + gust * _WindGust);
-
-                   float3 windOffset;
-                   windOffset.x = sin(windTime + worldPos.x * _WindFrequency) * strength;
-                   windOffset.z = cos(windTime * 0.8 + worldPos.z * _WindFrequency) * strength;
-                   windOffset.y = 0;
-                   
-                   windOffset *= windMask;
-                   input.positionOS.xyz += TransformWorldToObjectDir(windOffset);
-                }
-                // -------------------------------------------
 
                 VertexPositionInputs pos = GetVertexPositionInputs(input.positionOS.xyz);
                 VertexNormalInputs nrm = GetVertexNormalInputs(input.normalOS);
@@ -533,7 +487,7 @@ Shader "Watercolor/URP/Watercolour"
                 return o;
             }
 
-            float4 frag(Varyings input) : SV_Target { return 0; }
+            float4 frag(Varyings input) : SV_TARGET { return 0; }
             ENDHLSL
         }
 
@@ -552,7 +506,9 @@ Shader "Watercolor/URP/Watercolour"
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
             #pragma multi_compile_instancing
+            #pragma multi_compile_instancing
             #pragma multi_compile _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+            #pragma multi_compile _ _SKINNING
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
@@ -580,12 +536,6 @@ Shader "Watercolor/URP/Watercolour"
                 float _AlphaClip;
                 float _Cutoff;
                 
-                float _WindSpeed;
-                float _WindStrength;
-                float _WindFrequency;
-                float _WindGust;
-                float _WindHeightStart;
-                float _WindHeightPower;
             CBUFFER_END
 
             TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
@@ -606,28 +556,6 @@ Shader "Watercolor/URP/Watercolour"
                 Varyings o;
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_TRANSFER_INSTANCE_ID(input, o);
-
-                // --- Wind Logic ---
-                if (_WindStrength > 0.001)
-                {
-                   float height = max(0, input.positionOS.y - _WindHeightStart);
-                   float windMask = pow(height, _WindHeightPower);
-
-                   float windTime = _Time.y * _WindSpeed;
-                   float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
-                   
-                   float gust = sin(worldPos.x * 0.1 + windTime * 0.5) * 0.5 + 0.5;
-                   float strength = _WindStrength * (1.0 + gust * _WindGust);
-
-                   float3 windOffset;
-                   windOffset.x = sin(windTime + worldPos.x * _WindFrequency) * strength;
-                   windOffset.z = cos(windTime * 0.8 + worldPos.z * _WindFrequency) * strength;
-                   windOffset.y = 0;
-                   
-                   windOffset *= windMask;
-                   input.positionOS.xyz += TransformWorldToObjectDir(windOffset);
-                }
-                // ------------------
 
                 VertexPositionInputs posInputs = GetVertexPositionInputs(input.positionOS.xyz);
                 VertexNormalInputs normInputs = GetVertexNormalInputs(input.normalOS);
@@ -663,6 +591,7 @@ Shader "Watercolor/URP/Watercolour"
             #pragma vertex DepthOnlyVertex
             #pragma fragment DepthOnlyFragment
             #pragma multi_compile_instancing
+            #pragma multi_compile _ _SKINNING
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
@@ -685,12 +614,6 @@ Shader "Watercolor/URP/Watercolour"
                 float _AlphaClip;
                 float _Cutoff;
                 
-                float _WindSpeed;
-                float _WindStrength;
-                float _WindFrequency;
-                float _WindGust;
-                float _WindHeightStart;
-                float _WindHeightPower;
             CBUFFER_END
 
             TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
@@ -700,28 +623,6 @@ Shader "Watercolor/URP/Watercolour"
                 Varyings o;
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_TRANSFER_INSTANCE_ID(input, o);
-
-                // --- Wind Logic ---
-                if (_WindStrength > 0.001)
-                {
-                   float height = max(0, input.positionOS.y - _WindHeightStart);
-                   float windMask = pow(height, _WindHeightPower);
-
-                   float windTime = _Time.y * _WindSpeed;
-                   float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
-                   
-                   float gust = sin(worldPos.x * 0.1 + windTime * 0.5) * 0.5 + 0.5;
-                   float strength = _WindStrength * (1.0 + gust * _WindGust);
-
-                   float3 windOffset;
-                   windOffset.x = sin(windTime + worldPos.x * _WindFrequency) * strength;
-                   windOffset.z = cos(windTime * 0.8 + worldPos.z * _WindFrequency) * strength;
-                   windOffset.y = 0;
-                   
-                   windOffset *= windMask;
-                   input.positionOS.xyz += TransformWorldToObjectDir(windOffset);
-                }
-                // ------------------
 
                 VertexPositionInputs posInputs = GetVertexPositionInputs(input.positionOS.xyz);
                 o.positionCS = posInputs.positionCS;
