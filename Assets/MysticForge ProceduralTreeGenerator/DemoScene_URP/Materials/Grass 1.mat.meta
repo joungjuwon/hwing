@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1f090e8de7504ef4f9b9d4ad12b1679f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/DemoScene_URP/Materials/Grass
+    1.mat
+  uploadId: 764581

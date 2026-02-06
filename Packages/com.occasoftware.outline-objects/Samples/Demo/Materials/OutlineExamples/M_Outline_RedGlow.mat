@@ -22,6 +22,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: M_Outline_RedGlow
   m_Shader: {fileID: 4800000, guid: ad6de151320180a408b89711864a7035, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords:
   - ATTENUATE_BY_DISTANCE_ENABLED
@@ -35,6 +37,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -137,6 +140,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
+    - _USE_SMOOTHED_NORMALS_ENABLED: 0
     - _USE_VERTEX_COLOR_ENABLED: 1
     - _UseVertexColors: 1
     - _WorkflowMode: 1
@@ -148,3 +152,4 @@ Material:
     - _OutlineColor: {r: 32, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

@@ -18,10 +18,9 @@ MonoBehaviour:
   m_RendererData: {fileID: 0}
   m_RendererDataList:
   - {fileID: 11400000, guid: 85c65cdbb1631424098ab636232db9ef, type: 2}
-  - {fileID: 11400000, guid: 1008698a69a04ba47b9a0a7ccded24d2, type: 2}
   m_DefaultRendererIndex: 0
   m_RequireDepthTexture: 1
-  m_RequireOpaqueTexture: 0
+  m_RequireOpaqueTexture: 1
   m_OpaqueDownsampling: 1
   m_SupportsTerrainHoles: 0
   m_SupportsHDR: 1
@@ -93,7 +92,7 @@ MonoBehaviour:
   m_MaxPixelLights: 0
   m_ShadowAtlasResolution: 256
   m_VolumeFrameworkUpdateMode: 0
-  m_VolumeProfile: {fileID: 0}
+  m_VolumeProfile: {fileID: 11400000, guid: 2aa9c50d312232b419e99ac43b11b5cf, type: 2}
   apvScenesData:
     obsoleteSceneBounds:
       m_Keys: []

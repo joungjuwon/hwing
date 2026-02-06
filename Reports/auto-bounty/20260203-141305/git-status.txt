@@ -1,0 +1,24 @@
+﻿ M Assets/FullOpaqueWater&Waterfall/Prefabs/Terrain/Terrain/Terrain.asset
+ M Assets/ThirdParty/watercolor_rose.blend
+ M Assets/_project/Scenes/Demo.unity
+ M "Assets/_project/Scenes/New Scene.unity"
+ M "Assets/_project/Settings/Shaders/WatercolourObject/Watercolour 1.mat"
+ M Assets/_project/Settings/Shaders/WatercolourObject/Watercolour.shader
+ M Assets/_project/Shaders/Watercolor/New/WatercolorCore.hlsl
+ M Assets/_project/Shaders/Watercolor/New/Watercolour.shader
+ D Assets/_project/Shaders/Watercolor/SG_WatercolorCore.shadersubgraph
+ D Assets/_project/Shaders/Watercolor/SG_WatercolorCore.shadersubgraph.meta
+ D Assets/_project/Shaders/Watercolor/WatercolorCore.hlsl
+ D Assets/_project/Shaders/Watercolor/WatercolorCore.hlsl.meta
+ D Assets/_project/Shaders/Watercolor/WatercolorLit.shader
+ D Assets/_project/Shaders/Watercolor/WatercolorLit.shader.meta
+ M ProjectSettings/ProjectSettings.asset
+?? Assets/ThirdParty/textures.meta
+?? Assets/ThirdParty/textures/
+?? Assets/ThirdParty/watercolor_rose.blend1
+?? Assets/ThirdParty/watercolor_rose.blend1.meta
+?? Assets/_project/Shaders/Watercolor/Legacy.meta
+?? Assets/_project/Shaders/Watercolor/Legacy/
+?? "Assets/_project/Shaders/Watercolor/New/New Material.mat"
+?? "Assets/_project/Shaders/Watercolor/New/New Material.mat.meta"
+?? Reports/

@@ -1,0 +1,16 @@
+=== Object & Shader Mapping ===
+Object: Generated (11) | Material: Watercolour 1 | Shader: Legacy/Watercolour
+Object: Generated | Material: Watercolour 1 | Shader: Legacy/Watercolour
+Object: Cube | Material: New Material | Shader: Watercolor/URP/Watercolour
+Object: Generated (6) | Material: Watercolour 1 | Shader: Legacy/Watercolour
+Object: Quad | Material: Decal_Watercolour | Shader: Custom/WatercolourDecal
+Object: Generated (2) | Material: Watercolour 1 | Shader: Legacy/Watercolour
+Object: Target | Material: Lit | Shader: Universal Render Pipeline/Lit
+Object: Generated (8) | Material: Watercolour 1 | Shader: Legacy/Watercolour
+Object: Quad (2) | Material: Decal_Watercolour | Shader: Custom/WatercolourDecal
+Object: Generated (7) | Material: Watercolour 1 | Shader: Legacy/Watercolour
+Object: Sphere | Material: M_Sphere | Shader: Shader Graphs/S_OptiFX_Lit
+Object: Foam | Material: M_Ring_Lit | Shader: Shader Graphs/S_Particle_Ring_Lit
+Object: Firefly | Material: M_Particles | Shader: Shader Graphs/S_Particle
+Object: Ripple | Material: M_Ring_Lit | Shader: Shader Graphs/S_Particle_Ring_Lit
+Object: Grass | Material: M_Particles_Lit_TwoSided | Shader: Shader Graphs/S_Particle_Lit

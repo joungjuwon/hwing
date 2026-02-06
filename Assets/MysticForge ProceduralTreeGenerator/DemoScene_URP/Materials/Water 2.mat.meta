@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: f0defa0fbec18b040868c4bb7be45729
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/DemoScene_URP/Materials/Water
+    2.mat
+  uploadId: 764581

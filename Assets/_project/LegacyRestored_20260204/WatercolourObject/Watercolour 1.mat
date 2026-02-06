@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Watercolour 1
+  m_Shader: {fileID: 4800000, guid: d9e57929bc92d6a42835e2436bf709c6, type: 3}
+  m_Parent: {fileID: 2100000, guid: 1c272a7b2114256489f72b77f0544c42, type: 2}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - MAIN_LIGHT_CALCULATE_SHADOWS
+  - _INNER_OUTLINE
+  - _RANDOM_OFFSETS_ENABLED
+  - _TEXTURE_AS_MASK
+  - _USEINNEROUTLINE_ON
+  - _USE_SMOOTHED_NORMALS_ENABLED
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 3cf7ab9d1ad2b4f4794a8b0b634a3bdc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PaperTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RampEdgeA:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RampEdgeB:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RampEdgeCol:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RampLightingA:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _RampLightingB:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Cutoff: 0.5
+    - _Glossiness: 0.061
+    - _LayerBlend: 0.2
+    - _NoiseStrength: -0.92
+    - _PaperStrength: 0.5
+    - _WC_BaseDetailStrength: 0.35
+    - _WC_InnerLinePower: 2
+    - _WC_InnerLineStrength: 0.35
+    - _WC_PaletteStrength: 0.35
+    - _WC_PigmentNoiseStrength: 0.25
+    - _WC_PigmentScale: 1.2
+    - _WC_PigmentStrength: 0.12
+    m_Colors:
+    - _BaseColor: {r: 0.9150943, g: 0.87484866, b: 0.7294856, a: 1}
+    - _OutlineColor: {r: 0.45794684, g: 0.6226415, b: 0.2966358, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
+--- !u!114 &2675043985188659146
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 10

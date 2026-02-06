@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: daa7931db130cf444a6a41c53a739140
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/LeafPrefabs/LeafBend4Quad.prefab
+  uploadId: 764581

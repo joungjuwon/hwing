@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8816904132858579591
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 10
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Shader Graphs_Grass_Planes
+  m_Shader: {fileID: -6465566751694194690, guid: ff41b375e177f1e40b862e85ce054bac, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_de46b4d075bc456092ab7b5a2b6c732a:
+        m_Texture: {fileID: 2800000, guid: 8392db854a799364790df0c0fa508205, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - Vector1_35e97dc5632747879dec95fd7f0536b6: 1.68
+    - Vector1_5728a2dade0f42b1aef5ed815ba24d03: 0
+    - Vector1_576ffc892964421d92d57f4fabf91dc7: 0.1
+    - Vector1_6ea3b37cbad64043b37765735482c529: 2.2
+    - Vector1_82d6c858ad8f4719ac13cabc9ec68e3e: 0.631
+    - Vector1_94c6c982bafa44aab21a4a079f7de402: 0.4
+    - Vector1_a876e7e4e7f247e0aa043a83821ae934: 2.57
+    - Vector1_adb674af3978415894789ffc2014c988: 0
+    - Vector1_e2bd9d2ff8504b1f806c27b879f2361a: 0
+    - Vector1_eb2d6f6a19e146df8e1ecc107ede7d60: 0
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    m_Colors:
+    - Color_2d505f9b354042b7ae96e73b473c84d0: {r: 1, g: 1, b: 1, a: 0}
+    - Color_b722be98cc234933b3f3e52b5707d779: {r: 1, g: 1, b: 1, a: 0}
+    - Vector2_da00e416ab704bb28cdc7340291e5519: {r: 0.25, g: 0, b: 0, a: 0}
+    - _PlayerPosition: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

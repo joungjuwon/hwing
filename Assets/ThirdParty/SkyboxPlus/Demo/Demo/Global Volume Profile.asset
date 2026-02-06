@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7186a5c46bcb2244abd257c12a8f196e, type: 3}
   m_Name: LuftDeussenWatercolorVolume
   m_EditorClassIdentifier: Assembly-CSharp::LuftDeussenWatercolorVolume
-  active: 1
+  active: 0
   edgeThreshold:
     m_OverrideState: 0
     m_Value: 2

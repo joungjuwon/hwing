@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fb0d916b562b42c448d2f91682552f1c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/Materials/URP/Bark/Bark3.mat
+  uploadId: 764581

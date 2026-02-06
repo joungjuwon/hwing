@@ -166,14 +166,10 @@ Shader "Custom/PostProcess/LuftDeussenWatercolor"
                 half2 densityData = SAMPLE_TEXTURE2D(_DensityTex, sampler_DensityTex, distortedUV).rg;
                 float density = densityData.r;
                 
-                // 3. Color Quantization (Toon effect) - Controlled by parameters
-                if (_EnableQuantization > 0.5)
-                {
-                    float3 hsv = WatercolorRgbToHsv(originalColor.rgb);
-                    hsv.z = floor(hsv.z * _ColorSteps) / _ColorSteps;
-                    originalColor.rgb = WatercolorHsvToRgb(hsv);
-                }
-                
+                // 3. (Removed) Color Quantization / posterization
+                // Previously this applied a toon-like value quantization (HSV V channel).
+                // We intentionally disable it to avoid unwanted palette/cel stepping.
+
                 // 4. Apply Pigment Density
                 half3 modifiedColor = ApplyPigmentDensity(originalColor.rgb, density);
                 

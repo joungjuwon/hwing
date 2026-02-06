@@ -134,6 +134,61 @@ MonoBehaviour:
   cropToFit:
     m_OverrideState: 1
     m_Value: 1
+--- !u!114 &-5869874495950827159
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7186a5c46bcb2244abd257c12a8f196e, type: 3}
+  m_Name: LuftDeussenWatercolorVolume
+  m_EditorClassIdentifier: Assembly-CSharp::LuftDeussenWatercolorVolume
+  active: 1
+  edgeThreshold:
+    m_OverrideState: 1
+    m_Value: 2
+  edgeDarkening:
+    m_OverrideState: 1
+    m_Value: 0.5
+  densityBase:
+    m_OverrideState: 1
+    m_Value: 1
+  densityContrast:
+    m_OverrideState: 1
+    m_Value: 0.5
+  paperStrength:
+    m_OverrideState: 1
+    m_Value: 0.3
+  turbulenceStrength:
+    m_OverrideState: 1
+    m_Value: 0.5
+  dispersal1Strength:
+    m_OverrideState: 1
+    m_Value: 0.25
+  dispersal2Strength:
+    m_OverrideState: 1
+    m_Value: 0.125
+  textureScale:
+    m_OverrideState: 1
+    m_Value: 1
+  wobbleStrength:
+    m_OverrideState: 1
+    m_Value: 0.5
+  colorSteps:
+    m_OverrideState: 1
+    m_Value: 8
+  enableQuantization:
+    m_OverrideState: 1
+    m_Value: 1
+  blurSize:
+    m_OverrideState: 1
+    m_Value: 1
+  blurIterations:
+    m_OverrideState: 1
+    m_Value: 1
 --- !u!114 &-4852417913635322502
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -531,7 +586,7 @@ MonoBehaviour:
   - {fileID: -1394448068818378679}
   - {fileID: 1863693613629229601}
   - {fileID: 1365774957130458028}
-  - {fileID: -1497440901029872068}
+  - {fileID: -5869874495950827159}
 --- !u!114 &1365774957130458028
 MonoBehaviour:
   m_ObjectHideFlags: 3

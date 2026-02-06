@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 3cf7ba7a968a44a48af8f830ef7d9817
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/DemoScene_URP/Materials/New
+    Material.mat
+  uploadId: 764581

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f402fa7524df22f47b8d33db800df55f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/DemoScene_URP/Prefabs/Particles_Sunrays.prefab
+  uploadId: 764581

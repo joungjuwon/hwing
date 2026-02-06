@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5daf550785c141d49a084d4cd0c9135d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/Materials/URP/Leaves/Leaves3_Billboard.mat
+  uploadId: 764581

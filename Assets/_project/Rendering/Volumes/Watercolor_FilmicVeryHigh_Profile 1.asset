@@ -1,0 +1,164 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7681260160733947386
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7186a5c46bcb2244abd257c12a8f196e, type: 3}
+  m_Name: LuftDeussenWatercolorVolume
+  m_EditorClassIdentifier: Assembly-CSharp::LuftDeussenWatercolorVolume
+  active: 1
+  edgeThreshold:
+    m_OverrideState: 1
+    m_Value: 0.1
+  edgeDarkening:
+    m_OverrideState: 1
+    m_Value: 0
+  densityBase:
+    m_OverrideState: 1
+    m_Value: 1
+  densityContrast:
+    m_OverrideState: 1
+    m_Value: 0.5
+  paperStrength:
+    m_OverrideState: 1
+    m_Value: 0.209
+  turbulenceStrength:
+    m_OverrideState: 1
+    m_Value: 0.103
+  dispersal1Strength:
+    m_OverrideState: 1
+    m_Value: 0
+  dispersal2Strength:
+    m_OverrideState: 1
+    m_Value: 0
+  textureScale:
+    m_OverrideState: 1
+    m_Value: 1
+  wobbleStrength:
+    m_OverrideState: 1
+    m_Value: 0
+  colorSteps:
+    m_OverrideState: 1
+    m_Value: 24
+  enableQuantization:
+    m_OverrideState: 1
+    m_Value: 1
+  blurSize:
+    m_OverrideState: 1
+    m_Value: 0.57
+  blurIterations:
+    m_OverrideState: 1
+    m_Value: 1
+--- !u!114 &-7172801892492706405
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66f335fb1ffd8684294ad653bf1c7564, type: 3}
+  m_Name: ColorAdjustments
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.ColorAdjustments
+  active: 1
+  postExposure:
+    m_OverrideState: 1
+    m_Value: 0
+  contrast:
+    m_OverrideState: 1
+    m_Value: -33.4
+  colorFilter:
+    m_OverrideState: 1
+    m_Value: {r: 1.281001, g: 1.281001, b: 1.281001, a: 1}
+  hueShift:
+    m_OverrideState: 1
+    m_Value: 0
+  saturation:
+    m_OverrideState: 1
+    m_Value: 34.9
+--- !u!114 &-4663058911275201979
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97c23e3b12dc18c42a140437e53d3951, type: 3}
+  m_Name: Tonemapping
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.Tonemapping
+  active: 1
+  mode:
+    m_OverrideState: 1
+    m_Value: 2
+  neutralHDRRangeReductionMode:
+    m_OverrideState: 0
+    m_Value: 2
+  acesPreset:
+    m_OverrideState: 1
+    m_Value: 3
+  hueShiftAmount:
+    m_OverrideState: 1
+    m_Value: 0
+  detectPaperWhite:
+    m_OverrideState: 1
+    m_Value: 0
+  paperWhite:
+    m_OverrideState: 1
+    m_Value: 300
+  detectBrightnessLimits:
+    m_OverrideState: 1
+    m_Value: 1
+  minNits:
+    m_OverrideState: 1
+    m_Value: 0.005
+  maxNits:
+    m_OverrideState: 1
+    m_Value: 1000
+--- !u!114 &-973400694821543917
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5485954d14dfb9a4c8ead8edb0ded5b1, type: 3}
+  m_Name: LiftGammaGain
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.LiftGammaGain
+  active: 1
+  lift:
+    m_OverrideState: 1
+    m_Value: {x: 0.9255972, y: 0.98259425, z: 1, w: 0.2644068}
+  gamma:
+    m_OverrideState: 1
+    m_Value: {x: 0.9371808, y: 0.92105573, z: 1, w: -0.1559322}
+  gain:
+    m_OverrideState: 1
+    m_Value: {x: 0.9827482, y: 1, z: 0.9010721, w: -0.1559322}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: Watercolor_FilmicVeryHigh_Profile 1
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.VolumeProfile
+  components:
+  - {fileID: -4663058911275201979}
+  - {fileID: -7172801892492706405}
+  - {fileID: -973400694821543917}
+  - {fileID: -7681260160733947386}

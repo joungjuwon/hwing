@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: eaec0dafc1380d54fbffc74e43537758
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 309720
+  packageName: Procedural Tree Generator by MysticForge
+  packageVersion: 1.2
+  assetPath: Assets/MysticForge ProceduralTreeGenerator/DemoScene_URP/Materials/Shader
+    Graphs_Grass_Planes.mat
+  uploadId: 764581
