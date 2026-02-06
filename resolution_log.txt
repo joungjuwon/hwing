@@ -1,0 +1,13 @@
+Resolution Report (Cutoff: 2026-02-01 00:00:00+09:00)
+--------------------------------------------------
+[RESOLVED] Assets/FullOpaqueGrass/DemoScenes/URP/DemoScene/DemoScene_URP.unity: Older than cutoff (2026-01-31 21:56:40+09:00)
+[RESOLVED] Assets/FullOpaqueWater&Waterfall/Prefabs/Terrain/Terrain/Terrain.asset: Older than cutoff (2026-01-29 10:16:20+09:00)
+[RESOLVED] Assets/_project/LegacyRestored_20260204/WatercolourObject/MasterErosionShader.shadergraph: Not present in our branch (New file)
+[RESOLVED] Assets/_project/LegacyRestored_20260204/WatercolourObject/MasterErosionShader.shadergraph.meta: Not present in our branch (New file)
+[RESOLVED] Assets/_project/LegacyRestored_20260204/WatercolourObject/SG_Watercolour.shadersubgraph: Not present in our branch (New file)
+[RESOLVED] Assets/_project/LegacyRestored_20260204/WatercolourObject/SG_Watercolour.shadersubgraph.meta: Not present in our branch (New file)
+[RESOLVED] Assets/_project/LegacyRestored_20260204/WatercolourObject/Shader Graphs_MasterErosionShader.mat: Not present in our branch (New file)
+[RESOLVED] Assets/_project/LegacyRestored_20260204/WatercolourObject/Shader Graphs_MasterErosionShader.mat.meta: Not present in our branch (New file)
+[RESOLVED] Assets/_project/LegacyRestored_20260204/WatercolourObject/WatercolourFunc.hlsl: Not present in our branch (New file)
+[RESOLVED] Assets/_project/LegacyRestored_20260204/WatercolourObject/WatercolourFunc.hlsl.meta: Not present in our branch (New file)
+[RESOLVED] Assets/_project/Scenes/Demo.unity: Older than cutoff (2026-01-29 15:11:35+09:00)

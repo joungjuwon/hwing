@@ -1,0 +1,44 @@
+1. Assets/FullOpaqueGrass/DemoScenes/URP/DemoScene/DemoScene_URP.unity
+   - Ours (HEAD):       Sat Jan 31 21:56:40 2026 +0900
+   - Theirs (Incoming): Thu Feb 5 18:03:13 2026 +0900
+
+2. Assets/FullOpaqueWater&Waterfall/Prefabs/Terrain/Terrain/Terrain.asset
+   - Ours (HEAD):       Thu Jan 29 10:16:20 2026 +0900
+   - Theirs (Incoming): Thu Feb 5 02:47:33 2026 +0900
+
+3. Assets/_project/LegacyRestored_20260204/WatercolourObject/MasterErosionShader.shadergraph
+   - Ours (HEAD):       
+   - Theirs (Incoming): 
+
+4. Assets/_project/LegacyRestored_20260204/WatercolourObject/MasterErosionShader.shadergraph.meta
+   - Ours (HEAD):       
+   - Theirs (Incoming): 
+
+5. Assets/_project/LegacyRestored_20260204/WatercolourObject/SG_Watercolour.shadersubgraph
+   - Ours (HEAD):       
+   - Theirs (Incoming): 
+
+6. Assets/_project/LegacyRestored_20260204/WatercolourObject/SG_Watercolour.shadersubgraph.meta
+   - Ours (HEAD):       
+   - Theirs (Incoming): 
+
+7. Assets/_project/LegacyRestored_20260204/WatercolourObject/Shader Graphs_MasterErosionShader.mat
+   - Ours (HEAD):       
+   - Theirs (Incoming): 
+
+8. Assets/_project/LegacyRestored_20260204/WatercolourObject/Shader Graphs_MasterErosionShader.mat.meta
+   - Ours (HEAD):       
+   - Theirs (Incoming): 
+
+9. Assets/_project/LegacyRestored_20260204/WatercolourObject/WatercolourFunc.hlsl
+   - Ours (HEAD):       
+   - Theirs (Incoming): 
+
+10. Assets/_project/LegacyRestored_20260204/WatercolourObject/WatercolourFunc.hlsl.meta
+   - Ours (HEAD):       
+   - Theirs (Incoming): 
+
+11. Assets/_project/Scenes/Demo.unity
+   - Ours (HEAD):       Thu Jan 29 15:11:35 2026 +0900
+   - Theirs (Incoming): Thu Feb 5 02:47:33 2026 +0900
+
