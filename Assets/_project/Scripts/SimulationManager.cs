@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI; 
+using System.Collections.Generic; // List<> 사용을 위해 추가
 #if UNITY_6000_0_OR_NEWER
 using Unity.Cinemachine; 
 #else
@@ -54,9 +55,27 @@ public class SimulationManager : MonoBehaviour
     [Tooltip("씬에 있는 덩굴 효과 컨트롤러 (플레이어 생성 시 자동 연결용)")]
     public VineGrowthController vineController;
 
+    [Header("Growth Phases")]
+    [Tooltip("생명력 잔량에 따른 성장 단계 설정 (높은 Threshold -> 낮은 Threshold 순서로 체크됨)")]
+    public List<GrowthPhase> growthPhases = new List<GrowthPhase>();
+
+    [System.Serializable]
+    public struct GrowthPhase
+    {
+        [Tooltip("남은 생명 비율 (1.0 = 100%, 0.0 = 0%)")]
+        [Range(0f, 1f)]
+        public float remainingLifeThreshold;
+        
+        [Tooltip("도달 시 적용할 덩굴 성장률 (0~1)")]
+        [Range(0f, 1f)]
+        public float targetGrowth;
+    }
+
     private GameObject currentSpawnUi; // 현재 생성된 스폰 UI 인스턴스
     private bool isSimulationActive = false; // 시뮬레이션 모드 활성화 여부
     private float currentDayTime = 0f; // 현재 시간 흐름
+    private PlayerLifeCycle currentPlayer; // 현재 활성화된 플레이어 참조
+    private int lastPhaseIndex = -1; // 현재 성장 단계 인덱스
 
     private void Start()
     {
@@ -68,7 +87,7 @@ public class SimulationManager : MonoBehaviour
         if (playerUI != null) playerUI.SetActive(true);
         if (simulationUI != null) simulationUI.SetActive(false);
         isSimulationActive = false;
-
+        
         // 자동 시작 로직
         if (autoStartIntro)
         {
@@ -77,22 +96,16 @@ public class SimulationManager : MonoBehaviour
             if (existingPlayer != null) Destroy(existingPlayer.gameObject);
 
             // 랜덤 위치에서 리스폰(인트로) 시작
-            // GetRandomPositionOnMap()이 안전하지 않을 수 있다면(Invoke 필요?), 여기서 바로 호출.
-            // 하지만 Start에서도 동작해야 함.
             RespawnPlayer(GetRandomPositionOnMap());
         }
         else
         {
-            // 자동 시작 아님: 씬에 있는 배치된 플레이어 사용
             var initialPlayer = FindAnyObjectByType<PlayerLifeCycle>();
             if (initialPlayer != null)
             {
+                currentPlayer = initialPlayer;
+                lastPhaseIndex = -1;
                 initialPlayer.onSprout.AddListener(EnableSimulationMode);
-                // 기존 플레이어에게도 덩굴 연결 시도
-                if (vineController != null)
-                {
-                    initialPlayer.onLifePhaseChanged.AddListener(vineController.SetGrowthTarget);
-                }
             }
         }
     }
@@ -110,6 +123,38 @@ public class SimulationManager : MonoBehaviour
         if (currentSpawnUi != null && simulationCamera != null)
         {
             currentSpawnUi.transform.rotation = simulationCamera.transform.rotation;
+        }
+        
+        // 덩굴 성장 페이즈 업데이트 (플레이어가 살아있고 시뮬레이션 모드가 아닐 때)
+        if (!isSimulationActive && currentPlayer != null && vineController != null)
+        {
+            CheckLifePhase();
+        }
+    }
+    
+    private void CheckLifePhase()
+    {
+        float currentRatio = currentPlayer.LifeRatio;
+        int bestPhaseIndex = -1;
+
+        for (int i = 0; i < growthPhases.Count; i++)
+        {
+            if (currentRatio <= growthPhases[i].remainingLifeThreshold)
+            {
+                if (bestPhaseIndex == -1 || growthPhases[i].remainingLifeThreshold < growthPhases[bestPhaseIndex].remainingLifeThreshold)
+                {
+                    bestPhaseIndex = i;
+                }
+            }
+        }
+
+        if (bestPhaseIndex != -1 && bestPhaseIndex != lastPhaseIndex)
+        {
+            lastPhaseIndex = bestPhaseIndex;
+            float targetGrowth = growthPhases[bestPhaseIndex].targetGrowth;
+            // Logger
+            Debug.Log($"[SimManager] Phase Updated! Life: {currentRatio:F2} <= {growthPhases[bestPhaseIndex].remainingLifeThreshold}, Target: {targetGrowth}");
+            vineController.SetGrowthTarget(targetGrowth);
         }
     }
 
@@ -261,15 +306,11 @@ public class SimulationManager : MonoBehaviour
         if (lifeCycle != null) 
         {
             lifeCycle.enabled = true;
+            currentPlayer = lifeCycle; // 현재 플레이어로 등록
+            lastPhaseIndex = -1; // 페이즈 초기화
+            
             // 중요: 사망 시 시뮬레이션 모드 전환 연결
             lifeCycle.onSprout.AddListener(EnableSimulationMode);
-
-            // [NEW] 덩굴 효과 연결 (프리팹 문제를 해결하기 위해 여기서 코드로 연결)
-            if (vineController != null)
-            {
-                // 이전 이벤트 리스너가 있다면 중복 방지가 어렵지만, 새 플레이어 객체이므로 괜찮음.
-                lifeCycle.onLifePhaseChanged.AddListener(vineController.SetGrowthTarget);
-            }
         }
 
         // 2. 플레이어 카메라 연결
@@ -281,7 +322,6 @@ public class SimulationManager : MonoBehaviour
             {
                 vcam.Follow = player.transform;
                 vcam.LookAt = player.transform;
-                // 필요하다면 여기서 SmartTerrainCamera 등의 설정을 갱신할 수도 있음
             }
         }
 

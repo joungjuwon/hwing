@@ -30,8 +30,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _ColorMask: 15
-    - _EdgeWidth: 0.05
-    - _Growth: 0
+    - _EdgeWidth: 0.01
+    - _Growth: 0.35942262
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
@@ -40,6 +40,6 @@ Material:
     - _UseUIAlphaClip: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EdgeColor: {r: 0, g: 1, b: 0, a: 1}
+    - _EdgeColor: {r: 0.25711998, g: 0.509434, b: 0.2966519, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

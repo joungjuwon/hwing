@@ -2003,6 +2003,13 @@ MonoBehaviour:
   autoStartIntro: 1
   introController: {fileID: 1373708731}
   vineController: {fileID: 1626048176}
+  growthPhases:
+  - remainingLifeThreshold: 0.676
+    targetGrowth: 0.35
+  - remainingLifeThreshold: 0.301
+    targetGrowth: 0.46
+  - remainingLifeThreshold: 0
+    targetGrowth: 0.68
 --- !u!4 &1061735803
 Transform:
   m_ObjectHideFlags: 0
@@ -2511,6 +2518,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.InputActionReference
   m_Asset: {fileID: -944628639613478452, guid: 221d0649d682c4d40aeee244ae0bf552, type: 3}
   m_ActionId: 5cbbf1c2-1e08-4b06-84c6-56d0e642897d
+--- !u!1 &1694812734 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2627301541663352336, guid: de2f4f7ef782cfd4d877dce61d0d25ae, type: 3}
+  m_PrefabInstance: {fileID: 1941090042}
+  m_PrefabAsset: {fileID: 0}
+--- !u!223 &1694812738
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694812734}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &1774657817
 GameObject:
   m_ObjectHideFlags: 0
@@ -2873,9 +2908,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2582734263885322050, guid: de2f4f7ef782cfd4d877dce61d0d25ae, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
+    - target: {fileID: 1386427550424386504, guid: de2f4f7ef782cfd4d877dce61d0d25ae, type: 3}
+      propertyPath: m_margin.w
+      value: 962.9033
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628922465630804318, guid: de2f4f7ef782cfd4d877dce61d0d25ae, type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628922465630804318, guid: de2f4f7ef782cfd4d877dce61d0d25ae, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628922465630804318, guid: de2f4f7ef782cfd4d877dce61d0d25ae, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1080
       objectReference: {fileID: 0}
     - target: {fileID: 5407057946172921083, guid: de2f4f7ef782cfd4d877dce61d0d25ae, type: 3}
       propertyPath: m_Name
@@ -2969,14 +3016,25 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7905546818005864551, guid: de2f4f7ef782cfd4d877dce61d0d25ae, type: 3}
+    - target: {fileID: 8009254970410747096, guid: de2f4f7ef782cfd4d877dce61d0d25ae, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8314524723854421662, guid: de2f4f7ef782cfd4d877dce61d0d25ae, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8869809948423694489, guid: de2f4f7ef782cfd4d877dce61d0d25ae, type: 3}
+      propertyPath: currentGrowth
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2627301541663352336, guid: de2f4f7ef782cfd4d877dce61d0d25ae, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1694812738}
   m_SourcePrefab: {fileID: 100100000, guid: de2f4f7ef782cfd4d877dce61d0d25ae, type: 3}
 --- !u!1 &2033770683
 GameObject:

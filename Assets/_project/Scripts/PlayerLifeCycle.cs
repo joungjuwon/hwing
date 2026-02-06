@@ -1,14 +1,12 @@
 using UnityEngine;
-using UnityEngine.Events; // UnityEvent 사용을 위해 추가
+using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class PlayerLifeCycle : MonoBehaviour
 {
     // Inspector에서 Vector3 매개변수를 받는 이벤트를 보이기 위한 래퍼 클래스
     [System.Serializable]
     public class SproutEvent : UnityEvent<Vector3> { }
-
-    [System.Serializable]
-    public class FloatEvent : UnityEvent<float> { }
 
     [Header("Life Settings")]
     public float maxLifeTime = 24.0f; // 최대 생존 시간
@@ -18,17 +16,16 @@ public class PlayerLifeCycle : MonoBehaviour
 
     [Header("Events")]
     [Tooltip("싹이 트고 환경이 변하기 시작할 때 호출되는 이벤트")]
-    public SproutEvent onSprout; // 위치 정보를 포함하여 이벤트를 호출하도록 변경
+    public SproutEvent onSprout; 
 
-    [Tooltip("수명이 33%, 66%, 100% 진행될 때마다 호출 (전달값: 0~1)")]
-    public FloatEvent onLifePhaseChanged;
+    // 외부(SimulationManager)에서 접근 가능한 생존율 속성 (0.0 ~ 1.0)
+    public float LifeRatio => Mathf.Clamp01(currentLifeTime / maxLifeTime);
 
     private TPSController controller;
     private Rigidbody rb;
     private float currentLifeTime;
     private bool isDead = false;
     private bool hasSpawnedDeathObject = false;
-    private int lastPhaseIndex = 0; // 현재 수명 단계 (0 ~ 3)
 
     private void Awake()
     {
@@ -39,7 +36,6 @@ public class PlayerLifeCycle : MonoBehaviour
     private void Start()
     {
         currentLifeTime = maxLifeTime;
-        lastPhaseIndex = 0;
     }
 
     private void FixedUpdate()
@@ -55,8 +51,6 @@ public class PlayerLifeCycle : MonoBehaviour
         {
             currentLifeTime -= Time.fixedDeltaTime;
             
-            CheckLifePhase(); // 수명 단계 체크
-
             if (currentLifeTime <= 0f)
             {
                 Die();
@@ -64,60 +58,23 @@ public class PlayerLifeCycle : MonoBehaviour
         }
     }
 
-    // 수명 진행도에 따라 단계별 이벤트 발생
-    private void CheckLifePhase()
-    {
-        // 소모된 비율 (0.0 ~ 1.0)
-        float lossRatio = 1f - (currentLifeTime / maxLifeTime);
-        int currentPhase = 0;
-
-        if (lossRatio >= 0.99f) currentPhase = 3;
-        else if (lossRatio >= 0.66f) currentPhase = 2;
-        else if (lossRatio >= 0.33f) currentPhase = 1;
-
-        // 단계가 올라갔을 때만 이벤트 실행
-        if (currentPhase > lastPhaseIndex)
-        {
-            lastPhaseIndex = currentPhase;
-            float targetGrowth = 0f;
-            
-            // 3단계 (33% 씩 증가)
-            switch (currentPhase)
-            {
-                case 1: targetGrowth = 0.33f; break;
-                case 2: targetGrowth = 0.66f; break;
-                case 3: targetGrowth = 1.0f; break;
-            }
-            
-            Debug.Log($"[PlayerLifeCycle] Life Phase Updated: {currentPhase} (Target Growth: {targetGrowth})");
-            onLifePhaseChanged?.Invoke(targetGrowth);
-        }
-    }
-    
-    // 사망 처리
     public void Die()
     {
         if (isDead) return;
         isDead = true;
 
-        // 이동 컨트롤러 비활성화 (입력 및 이동 중단)
         if (controller != null)
         {
             controller.enabled = false;
         }
     }
 
-    // 사망 후 물리 처리 (멈출 때까지 감속 후 오브젝트 생성)
     private void HandleDeathPhysics()
     {
-        // 죽었을 때 마찰력 적용
         rb.linearDamping = deathStopDamping;
-
-        // 경사면에서 멈추는 시간을 단축하기 위해 속도를 강제로 서서히 줄임
         rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, Vector3.zero, Time.fixedDeltaTime * 2f);
         rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, Vector3.zero, Time.fixedDeltaTime * 2f);
 
-        // 아직 오브젝트가 생성되지 않았고, 움직임이 거의 멈췄다면 생성
         if (!hasSpawnedDeathObject && rb.linearVelocity.sqrMagnitude < 0.01f && rb.angularVelocity.sqrMagnitude < 0.01f)
         {
             SpawnDeathObject();
@@ -133,24 +90,17 @@ public class PlayerLifeCycle : MonoBehaviour
         if (deathSpawnPrefab != null)
         {
             Vector3 spawnPosition = transform.position;
-            Quaternion spawnRotation = Quaternion.identity; // 기본적으로 월드 정방향(위쪽)으로 설정
+            Quaternion spawnRotation = Quaternion.identity; 
 
-            // 바닥에 붙여서 생성하기 위해 레이캐스트 (TPSController의 설정을 가져오거나 직접 정의)
             if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, Mathf.Infinity))
             {
                 spawnPosition = hit.point;
-                // 선택 사항: 경사면에 맞춰 싹이 자라게 하려면 아래 코드 사용
-                // spawnRotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
             }
-            // 씨앗이 구르고 있으므로 transform.rotation 대신 정방향(spawnRotation) 사용
-            Instantiate(deathSpawnPrefab, spawnPosition, spawnRotation);
             
-            // 환경 변화 로직 실행 (예: 주변 땅의 메테리얼 변경, 나무 성장 시작 등)
-            // 싹이 튼 위치(spawnPosition)를 이벤트와 함께 전달
+            Instantiate(deathSpawnPrefab, spawnPosition, spawnRotation);
             onSprout?.Invoke(spawnPosition);
         }
 
-        // 플레이어 캐릭터 삭제 (시뮬레이션 모드 전환 후 불필요한 객체 제거)
         Destroy(gameObject);
     }
 }
