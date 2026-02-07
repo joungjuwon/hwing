@@ -1,0 +1,5 @@
+﻿C:\Users\User\Documents\GitHub\hwing\Assets\Editor
+C:\Users\User\Documents\GitHub\hwing\Assets\MysticForge ProceduralTreeGenerator\Script\Editor
+C:\Users\User\Documents\GitHub\hwing\Assets\ThirdParty\KinoAqua-main\KinoAqua-main\jp.keijiro.kino.aqua.universal\Editor
+C:\Users\User\Documents\GitHub\hwing\Assets\ThirdParty\TutorialInfo\Scripts\Editor
+C:\Users\User\Documents\GitHub\hwing\Assets\_project\Editor

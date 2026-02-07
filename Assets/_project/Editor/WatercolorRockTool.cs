@@ -74,11 +74,31 @@ public static class WatercolorRockTool
             Selection.activeObject = mat;
         }
 
-        EditorUtility.DisplayDialog("Watercolor", "Created/Updated: " + OutputMatPath + "\n\nAssign this material to rock prefabs/meshes (including procedural/baked rock meshes).", "OK");
+        EditorUtility.DisplayDialog("Watercolor", $"Created/Updated: {OutputMatPath} with Triplanar enabled.\n\nAssign this material to rock prefabs/meshes (including procedural/baked rock meshes).", "OK");
     }
 
     [MenuItem("Tools/Watercolor/Apply Rock Watercolor Material To Selection")]
     public static void ApplyRockWatercolorToSelection()
+    {
+        ApplyToInternal(Selection.gameObjects);
+    }
+
+    [MenuItem("Tools/Watercolor/Apply Rock Watercolor Material To All Rocks in Scene")]
+    public static void ApplyRockWatercolorToAllInScene()
+    {
+        var allObjects = GameObject.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
+        var rocks = new System.Collections.Generic.List<GameObject>();
+        foreach (var obj in allObjects)
+        {
+            if (obj.name.Contains("Rock", System.StringComparison.OrdinalIgnoreCase))
+            {
+                rocks.Add(obj);
+            }
+        }
+        ApplyToInternal(rocks.ToArray());
+    }
+
+    private static void ApplyToInternal(GameObject[] targets)
     {
         var mat = AssetDatabase.LoadAssetAtPath<Material>(OutputMatPath);
         if (mat == null)
@@ -87,33 +107,26 @@ public static class WatercolorRockTool
             return;
         }
 
-        var selection = Selection.gameObjects;
-        if (selection == null || selection.Length == 0)
+        if (targets == null || targets.Length == 0)
         {
-            EditorUtility.DisplayDialog("Watercolor", "Select one or more GameObjects with MeshRenderer.", "OK");
+            EditorUtility.DisplayDialog("Watercolor", "No GameObjects selected or found.", "OK");
             return;
         }
 
-        Undo.RecordObjects(selection, "Apply Rock Watercolor Material");
-
         int count = 0;
-        foreach (var go in selection)
+        Undo.RecordObjects(targets, "Apply Rock Watercolor Material");
+
+        foreach (var go in targets)
         {
             if (go == null) continue;
-            var r = go.GetComponent<MeshRenderer>();
-            if (r == null) continue;
-
-            Undo.RecordObject(r, "Apply Rock Watercolor Material");
-            var mats = r.sharedMaterials;
-            if (mats == null || mats.Length == 0)
-                r.sharedMaterial = mat;
-            else
+            var renderers = go.GetComponentsInChildren<MeshRenderer>();
+            foreach (var r in renderers)
             {
-                mats[0] = mat;
-                r.sharedMaterials = mats;
+                Undo.RecordObject(r, "Apply Rock Watercolor Material");
+                r.sharedMaterial = mat;
+                EditorUtility.SetDirty(r);
+                count++;
             }
-            EditorUtility.SetDirty(r);
-            count++;
         }
 
         EditorUtility.DisplayDialog("Watercolor", $"Applied Mat_Rock_Watercolor to {count} renderer(s).", "OK");

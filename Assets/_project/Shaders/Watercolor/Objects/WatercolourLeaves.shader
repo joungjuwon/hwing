@@ -11,7 +11,6 @@ Shader "Watercolor/URP/Leaves"
         _WC_PaletteStrength("Palette Strength (0=keep texture color)", Range(0,1)) = 0.35
         _WC_BaseDetailStrength("Base Detail Strength (luma)", Range(0,1)) = 0.35
 
-        // [Header("Inner Line - Pigment")]
         _WC_InnerLineColor("Inner Line Color", Color) = (0.12, 0.18, 0.12, 1)
         _WC_InnerLineStrength("Inner Line Strength", Range(0,1)) = 0.35
         _WC_InnerLinePower("Inner Line Power", Range(0.1, 6)) = 2.0
@@ -22,9 +21,7 @@ Shader "Watercolor/URP/Leaves"
         [Header(Fake Volume)]
         _NormalSpherize("Spherize Normal", Range(0, 1)) = 0.5
         _NormalFlatten("Flatten Y", Range(0, 1)) = 0.0
-        
 
-        
         [Header(Complex Watercolor)]
         _RampLightingA("Ramp Lighting A", 2D) = "white" {}
         _RampLightingB("Ramp Lighting B", 2D) = "white" {}
@@ -55,6 +52,47 @@ Shader "Watercolor/URP/Leaves"
         Tags { "RenderPipeline" = "UniversalPipeline" "RenderType" = "TransparentCutout" "Queue" = "AlphaTest" }
         LOD 300
 
+        HLSLINCLUDE
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+        #include "Assets/_project/Shaders/Watercolor/Core/WatercolorCore.hlsl"
+
+        CBUFFER_START(UnityPerMaterial)
+            float4 _BaseColor;
+            float4 _MainTex_ST;
+            float _Cutoff;
+            
+            float _NormalSpherize;
+            float _NormalFlatten;
+            
+            float _LayerBlend;
+            float _WC_PaletteStrength;
+            float _WC_BaseDetailStrength;
+
+            float4 _WC_InnerLineColor;
+            float _WC_InnerLineStrength;
+            float _WC_InnerLinePower;
+            float _WC_PigmentStrength;
+            float _WC_PigmentScale;
+            float _WC_PigmentNoiseStrength;
+
+            float _PaperTiling;
+            float _PaperStrength;
+            
+            float _NoiseStrength;
+            float _NoiseScale;
+            float _NoiseDetail;
+            float _NoiseRoughness;
+            float _NoiseDistortion;
+            
+            float _FlutterSpeed;
+            float _FlutterStrength;
+            float _FlutterScale;
+        CBUFFER_END
+
+        TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
+        ENDHLSL
+
         Pass
         {
             Name "ForwardLit"
@@ -71,15 +109,9 @@ Shader "Watercolor/URP/Leaves"
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile_fragment _ _SHADOWS_SOFT
             #pragma multi_compile_fog
-
             #pragma multi_compile_instancing
-            // Skinning support
             #pragma multi_compile _ _SKINNING
             
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-            #include "Assets/_project/Shaders/Watercolor/Core/WatercolorCore.hlsl"
-
             struct Attributes
             {
                 float4 positionOS : POSITION;
@@ -103,42 +135,6 @@ Shader "Watercolor/URP/Leaves"
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
-            CBUFFER_START(UnityPerMaterial)
-                float4 _BaseColor;
-                float4 _MainTex_ST;
-                float _Cutoff;
-                
-                float _NormalSpherize;
-                float _NormalFlatten;
-                
-
-                
-                float _LayerBlend;
-                float _WC_PaletteStrength;
-                float _WC_BaseDetailStrength;
-
-                float4 _WC_InnerLineColor;
-                float _WC_InnerLineStrength;
-                float _WC_InnerLinePower;
-                float _WC_PigmentStrength;
-                float _WC_PigmentScale;
-                float _WC_PigmentNoiseStrength;
-
-                float _PaperTiling;
-                float _PaperStrength;
-                
-                float _NoiseStrength;
-                float _NoiseScale;
-                float _NoiseDetail;
-                float _NoiseRoughness;
-                float _NoiseDistortion;
-                
-                float _FlutterSpeed;
-                float _FlutterStrength;
-                float _FlutterScale;
-            CBUFFER_END
-
-            TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
             TEXTURE2D(_RampLightingA); SAMPLER(sampler_RampLightingA);
             TEXTURE2D(_RampLightingB); SAMPLER(sampler_RampLightingB);
             TEXTURE2D(_RampEdgeA); SAMPLER(sampler_RampEdgeA);
@@ -152,17 +148,11 @@ Shader "Watercolor/URP/Leaves"
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
-                float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
-
-                // --- Flutter Logic (High Frequency Wind) ---
-                // Applied in Object Space before skinning/transform
                 if (_FlutterStrength > 0.0001)
                 {
                     float noise = sin(_Time.y * _FlutterSpeed + (input.positionOS.x + input.positionOS.z) * _FlutterScale);
                     input.positionOS.xyz += input.normalOS * noise * _FlutterStrength;
                 }
-                // -------------------------------------------
-
 
                 VertexPositionInputs posInputs = GetVertexPositionInputs(input.positionOS.xyz);
                 VertexNormalInputs normInputs = GetVertexNormalInputs(input.normalOS);
@@ -191,7 +181,6 @@ Shader "Watercolor/URP/Leaves"
                 float4 baseTex = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv) * _BaseColor;
                 clip(baseTex.a - _Cutoff);
 
-                // Base texture vs palette control
                 float3 baseForLighting;
                 float detailMul;
                 WatercolorComputeBase_float(baseTex.rgb, _BaseColor.rgb, _WC_PaletteStrength, _WC_BaseDetailStrength, baseForLighting, detailMul);
@@ -230,7 +219,6 @@ Shader "Watercolor/URP/Leaves"
                 
                 wcColor *= detailMul;
 
-                // Inner line / pigment
                 {
                     float3 tmp;
                     WatercolorInnerLinePigment_float(
@@ -268,7 +256,6 @@ Shader "Watercolor/URP/Leaves"
             ENDHLSL
         }
         
-        // Custom ShadowCaster/DepthOnly so alpha cutout affects shadows (prevents quad-shaped shadows)
         Pass
         {
             Name "ShadowCaster"
@@ -285,10 +272,8 @@ Shader "Watercolor/URP/Leaves"
             #pragma multi_compile_instancing
             #pragma multi_compile _ _SKINNING
 
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
 
-            // Set by URP ShadowUtils.SetupShadowCasterConstantBuffer
             float3 _LightDirection;
             float3 _LightPosition;
 
@@ -308,16 +293,6 @@ Shader "Watercolor/URP/Leaves"
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
-            CBUFFER_START(UnityPerMaterial)
-                float4 _BaseColor;
-                float4 _MainTex_ST;
-                float _Cutoff;
-
-            CBUFFER_END
-
-            TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
-
-            // URP helper (same as Lit shadow caster)
             float4 GetShadowPositionHClip(float3 positionWS, float3 normalWS)
             {
                 float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, _LightDirection));
@@ -331,9 +306,11 @@ Shader "Watercolor/URP/Leaves"
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_TRANSFER_INSTANCE_ID(input, o);
 
-                // Apply same wind offset as Forward pass
-
-
+                if (_FlutterStrength > 0.0001)
+                {
+                    float noise = sin(_Time.y * _FlutterSpeed + (input.positionOS.x + input.positionOS.z) * _FlutterScale);
+                    input.positionOS.xyz += input.normalOS * noise * _FlutterStrength;
+                }
                 VertexPositionInputs posInputs = GetVertexPositionInputs(input.positionOS.xyz);
                 VertexNormalInputs normInputs = GetVertexNormalInputs(input.normalOS);
 
@@ -367,11 +344,10 @@ Shader "Watercolor/URP/Leaves"
             #pragma fragment DepthOnlyFragment
             #pragma multi_compile_instancing
 
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-
             struct Attributes
             {
                 float4 positionOS : POSITION;
+                float3 normalOS : NORMAL;
                 float2 uv : TEXCOORD0;
                 float4 color : COLOR;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -384,41 +360,16 @@ Shader "Watercolor/URP/Leaves"
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
-            CBUFFER_START(UnityPerMaterial)
-                float4 _BaseColor;
-                float4 _MainTex_ST;
-                float _Cutoff;
-
-            CBUFFER_END
-
-            TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
-
             Varyings DepthOnlyVertex(Attributes input)
             {
                 Varyings o;
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_TRANSFER_INSTANCE_ID(input, o);
 
-                // Apply same wind offset as Forward pass
-                // Synced Wind Logic
-                if (_WindStrength > 0.001)
+                if (_FlutterStrength > 0.0001)
                 {
-                    float height = max(0, input.positionOS.y - _WindHeightStart);
-                    float windMask = pow(height, _WindHeightPower);
-
-                    float windTime = _Time.y * _WindSpeed;
-                    float3 worldPos = TransformObjectToWorld(input.positionOS.xyz);
-                    
-                    float gust = sin(worldPos.x * 0.1 + windTime * 0.5) * 0.5 + 0.5;
-                    float strength = _WindStrength * (1.0 + gust * _WindGust);
-
-                    float3 windOffset;
-                    windOffset.x = sin(windTime + worldPos.x * _WindFrequency) * strength;
-                    windOffset.z = cos(windTime * 0.8 + worldPos.z * _WindFrequency) * strength;
-                    windOffset.y = sin(windTime * 1.5 + worldPos.x) * 0.2 * strength;
-                    
-                    windOffset *= windMask;
-                    input.positionOS.xyz += TransformWorldToObjectDir(windOffset);
+                    float noise = sin(_Time.y * _FlutterSpeed + (input.positionOS.x + input.positionOS.z) * _FlutterScale);
+                    input.positionOS.xyz += input.normalOS * noise * _FlutterStrength;
                 }
 
                 VertexPositionInputs posInputs = GetVertexPositionInputs(input.positionOS.xyz);

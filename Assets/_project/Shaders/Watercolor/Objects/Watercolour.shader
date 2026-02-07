@@ -12,9 +12,13 @@ Shader "Watercolor/URP/Watercolour"
         _WC_PaletteStrength("Palette Strength (0=keep texture color)", Range(0,1)) = 0.35
         _WC_BaseDetailStrength("Base Detail Strength (luma)", Range(0,1)) = 0.35
 
-        [Header(Normal Map)]
         [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
         _BumpScale("Normal Strength", Range(0,2)) = 1.0
+
+        [Header(Triplanar Settings)]
+        [Toggle] _UseTriplanar("Use Triplanar Mapping", Float) = 0
+        _TriplanarScale("Triplanar Scale", Float) = 1.0
+        _TriplanarBlend("Triplanar Blend", Range(0.01, 1)) = 0.2
 
         [Header(Inner Line (Front Overlay))]
         [Toggle] _UseInnerOutline("Use Inner Line", Float) = 0
@@ -126,6 +130,10 @@ Shader "Watercolor/URP/Watercolour"
                 float4 _MainTex_ST;
                 float _BumpScale;
 
+                float _UseTriplanar;
+                float _TriplanarScale;
+                float _TriplanarBlend;
+
                 float _LayerBlend;
                 float _WC_PaletteStrength;
                 float _WC_BaseDetailStrength;
@@ -231,7 +239,27 @@ Shader "Watercolor/URP/Watercolour"
                 Light mainLight = GetMainLight(shadowCoord);
                 
                 // 4. Complex Watercolor Lighting
-                float4 baseTex = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv) * _BaseColor;
+                float4 baseTex;
+                if (_UseTriplanar > 0.5)
+                {
+                    float3 blending = pow(abs(normalWS), _TriplanarBlend * 10.0);
+                    blending /= (blending.x + blending.y + blending.z);
+                    
+                    float2 uvX = input.positionWS.zy * _TriplanarScale;
+                    float2 uvY = input.positionWS.xz * _TriplanarScale;
+                    float2 uvZ = input.positionWS.xy * _TriplanarScale;
+                    
+                    float4 colX = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvX);
+                    float4 colY = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvY);
+                    float4 colZ = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvZ);
+                    
+                    baseTex = colX * blending.x + colY * blending.y + colZ * blending.z;
+                }
+                else
+                {
+                    baseTex = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv);
+                }
+                baseTex *= _BaseColor;
                 if (_AlphaClip > 0.5)
                 {
                     clip(baseTex.a - _Cutoff);

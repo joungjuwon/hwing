@@ -52,6 +52,10 @@ Shader "Watercolor/URP/Grass"
         _NoiseRoughness("Noise Roughness", Float) = 0.5
         _NoiseDistortion("Noise Distortion", Float) = 1.0
 
+        [Header(Inner Shadow)]
+        _InnerShadowStrength("Inner Shadow Strength", Range(0, 1)) = 0.5
+        _InnerShadowWidth("Inner Shadow Width", Range(0.01, 1)) = 0.3
+
         [Header(Debug)]
         _WC_DebugView("Debug View (0..8)", Range(0,8)) = 0
     }
@@ -138,6 +142,9 @@ Shader "Watercolor/URP/Grass"
                 float _NoiseDetail;
                 float _NoiseRoughness;
                 float _NoiseDistortion;
+
+                float _InnerShadowStrength;
+                float _InnerShadowWidth;
 
                 float _WC_DebugView;
             CBUFFER_END
@@ -297,6 +304,11 @@ Shader "Watercolor/URP/Grass"
                 float3 watercolorResult = grassColor * lightIntensity;
                 watercolorResult = lerp(watercolorResult, watercolorResult * colorFromRamp, 0.5);
                 watercolorResult = lerp(watercolorResult, edgeColor, edgeMask * _LayerBlend);
+
+                // Inner Shadow (AO at the base)
+                float innerShadow = 1.0 - saturate((1.0 - heightFactor) / max(_InnerShadowWidth, 0.001));
+                innerShadow = lerp(1.0, innerShadow, _InnerShadowStrength);
+                watercolorResult *= innerShadow;
 
                 // Paper texture overlay
                 float2 screenUV = input.positionCS.xy / _ScreenParams.xy;

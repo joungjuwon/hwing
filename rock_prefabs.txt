@@ -1,0 +1,5 @@
+﻿C:\Users\User\Documents\GitHub\hwing\Assets\FullOpaqueWater&Waterfall\Prefabs\Terrain\SM_Rock.prefab
+C:\Users\User\Documents\GitHub\hwing\Library\PackageCache\com.unity.shadergraph@bb4ad9d6ddac\Samples~\Common\Meshes\Rock_A_01.prefab
+C:\Users\User\Documents\GitHub\hwing\Library\PackageCache\com.unity.shadergraph@bb4ad9d6ddac\Samples~\Common\Meshes\Rock_A_02.prefab
+C:\Users\User\Documents\GitHub\hwing\Library\PackageCache\com.unity.shadergraph@bb4ad9d6ddac\Samples~\ProductionReady\Prefabs\PlatformRock.prefab
+C:\Users\User\Documents\GitHub\hwing\Library\PackageCache\com.unity.shadergraph@bb4ad9d6ddac\Samples~\ProductionReady\Prefabs\TutorialStep5AddRocks.prefab
