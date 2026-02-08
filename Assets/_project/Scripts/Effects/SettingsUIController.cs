@@ -94,6 +94,8 @@ public class SettingsUIController : MonoBehaviour
         else
         {
             // 원래 상태로 복구 (게임 특성에 따라 다름)
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             Time.timeScale = 1f;
         }
     }
