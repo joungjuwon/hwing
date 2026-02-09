@@ -36,6 +36,8 @@ public class SimulationManager : MonoBehaviour
 
     [Tooltip("랜덤 위치에 생성될 UI 프리팹 (World Space Canvas 권장)")]
     public GameObject spawnUiPrefab;
+    [Tooltip("스폰 영역을 정의하는 콜라이더 (설정되면 spawnAreaSize 대신 사용됨)")]
+    public Collider spawnAreaCollider;
     public Vector2 spawnAreaSize = new Vector2(40f, 40f); // 스폰 랜덤 범위 (가로, 세로)
     [Tooltip("레이캐스트 시작 높이 (현재 위치 기준)")]
     public float raycastHeight = 50f;
@@ -158,6 +160,12 @@ public class SimulationManager : MonoBehaviour
         }
     }
 
+    // 외부에서 스폰 영역을 변경할 수 있도록 하는 메서드
+    public void SetSpawnArea(Collider newArea)
+    {
+        spawnAreaCollider = newArea;
+    }
+
     // PlayerLifeCycle의 OnSprout 이벤트에 연결할 메서드
     public void EnableSimulationMode(Vector3 targetPosition)
     {
@@ -225,22 +233,48 @@ public class SimulationManager : MonoBehaviour
 
     private Vector3 GetRandomPositionOnMap()
     {
-        float randomX = Random.Range(-spawnAreaSize.x / 2f, spawnAreaSize.x / 2f);
-        float randomZ = Random.Range(-spawnAreaSize.y / 2f, spawnAreaSize.y / 2f);
+        // 1. 콜라이더가 설정되어 있다면 콜라이더 영역 내에서 랜덤 위치 계산
+        if (spawnAreaCollider != null)
+        {
+            Bounds bounds = spawnAreaCollider.bounds;
+            float randomX = Random.Range(bounds.min.x, bounds.max.x);
+            float randomZ = Random.Range(bounds.min.z, bounds.max.z);
+
+            // 콜라이더의 위쪽에서 아래로 레이캐스트
+            Vector3 searchPos = new Vector3(randomX, bounds.max.y + 0.1f, randomZ);
+            float checkDist = bounds.size.y + raycastDistance; // 콜라이더 높이 + 여유 거리
+
+            if (Physics.Raycast(searchPos, Vector3.down, out RaycastHit hit, checkDist, groundLayer))
+            {
+                return hit.point + Vector3.up * spawnOffset;
+            }
+            return new Vector3(randomX, bounds.min.y + spawnOffset, randomZ);
+        }
+
+        // 2. 콜라이더가 없으면 기존 방식(중심점 기준 사각형 범위) 사용
+        float offsetX = Random.Range(-spawnAreaSize.x / 2f, spawnAreaSize.x / 2f);
+        float offsetZ = Random.Range(-spawnAreaSize.y / 2f, spawnAreaSize.y / 2f);
         
         Vector3 center = transform.position;
-        Vector3 searchPos = new Vector3(center.x + randomX, center.y + raycastHeight, center.z + randomZ);
+        Vector3 rayStartPos = new Vector3(center.x + offsetX, center.y + raycastHeight, center.z + offsetZ);
 
-        if (Physics.Raycast(searchPos, Vector3.down, out RaycastHit hit, raycastDistance, groundLayer))
+        if (Physics.Raycast(rayStartPos, Vector3.down, out RaycastHit rayHit, raycastDistance, groundLayer))
         {
-            return hit.point + Vector3.up * spawnOffset;
+            return rayHit.point + Vector3.up * spawnOffset;
         }
-        return new Vector3(center.x + randomX, center.y + spawnOffset, center.z + randomZ); 
+        return new Vector3(center.x + offsetX, center.y + spawnOffset, center.z + offsetZ); 
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
+        
+        if (spawnAreaCollider != null)
+        {
+            Gizmos.DrawWireCube(spawnAreaCollider.bounds.center, spawnAreaCollider.bounds.size);
+            return;
+        }
+
         Vector3 center = transform.position;
         Vector3 boxCenter = new Vector3(center.x, center.y + raycastHeight - (raycastDistance * 0.5f), center.z);
         Gizmos.DrawWireCube(boxCenter, new Vector3(spawnAreaSize.x, raycastDistance, spawnAreaSize.y));
