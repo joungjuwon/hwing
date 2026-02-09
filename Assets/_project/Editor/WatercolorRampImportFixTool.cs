@@ -11,7 +11,6 @@ public class WatercolorRampImportFixTool : EditorWindow
     private FilterMode filterMode = FilterMode.Point;
     private bool setCompressionNone = true;
 
-    [MenuItem("Tools/Watercolor/Fix Ramp Import Settings")]
     public static void Open()
     {
         GetWindow<WatercolorRampImportFixTool>("Fix Ramp Imports");

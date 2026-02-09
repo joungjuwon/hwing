@@ -13,7 +13,8 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _SKINNING
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _USEINNEROUTLINE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -30,7 +31,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 9f475cdbc6cddec479674cdec29d3bf5, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -116,7 +117,7 @@ Material:
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _BumpScale: 1
+    - _BumpScale: 1.24
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -136,16 +137,16 @@ Material:
     - _InnerOutlineTexTiling: 3.58
     - _InnerOutlineThreshold: 0.208
     - _InnerOutlineWidth: 0
-    - _LayerBlend: 0.129
+    - _LayerBlend: 0.327
     - _Metallic: 0
     - _NoiseDetail: 2
     - _NoiseDistortion: 1
     - _NoiseRoughness: 0.5
     - _NoiseScale: 3.6
-    - _NoiseStrength: 0.1
+    - _NoiseStrength: 1
     - _OcclusionStrength: 1
     - _OutlineWidth: 0
-    - _PaperStrength: 0.161
+    - _PaperStrength: 0.294
     - _PaperTiling: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
@@ -158,10 +159,11 @@ Material:
     - _Surface: 0
     - _TriplanarBlend: 0.2
     - _TriplanarScale: 1
-    - _UseInnerOutline: 0
+    - _UseInnerOutline: 1
     - _UseTriplanar: 0
-    - _WC_BaseDetailStrength: 0.292
+    - _WC_BaseDetailStrength: 0.579
     - _WC_DebugView: 0
+    - _WC_EdgeViewDependency: 0.182
     - _WC_ForceSolid: 0
     - _WC_InnerLinePower: 2.6
     - _WC_InnerLineStrength: 0.995
@@ -169,7 +171,8 @@ Material:
     - _WC_InnerOverlayNoiseStrength: 0.35
     - _WC_InnerOverlayPower: 1.8
     - _WC_InnerOverlayStrength: 0.18
-    - _WC_PaletteStrength: 0.344
+    - _WC_MainTexAsAO: 0
+    - _WC_PaletteStrength: 0.774
     - _WC_PigmentNoiseStrength: 0.085
     - _WC_PigmentScale: 0.5
     - _WC_PigmentStrength: 0
@@ -183,7 +186,7 @@ Material:
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 1, g: 0.95508665, b: 0.8915094, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _InnerOutlineColor: {r: 0.1509434, g: 0.059407268, b: 0.017799927, a: 1}

@@ -506,6 +506,7 @@ void SplatmapFragment(
         _RampEdgeB, sampler_RampEdgeB,
         _RampEdgeCol, sampler_RampEdgeCol,
         _LayerBlend,
+        _WC_EdgeViewDependency,
         wcColor
     );
 

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6579a6f27719d4f48a043c091da1db7e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 223628
+  packageName: Titan Rock Generator - Procedural
+  packageVersion: 1.2.1
+  assetPath: Assets/RockTools/Materials/RockSnowy01.mat
+  uploadId: 694150

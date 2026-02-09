@@ -5,7 +5,6 @@ public static class WatercolorRampPresetFactory
 {
     private const string PresetFolder = "Assets/_project/Shaders/Watercolor/Presets";
 
-    [MenuItem("Tools/Watercolor/Create Presets (Rose: Petal/StemLeaf/Wood)")]
     public static void CreateRosePresets()
     {
         EnsureFolder(PresetFolder);

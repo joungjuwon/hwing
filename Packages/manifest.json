@@ -1,7 +1,5 @@
 {
   "dependencies": {
-    "com.antigravity.editor": "https://github.com/hohollala/Antigravity.git",
-    "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.9",
     "com.unity.cinemachine": "3.1.5",
     "com.unity.collab-proxy": "2.10.2",
@@ -9,7 +7,6 @@
     "com.unity.ide.visualstudio": "2.0.25",
     "com.unity.inputsystem": "1.16.0",
     "com.unity.multiplayer.center": "1.0.0",
-    "com.unity.probuilder": "6.0.8",
     "com.unity.render-pipelines.universal": "17.2.0",
     "com.unity.terrain-tools": "5.3.1",
     "com.unity.test-framework": "1.6.0",

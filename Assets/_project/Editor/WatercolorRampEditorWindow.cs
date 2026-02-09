@@ -13,7 +13,7 @@ public class WatercolorRampEditorWindow : EditorWindow
     private Material _mat;
     private WatercolorRampPreset _preset;
 
-    [MenuItem("Tools/Watercolor/Ramp Editor")]
+    [MenuItem(HwingMenuPaths.WatercolorRamps + "/Ramp Editor", false, HwingMenuPaths.WatercolorRampsPriority)]
     public static void Open()
     {
         var w = GetWindow<WatercolorRampEditorWindow>(false, "Watercolor Ramp Editor", true);

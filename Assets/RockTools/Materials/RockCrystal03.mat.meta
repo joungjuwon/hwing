@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: aa5a63d1dbb661b4bb03341ec89cd4d2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 223628
+  packageName: Titan Rock Generator - Procedural
+  packageVersion: 1.2.1
+  assetPath: Assets/RockTools/Materials/RockCrystal03.mat
+  uploadId: 694150

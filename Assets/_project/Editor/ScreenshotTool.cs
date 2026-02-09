@@ -6,7 +6,6 @@ using System.Text;
 
 public class ScreenshotTool
 {
-    [MenuItem("Tools/Capture Demo")]
     public static void CaptureDemo()
     {
         string scenePath = "Assets/_project/Scenes/Demo.unity";

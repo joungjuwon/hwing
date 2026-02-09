@@ -6,7 +6,6 @@ public static class WatercolorMaterialConvertTool
 {
     private const string GrassShaderName = "Watercolor/URP/Grass";
 
-    [MenuItem("Tools/Watercolor/Convert Selected Material -> Watercolor Grass")]
     public static void ConvertSelectedToWatercolorGrass()
     {
         var mat = Selection.activeObject as Material;

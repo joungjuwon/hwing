@@ -42,6 +42,7 @@ Shader "Watercolor/URP/Terrain"
         _RampEdgeB("Ramp Edge B (Mask)", 2D) = "white" {}
         _RampEdgeCol("Ramp Edge Color", 2D) = "white" {}
         _LayerBlend("Edge Blend Strength", Range(0, 1)) = 0.2
+        _WC_EdgeViewDependency("Edge Source (0=Light,1=View)", Range(0, 1)) = 0.0
 
         _PaperTex("Paper Texture", 2D) = "white" {}
         _PaperTiling("Paper Tiling", Float) = 1.0
@@ -110,6 +111,7 @@ Shader "Watercolor/URP/Terrain"
 
             CBUFFER_START(UnityPerMaterial)
                 float _LayerBlend;
+                float _WC_EdgeViewDependency;
                 float _PaperTiling;
                 float _PaperStrength;
             CBUFFER_END

@@ -159,6 +159,7 @@ void WatercolorLightingComplex_float(
     Texture2D RampEdgeCol, SamplerState SamplerEC,
 
     float LayerBlend,
+    float EdgeViewDependency,
     out float3 OutColor
 )
 {
@@ -178,11 +179,13 @@ void WatercolorLightingComplex_float(
     float3 rampB = SAMPLE_TEXTURE2D(RampLightB, SamplerB, float2(rampAFactor, 0.5)).rgb;
     float3 bodyColor = rampB * BaseColor * LightColor;
 
-    float fresnel = 1.0 - saturate(dot(NormalWS, ViewDirWS));
-    fresnel = pow(fresnel, max(LayerBlend, 0.0001));
+    float lightEdge = 1.0 - saturate(ndl * softShadow);
+    float viewEdge = 1.0 - saturate(dot(NormalWS, ViewDirWS));
+    float edgeInput = lerp(lightEdge, viewEdge, saturate(EdgeViewDependency));
+    edgeInput = pow(saturate(edgeInput), max(LayerBlend, 0.0001));
 
-    float3 edgeA = SAMPLE_TEXTURE2D(RampEdgeA, SamplerEA, float2(fresnel, 0.5)).rgb;
-    float3 edgeB = SAMPLE_TEXTURE2D(RampEdgeB, SamplerEB, float2(fresnel, 0.5)).rgb;
+    float3 edgeA = SAMPLE_TEXTURE2D(RampEdgeA, SamplerEA, float2(edgeInput, 0.5)).rgb;
+    float3 edgeB = SAMPLE_TEXTURE2D(RampEdgeB, SamplerEB, float2(edgeInput, 0.5)).rgb;
     float edgeMask = saturate(dot(edgeA, float3(0.33,0.33,0.33)) * dot(edgeB, float3(0.33,0.33,0.33)));
 
     float3 edgeColor = SAMPLE_TEXTURE2D(RampEdgeCol, SamplerEC, float2(edgeMask, 0.5)).rgb;
@@ -211,6 +214,7 @@ void WatercolorLightingComplex_Debug_float(
     Texture2D RampEdgeCol, SamplerState SamplerEC,
 
     float LayerBlend,
+    float EdgeViewDependency,
     out float LightIntensity,
     out float RampAFactor,
     out float EdgeMask,
@@ -233,11 +237,13 @@ void WatercolorLightingComplex_Debug_float(
     RampBColor = SAMPLE_TEXTURE2D(RampLightB, SamplerB, float2(RampAFactor, 0.5)).rgb;
     float3 bodyColor = RampBColor * BaseColor * LightColor;
 
-    float fresnel = 1.0 - saturate(dot(NormalWS, ViewDirWS));
-    fresnel = pow(fresnel, max(LayerBlend, 0.0001));
+    float lightEdge = 1.0 - saturate(ndl * softShadow);
+    float viewEdge = 1.0 - saturate(dot(NormalWS, ViewDirWS));
+    float edgeInput = lerp(lightEdge, viewEdge, saturate(EdgeViewDependency));
+    edgeInput = pow(saturate(edgeInput), max(LayerBlend, 0.0001));
 
-    float3 edgeA = SAMPLE_TEXTURE2D(RampEdgeA, SamplerEA, float2(fresnel, 0.5)).rgb;
-    float3 edgeB = SAMPLE_TEXTURE2D(RampEdgeB, SamplerEB, float2(fresnel, 0.5)).rgb;
+    float3 edgeA = SAMPLE_TEXTURE2D(RampEdgeA, SamplerEA, float2(edgeInput, 0.5)).rgb;
+    float3 edgeB = SAMPLE_TEXTURE2D(RampEdgeB, SamplerEB, float2(edgeInput, 0.5)).rgb;
     EdgeMask = saturate(dot(edgeA, float3(0.33,0.33,0.33)) * dot(edgeB, float3(0.33,0.33,0.33)));
 
     EdgeColor = SAMPLE_TEXTURE2D(RampEdgeCol, SamplerEC, float2(EdgeMask, 0.5)).rgb;

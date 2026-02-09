@@ -10,7 +10,6 @@ public static class WatercolorVolumeSetupTool
     private const string DefaultProfileName = "Watercolor_FilmicVeryHigh_Profile.asset";
     private const string DefaultVolumeObjectName = "Global Volume (Watercolor Filmic)";
 
-    [MenuItem("Tools/Watercolor/Setup Global Volume (Filmic)")]
     public static void SetupGlobalVolumeFilmic()
     {
         EnsureFolder(DefaultFolder);

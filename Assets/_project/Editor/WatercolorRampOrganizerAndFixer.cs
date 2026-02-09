@@ -18,7 +18,6 @@ public static class WatercolorRampOrganizerAndFixer
         Root + "/Ramps_Leaves",
     };
 
-    [MenuItem("Tools/Watercolor/Organize & Fix All Ramp Textures")]
     public static void OrganizeAndFix()
     {
         EnsureFolder(TargetTextures);
@@ -68,7 +67,6 @@ public static class WatercolorRampOrganizerAndFixer
             "OK");
     }
 
-    [MenuItem("Tools/Watercolor/Fix Ramp Imports (Scan Target Folder)")]
     public static void FixOnly()
     {
         EnsureFolder(TargetTextures);

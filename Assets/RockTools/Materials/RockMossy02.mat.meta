@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 25f03318db2768c43ab4879f11827041
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 223628
+  packageName: Titan Rock Generator - Procedural
+  packageVersion: 1.2.1
+  assetPath: Assets/RockTools/Materials/RockMossy02.mat
+  uploadId: 694150

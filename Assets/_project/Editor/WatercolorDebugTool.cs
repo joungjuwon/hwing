@@ -5,7 +5,6 @@ public class WatercolorDebugTool : EditorWindow
 {
     private static readonly string DebugProp = "_WC_DebugView";
 
-    [MenuItem("Tools/Watercolor/Debug Tool")]
     public static void Open()
     {
         GetWindow<WatercolorDebugTool>("Watercolor Debug");

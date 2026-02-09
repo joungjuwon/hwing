@@ -11,6 +11,7 @@ Shader "Watercolor/URP/Watercolour"
         [Header(Base Texture vs Palette)]
         _WC_PaletteStrength("Palette Strength (0=keep texture color)", Range(0,1)) = 0.35
         _WC_BaseDetailStrength("Base Detail Strength (luma)", Range(0,1)) = 0.35
+        [Toggle] _WC_MainTexAsAO("Use MainTex As AO (Grayscale Detail)", Float) = 0
 
         [Normal] _BumpMap("Normal Map", 2D) = "bump" {}
         _BumpScale("Normal Strength", Range(0,2)) = 1.0
@@ -41,6 +42,7 @@ Shader "Watercolor/URP/Watercolour"
         _RampEdgeCol("Ramp Edge Color", 2D) = "white" {}
         
         _LayerBlend("Edge Blend Strength", Range(0, 1)) = 0.2
+        _WC_EdgeViewDependency("Edge Source (0=Light,1=View)", Range(0, 1)) = 0.0
 
 
 
@@ -135,8 +137,10 @@ Shader "Watercolor/URP/Watercolour"
                 float _TriplanarBlend;
 
                 float _LayerBlend;
+                float _WC_EdgeViewDependency;
                 float _WC_PaletteStrength;
                 float _WC_BaseDetailStrength;
+                float _WC_MainTexAsAO;
 
                 // Inner line (front overlay) controls
                 float _UseInnerOutline;
@@ -259,7 +263,12 @@ Shader "Watercolor/URP/Watercolour"
                 {
                     baseTex = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv);
                 }
-                baseTex *= _BaseColor;
+
+                // Default mode: texture color is part of base color.
+                if (_WC_MainTexAsAO < 0.5)
+                {
+                    baseTex *= _BaseColor;
+                }
                 if (_AlphaClip > 0.5)
                 {
                     clip(baseTex.a - _Cutoff);
@@ -272,7 +281,19 @@ Shader "Watercolor/URP/Watercolour"
                 // Base texture vs palette control
                 float3 baseForLighting;
                 float detailMul;
-                WatercolorComputeBase_float(baseTex.rgb, _BaseColor.rgb, _WC_PaletteStrength, _WC_BaseDetailStrength, baseForLighting, detailMul);
+                if (_WC_MainTexAsAO > 0.5)
+                {
+                    // AO mode:
+                    // - _MainTex acts as grayscale detail mask only.
+                    // - _BaseColor drives hue.
+                    float aoLuma = dot(baseTex.rgb, float3(0.3, 0.59, 0.11));
+                    baseForLighting = _BaseColor.rgb;
+                    detailMul = lerp(1.0, aoLuma, saturate(_WC_BaseDetailStrength));
+                }
+                else
+                {
+                    WatercolorComputeBase_float(baseTex.rgb, _BaseColor.rgb, _WC_PaletteStrength, _WC_BaseDetailStrength, baseForLighting, detailMul);
+                }
                 
                 float3 watercolorColor;
                 float3 viewDirWS = SafeNormalize(input.viewDirWS);
@@ -299,6 +320,7 @@ Shader "Watercolor/URP/Watercolour"
                     _RampEdgeB, sampler_RampEdgeB,
                     _RampEdgeCol, sampler_RampEdgeCol,
                     _LayerBlend,
+                    _WC_EdgeViewDependency,
                     dbgLightIntensity,
                     dbgRampAFactor,
                     dbgEdgeMask,

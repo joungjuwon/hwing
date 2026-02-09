@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 public class ConsoleLogExporter : EditorWindow
 {
-    [MenuItem("Tools/Export Console Log to File")]
+    [MenuItem(HwingMenuPaths.Utilities + "/Export Console Log to File", false, HwingMenuPaths.UtilitiesPriority)]
     public static void ExportConsoleLog()
     {
         string path = EditorUtility.SaveFilePanel(

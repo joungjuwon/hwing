@@ -78,7 +78,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampEdgeCol:
-        m_Texture: {fileID: 2800000, guid: d681720ca3144234e8c8c382cf8467ed, type: 3}
+        m_Texture: {fileID: 2800000, guid: 7969947781a7fcb45b8fc835134060a2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampLightingA:
@@ -134,11 +134,11 @@ Material:
     - _NoiseDistortion: 1
     - _NoiseRoughness: 0.5
     - _NoiseScale: 5.57
-    - _NoiseStrength: 0
-    - _NormalFlatten: 0
-    - _NormalSpherize: 0.495
+    - _NoiseStrength: 0.289
+    - _NormalFlatten: 0.025
+    - _NormalSpherize: 0.887
     - _OcclusionStrength: 1
-    - _PaperStrength: 0
+    - _PaperStrength: 0.314
     - _PaperTiling: 0.3
     - _Parallax: 0.005
     - _QueueOffset: 0
@@ -150,6 +150,7 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _WC_BaseDetailStrength: 0.491
+    - _WC_EdgeViewDependency: 0
     - _WC_InnerLinePower: 4.11
     - _WC_InnerLineStrength: 1
     - _WC_PaletteStrength: 0.533
@@ -163,11 +164,11 @@ Material:
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.8331909, g: 1, b: 0.6556604, a: 1}
+    - _BaseColor: {r: 0.84130937, g: 0.9716981, b: 0.64627093, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _WC_InnerLineColor: {r: 0.8537736, g: 1, b: 0.8537736, a: 1}
+    - _WC_InnerLineColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &7108964685169825108

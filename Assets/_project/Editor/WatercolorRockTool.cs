@@ -7,7 +7,6 @@ public static class WatercolorRockTool
     private const string DefaultWatercolorTemplateMatPath = "Assets/_project/Shaders/Watercolor/Material/Mat_Tree_Watercolor.mat";
     private const string OutputMatPath = "Assets/_project/Shaders/Watercolor/Material/Mat_Rock_Watercolor.mat";
 
-    [MenuItem("Tools/Watercolor/Create Rock Watercolor Material")]
     public static void CreateRockWatercolorMaterial()
     {
         // 1) Load shader
@@ -77,13 +76,11 @@ public static class WatercolorRockTool
         EditorUtility.DisplayDialog("Watercolor", $"Created/Updated: {OutputMatPath} with Triplanar enabled.\n\nAssign this material to rock prefabs/meshes (including procedural/baked rock meshes).", "OK");
     }
 
-    [MenuItem("Tools/Watercolor/Apply Rock Watercolor Material To Selection")]
     public static void ApplyRockWatercolorToSelection()
     {
         ApplyToInternal(Selection.gameObjects);
     }
 
-    [MenuItem("Tools/Watercolor/Apply Rock Watercolor Material To All Rocks in Scene")]
     public static void ApplyRockWatercolorToAllInScene()
     {
         var allObjects = GameObject.FindObjectsByType<GameObject>(FindObjectsSortMode.None);
@@ -103,7 +100,7 @@ public static class WatercolorRockTool
         var mat = AssetDatabase.LoadAssetAtPath<Material>(OutputMatPath);
         if (mat == null)
         {
-            EditorUtility.DisplayDialog("Watercolor", "Material not found. Run: Tools/Watercolor/Create Rock Watercolor Material", "OK");
+            EditorUtility.DisplayDialog("Watercolor", $"Material not found. Run: {HwingMenuPaths.WatercolorMaterials}/Create Rock Material", "OK");
             return;
         }
 

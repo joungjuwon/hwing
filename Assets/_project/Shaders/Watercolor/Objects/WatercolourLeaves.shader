@@ -29,6 +29,7 @@ Shader "Watercolor/URP/Leaves"
         _RampEdgeB("Ramp Edge B", 2D) = "white" {}
         _RampEdgeCol("Ramp Edge Color", 2D) = "white" {}
         _LayerBlend("Edge Blend", Range(0, 1)) = 0.2
+        _WC_EdgeViewDependency("Edge Source (0=Light,1=View)", Range(0, 1)) = 0.0
         
         [Header(Paper Texture)]
         _PaperTex("Paper Texture", 2D) = "white" {}
@@ -66,6 +67,7 @@ Shader "Watercolor/URP/Leaves"
             float _NormalFlatten;
             
             float _LayerBlend;
+            float _WC_EdgeViewDependency;
             float _WC_PaletteStrength;
             float _WC_BaseDetailStrength;
 
@@ -214,6 +216,7 @@ Shader "Watercolor/URP/Leaves"
                     _RampEdgeB, sampler_RampEdgeB,
                     _RampEdgeCol, sampler_RampEdgeCol,
                     _LayerBlend,
+                    _WC_EdgeViewDependency,
                     wcColor
                 );
                 
