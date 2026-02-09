@@ -26,7 +26,8 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
   - {fileID: 3639343787593450266}
-  m_RendererFeatureMap: 1a43088be48b8132
+  - {fileID: 2249687133478581929}
+  m_RendererFeatureMap: 1a43088be48b8132a9f6c14e877e381f
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -55,6 +56,37 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
+--- !u!114 &2249687133478581929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35cb3a2e0b6ac0c4db0446e6cc38d3dc, type: 3}
+  m_Name: KuwaharaTestRenderFeature
+  m_EditorClassIdentifier: Assembly-CSharp::KuwaharaTestRenderFeature
+  m_Active: 0
+  settings:
+    renderPassEvent: 500
+    material: {fileID: 0}
+    kernelSize1: 3
+    tensorSpread1: 1
+    weightH1: 1
+    weightV1: 1
+    anisotropy1: 1
+    sharpness1: 12
+    kernelSize2: 8
+    tensorSpread2: 2
+    weightH2: 1
+    weightV2: 1
+    anisotropy2: 1
+    sharpness2: 8
+    blendFactor: 0.5
+    layer2Offset: {x: 0, y: 0}
+    debugPass: 0
 --- !u!114 &3639343787593450266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3535f62ae750048bfb2e0af8f8467a, type: 3}
   m_Name: LuftDeussenWatercolorFeature
   m_EditorClassIdentifier: Assembly-CSharp::LuftDeussenWatercolorFeature
-  m_Active: 1
+  m_Active: 0
   settings:
     renderPassEvent: 550
     shader: {fileID: 0}

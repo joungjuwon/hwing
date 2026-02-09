@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace ProceduralTreeGeneratorByMysticForge
 {
@@ -764,6 +765,7 @@ namespace ProceduralTreeGeneratorByMysticForge
             MeshRenderer meshRenderer = trunkObject.AddComponent<MeshRenderer>();
 
             meshRenderer.sharedMaterial = GetTrunkMaterial();
+            ConfigureTreeRenderer(meshRenderer);
             List<Vector3> trunkBendPositions = new List<Vector3>();
 
             meshFilter.mesh = CreateTrunkMesh(ref vertexCount, ref triangleCount, ref edgeCount, trunkSubdivision, trunkSegments, trunkBending, trunkHeight, trunkRadiusCurvature, trunkRadius, trunkBendPositions, includeStump);
@@ -786,6 +788,13 @@ namespace ProceduralTreeGeneratorByMysticForge
             Material mat = new Material(fallback);
             mat.color = new Color(0.55f, 0.27f, 0.07f);
             return mat;
+        }
+
+        private static void ConfigureTreeRenderer(Renderer renderer)
+        {
+            if (renderer == null) return;
+            renderer.shadowCastingMode = ShadowCastingMode.TwoSided;
+            renderer.receiveShadows = true;
         }
 
         private Mesh CreateTrunkMesh(ref int vertexCount, ref int triangleCount, ref int edgeCount, int trunkSubdivision, int trunkSegments, float trunkBending, float trunkHeight, float trunkRadiusCurvature, float trunkRadius, List<Vector3> trunkBendPositions, bool includeStump)
@@ -1042,6 +1051,7 @@ namespace ProceduralTreeGeneratorByMysticForge
                     MeshRenderer meshRenderer = branch.AddComponent<MeshRenderer>();
 
                     meshRenderer.sharedMaterial = GetTrunkMaterial();
+                    ConfigureTreeRenderer(meshRenderer);
                     meshFilter.mesh = CreateBranchMesh(gravity, adjustedBranchRadius, adjustedBranchLength, branchBending, direction, branchPosition, randomRotation, bendPositions, branchSegments, branchSubdivision, ref vertexBranchCount, ref triangleBranchCount, ref edgeBranchCount);
 
                     branches.Add(new Branch(branchPosition, direction, adjustedBranchLength, adjustedBranchRadius, randomRotation, bendPositions, i));
@@ -1117,6 +1127,7 @@ namespace ProceduralTreeGeneratorByMysticForge
                 MeshRenderer meshRenderer = branch.AddComponent<MeshRenderer>();
 
                 meshRenderer.sharedMaterial = GetTrunkMaterial();
+                ConfigureTreeRenderer(meshRenderer);
                 meshFilter.mesh = CreateBranchMesh(gravity, adjustedBranchRadius, adjustedBranchLength, branchBending, direction, branchPosition, randomRotation, bendPositions, branchSegments, branchSubdivision, ref vertexBranchCount, ref triangleBranchCount, ref edgeBranchCount);
 
                 branches.Add(new Branch(branchPosition, direction, adjustedBranchLength, adjustedBranchRadius, randomRotation, bendPositions, i));
@@ -1366,6 +1377,7 @@ namespace ProceduralTreeGeneratorByMysticForge
                         MeshRenderer meshRenderer = branchlet.AddComponent<MeshRenderer>();
 
                         meshRenderer.sharedMaterial = GetTrunkMaterial();
+                        ConfigureTreeRenderer(meshRenderer);
                         meshFilter.mesh = CreateBranchletMesh(adjustedBranchletLength, gravityBranchlets, branchletRadius, branchletBending, branchletSegments, branchletSubdivision, ref vertexBranchletCount, ref triangleBranchletCount, ref edgeBranchletCount, direction, branchletPosition, fixedRotation, branchRotation, bendBranchletPositions);
 
                         BranchletsX created = new BranchletsX(branchletPosition, direction, adjustedBranchletLength, branchletRadius, branchletData.sideFactor, fixedRotation, bendBranchletPositions, branchletData.childSeed);
@@ -1499,6 +1511,7 @@ namespace ProceduralTreeGeneratorByMysticForge
                     MeshRenderer meshRenderer = branchlet.AddComponent<MeshRenderer>();
 
                     meshRenderer.sharedMaterial = GetTrunkMaterial();
+                    ConfigureTreeRenderer(meshRenderer);
                     meshFilter.mesh = CreateBranchletMesh(adjustedBranchletLength, gravityBranchlets, branchletRadius, branchletBending, branchletSegments, branchletSubdivision, ref vertexBranchletCount, ref triangleBranchletCount, ref edgeBranchletCount, direction, branchletPosition, fixedRotation, branchRotation, bendBranchletPositions);
 
                     branchlets.Add(new BranchletsX(branchletPosition, direction, branchletLength, branchletMaxRadius, sideFactor, fixedRotation, bendBranchletPositions, Random.Range(int.MinValue, int.MaxValue)));
@@ -1579,6 +1592,7 @@ namespace ProceduralTreeGeneratorByMysticForge
                 MeshRenderer meshRenderer = branchlet.AddComponent<MeshRenderer>();
 
                 meshRenderer.sharedMaterial = GetTrunkMaterial();
+                ConfigureTreeRenderer(meshRenderer);
                 meshFilter.mesh = CreateBranchletMesh(length, 0f, Mathf.Max(0.001f, node.radius), 0f, branchletSegments, branchletSubdivision, ref vertexBranchletCount, ref triangleBranchletCount, ref edgeBranchletCount, direction, parentWorld, rotation, rotation, bendPositions);
 
                 branchlets.Add(new BranchletsX(parentWorld, direction, length, Mathf.Max(0.001f, node.radius), 1f, rotation, bendPositions, 0));
@@ -2031,6 +2045,7 @@ namespace ProceduralTreeGeneratorByMysticForge
                 MeshRenderer meshRenderer = branchlet.AddComponent<MeshRenderer>();
 
                 meshRenderer.sharedMaterial = GetTrunkMaterial();
+                ConfigureTreeRenderer(meshRenderer);
                 meshFilter.mesh = CreateBranchletMesh(adjustedLength, gravityBranchlets, radius, branchletBending, branchletSegments, branchletSubdivision, ref vertexBranchletCount, ref triangleBranchletCount, ref edgeBranchletCount, direction, childPosition, fixedRotation, branchRotation, bendPositions);
 
                 branchlets.Add(new BranchletsX(childPosition, direction, adjustedLength, radius, sideFactor, fixedRotation, bendPositions, rng.Next()));
@@ -2131,7 +2146,11 @@ namespace ProceduralTreeGeneratorByMysticForge
 
 
                     MeshRenderer leafRenderer = leaf.GetComponent<MeshRenderer>();
-                    leafRenderer.sharedMaterial = leafMaterial;
+                    if (leafRenderer != null)
+                    {
+                        leafRenderer.sharedMaterial = leafMaterial;
+                        ConfigureTreeRenderer(leafRenderer);
+                    }
 
                     leaf.transform.position += new Vector3(
                         Random.Range(0f, leafBranchRandomPositioning),
@@ -2246,7 +2265,11 @@ namespace ProceduralTreeGeneratorByMysticForge
 
 
                     MeshRenderer leafRenderer = leaf.GetComponent<MeshRenderer>();
-                    leafRenderer.sharedMaterial = leafMaterial;
+                    if (leafRenderer != null)
+                    {
+                        leafRenderer.sharedMaterial = leafMaterial;
+                        ConfigureTreeRenderer(leafRenderer);
+                    }
 
                     leaf.transform.position += new Vector3(
                         Random.Range(0f, leafBranchletRandomPositioning),
@@ -2341,7 +2364,11 @@ namespace ProceduralTreeGeneratorByMysticForge
                 leaf.transform.localScale = leafSizeTrunkV3 * leafTrunkSize * randomSizeMultiplier;
 
                 MeshRenderer leafRenderer = leaf.GetComponent<MeshRenderer>();
-                leafRenderer.sharedMaterial = leafMaterial;
+                if (leafRenderer != null)
+                {
+                    leafRenderer.sharedMaterial = leafMaterial;
+                    ConfigureTreeRenderer(leafRenderer);
+                }
 
                 leaf.transform.position += new Vector3(
                     Random.Range(0f, leafTrunkRandomPositioning),
@@ -2441,7 +2468,11 @@ namespace ProceduralTreeGeneratorByMysticForge
             leaf.transform.localScale = trueLeavesSizeV3 * trueLeavesSize;
 
             MeshRenderer mr = leaf.GetComponent<MeshRenderer>();
-            if(mr) mr.sharedMaterial = mat;
+            if (mr != null)
+            {
+                mr.sharedMaterial = mat;
+                ConfigureTreeRenderer(mr);
+            }
 
             MeshFilter mf = leaf.GetComponent<MeshFilter>();
             if (mf != null && mf.sharedMesh != null)
@@ -2491,7 +2522,11 @@ namespace ProceduralTreeGeneratorByMysticForge
                 leaf.transform.localScale = Vector3.one * scale * cotyledonStartSize;
                 
                 MeshRenderer mr = leaf.GetComponent<MeshRenderer>();
-                if (mr && material != null) mr.sharedMaterial = material;
+                if (mr != null)
+                {
+                    if (material != null) mr.sharedMaterial = material;
+                    ConfigureTreeRenderer(mr);
+                }
 
                 // Mesh counting skip for brevity or add if needed
             }
@@ -2538,7 +2573,11 @@ namespace ProceduralTreeGeneratorByMysticForge
                     leaf.transform.localScale = trueLeavesSizeV3 * trueLeavesSize; 
                     
                     MeshRenderer mr = leaf.GetComponent<MeshRenderer>();
-                    if (mr && material != null) mr.sharedMaterial = material;
+                    if (mr != null)
+                    {
+                        if (material != null) mr.sharedMaterial = material;
+                        ConfigureTreeRenderer(mr);
+                    }
                 }
                 
                 currentFrac += interval;
@@ -2701,6 +2740,7 @@ namespace ProceduralTreeGeneratorByMysticForge
              MeshFilter mf = segment.AddComponent<MeshFilter>();
              MeshRenderer mr = segment.AddComponent<MeshRenderer>();
              mr.sharedMaterial = GetTrunkMaterial();
+             ConfigureTreeRenderer(mr);
              
              // Use CreateBranchMesh for better visuals (tapering, bending)
              // We treat this segment as a mini-branch with 1 segment?

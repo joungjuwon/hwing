@@ -165,12 +165,11 @@ void WatercolorLightingComplex_float(
     // URP's mainLight.direction sign can vary by version/pipeline.
     // Make it robust by choosing the direction that gives the lit side (positive N·L).
     float ndl = dot(NormalWS, LightDir);
-    if (ndl < 0.0) ndl = dot(NormalWS, -LightDir);
-    float NdotL = ndl * 0.5 + 0.5;
+    float NdotL = saturate(ndl * 0.5 + 0.5);
 
-    // Soft Shadow & Gamma-ish shaping
-    float softShadow = lerp(0.4, 1.0, ShadowAtten);
-    float lightIntensity = pow(max(NdotL * softShadow, 0.01), 0.7);
+    // Soft shadow remap: lower floor so shadowed regions don't stay overly bright.
+    float softShadow = lerp(0.2, 1.0, saturate(ShadowAtten));
+    float lightIntensity = pow(max(NdotL * softShadow, 0.01), 0.85);
 
     float3 rampA = SAMPLE_TEXTURE2D(RampLightA, SamplerA, float2(lightIntensity, 0.5)).rgb;
     float rampAFactor = dot(rampA, float3(0.3, 0.59, 0.11));
@@ -178,11 +177,12 @@ void WatercolorLightingComplex_float(
     float3 rampB = SAMPLE_TEXTURE2D(RampLightB, SamplerB, float2(rampAFactor, 0.5)).rgb;
     float3 bodyColor = rampB * BaseColor * LightColor;
 
-    float fresnel = 1.0 - saturate(dot(NormalWS, ViewDirWS));
-    fresnel = pow(fresnel, max(LayerBlend, 0.0001));
+    // Edge blend is driven by light direction (N dot L), not camera view angle.
+    float edgeCoord = 1.0 - NdotL;
+    edgeCoord = pow(edgeCoord, max(LayerBlend, 0.0001));
 
-    float3 edgeA = SAMPLE_TEXTURE2D(RampEdgeA, SamplerEA, float2(fresnel, 0.5)).rgb;
-    float3 edgeB = SAMPLE_TEXTURE2D(RampEdgeB, SamplerEB, float2(fresnel, 0.5)).rgb;
+    float3 edgeA = SAMPLE_TEXTURE2D(RampEdgeA, SamplerEA, float2(edgeCoord, 0.5)).rgb;
+    float3 edgeB = SAMPLE_TEXTURE2D(RampEdgeB, SamplerEB, float2(edgeCoord, 0.5)).rgb;
     float edgeMask = saturate(dot(edgeA, float3(0.33,0.33,0.33)) * dot(edgeB, float3(0.33,0.33,0.33)));
 
     float3 edgeColor = SAMPLE_TEXTURE2D(RampEdgeCol, SamplerEC, float2(edgeMask, 0.5)).rgb;
@@ -221,11 +221,10 @@ void WatercolorLightingComplex_Debug_float(
 )
 {
     float ndl = dot(NormalWS, LightDir);
-    if (ndl < 0.0) ndl = dot(NormalWS, -LightDir);
-    float NdotL = ndl * 0.5 + 0.5;
+    float NdotL = saturate(ndl * 0.5 + 0.5);
 
-    float softShadow = lerp(0.4, 1.0, ShadowAtten);
-    LightIntensity = pow(max(NdotL * softShadow, 0.01), 0.7);
+    float softShadow = lerp(0.2, 1.0, saturate(ShadowAtten));
+    LightIntensity = pow(max(NdotL * softShadow, 0.01), 0.85);
 
     float3 rampA = SAMPLE_TEXTURE2D(RampLightA, SamplerA, float2(LightIntensity, 0.5)).rgb;
     RampAFactor = dot(rampA, float3(0.3, 0.59, 0.11));
@@ -233,11 +232,12 @@ void WatercolorLightingComplex_Debug_float(
     RampBColor = SAMPLE_TEXTURE2D(RampLightB, SamplerB, float2(RampAFactor, 0.5)).rgb;
     float3 bodyColor = RampBColor * BaseColor * LightColor;
 
-    float fresnel = 1.0 - saturate(dot(NormalWS, ViewDirWS));
-    fresnel = pow(fresnel, max(LayerBlend, 0.0001));
+    // Edge blend is driven by light direction (N dot L), not camera view angle.
+    float edgeCoord = 1.0 - NdotL;
+    edgeCoord = pow(edgeCoord, max(LayerBlend, 0.0001));
 
-    float3 edgeA = SAMPLE_TEXTURE2D(RampEdgeA, SamplerEA, float2(fresnel, 0.5)).rgb;
-    float3 edgeB = SAMPLE_TEXTURE2D(RampEdgeB, SamplerEB, float2(fresnel, 0.5)).rgb;
+    float3 edgeA = SAMPLE_TEXTURE2D(RampEdgeA, SamplerEA, float2(edgeCoord, 0.5)).rgb;
+    float3 edgeB = SAMPLE_TEXTURE2D(RampEdgeB, SamplerEB, float2(edgeCoord, 0.5)).rgb;
     EdgeMask = saturate(dot(edgeA, float3(0.33,0.33,0.33)) * dot(edgeB, float3(0.33,0.33,0.33)));
 
     EdgeColor = SAMPLE_TEXTURE2D(RampEdgeCol, SamplerEC, float2(EdgeMask, 0.5)).rgb;

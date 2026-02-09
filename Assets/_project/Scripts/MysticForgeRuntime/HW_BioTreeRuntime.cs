@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -116,6 +117,7 @@ namespace MysticForgeRuntime
             // Ensure SkinnedMeshRenderer
             skinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();
             if (skinnedMeshRenderer == null) skinnedMeshRenderer = gameObject.AddComponent<SkinnedMeshRenderer>();
+            ConfigureTreeRenderer(skinnedMeshRenderer);
             
             if (treeMesh == null) { 
                 treeMesh = new Mesh(); 
@@ -230,12 +232,20 @@ namespace MysticForgeRuntime
                 mats[0] = treeMaterial;
                 mats[1] = leafMaterial;
                 skinnedMeshRenderer.sharedMaterials = mats;
+                ConfigureTreeRenderer(skinnedMeshRenderer);
                 
                 // 5. ANIMATION BINDING
                 HW_ProceduralSway sway = GetComponent<HW_ProceduralSway>();
                 if(sway == null) sway = gameObject.AddComponent<HW_ProceduralSway>();
                 sway.BindBones(bones, stiffnessList);
             }
+        }
+
+        private static void ConfigureTreeRenderer(Renderer renderer)
+        {
+            if (renderer == null) return;
+            renderer.shadowCastingMode = ShadowCastingMode.TwoSided;
+            renderer.receiveShadows = true;
         }
 
         private BioNode GenerateSkeletonNode(Vector3 pos, Vector3 dir, float length, float structuralRadius, int depth, int generation, int seed, Quaternion startRot, bool allowTrifurcation, float parentTipRadius, List<Vector3> avoidDirs, float vStart, BioNode parent)

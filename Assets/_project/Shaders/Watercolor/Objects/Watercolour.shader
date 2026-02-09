@@ -41,6 +41,8 @@ Shader "Watercolor/URP/Watercolour"
         _RampEdgeCol("Ramp Edge Color", 2D) = "white" {}
         
         _LayerBlend("Edge Blend Strength", Range(0, 1)) = 0.2
+        _WC_ShadowPower("Shadow Power", Range(0.5, 3.0)) = 1.8
+        _WC_ShadowFloor("Shadow Floor", Range(0, 1)) = 0.2
 
 
 
@@ -135,6 +137,8 @@ Shader "Watercolor/URP/Watercolour"
                 float _TriplanarBlend;
 
                 float _LayerBlend;
+                float _WC_ShadowPower;
+                float _WC_ShadowFloor;
                 float _WC_PaletteStrength;
                 float _WC_BaseDetailStrength;
 
@@ -276,6 +280,7 @@ Shader "Watercolor/URP/Watercolour"
                 
                 float3 watercolorColor;
                 float3 viewDirWS = SafeNormalize(input.viewDirWS);
+                float shadowAttenRemap = pow(saturate(mainLight.shadowAttenuation), _WC_ShadowPower);
 
                 // Debug intermediates
                 float dbgLightIntensity;
@@ -292,7 +297,7 @@ Shader "Watercolor/URP/Watercolour"
                     viewDirWS,
                     mainLight.direction,
                     mainLight.color,
-                    mainLight.shadowAttenuation,
+                    shadowAttenRemap,
                     _RampLightingA, sampler_RampLightingA,
                     _RampLightingB, sampler_RampLightingB,
                     _RampEdgeA, sampler_RampEdgeA,
@@ -308,7 +313,8 @@ Shader "Watercolor/URP/Watercolour"
                     dbgTone
                 );
 
-                watercolorColor = dbgTone * detailMul;
+                float shadowMul = lerp(_WC_ShadowFloor, 1.0, shadowAttenRemap);
+                watercolorColor = dbgTone * detailMul * shadowMul;
 
                 // (Inner line/pigment removed — now handled by front overlay pass)
 
