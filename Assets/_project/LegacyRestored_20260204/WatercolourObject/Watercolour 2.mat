@@ -71,6 +71,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 10e9d686769e62f4a8b00833232b0827, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _PaperTex:
+        m_Texture: {fileID: 2800000, guid: 8e64a30be1a44e840adf7ba6e642a3f4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ShadowMap:
         m_Texture: {fileID: 2800000, guid: 10e9d686769e62f4a8b00833232b0827, type: 3}
         m_Scale: {x: 20, y: 20}
@@ -103,6 +107,8 @@ Material:
     - Vector1_BBEA2355: 1
     - _AlphaClip: 0
     - _Blend: 0
+    - _BlenderNormalAmplitude: 2
+    - _BlenderNormalOffset: 0.7
     - _BumpScale: 1
     - _Cull: 2
     - _Cutoff: 0.5
@@ -113,6 +119,8 @@ Material:
     - _DeepShadowSpread: -0.53
     - _DeepShadowThreshold: 1
     - _DstBlend: 0
+    - _EdgeSmoothness: 0.1
+    - _EdgeThreshold: 0.5
     - _EnvironmentReflections: 1
     - _FresnelAmount: 0.5
     - _FresnelPower: 4
@@ -127,6 +135,8 @@ Material:
     - _InnerOutlinePower: 3
     - _InnerOutlineSmoothness: 0
     - _InnerOutlineThreshold: 0
+    - _LightingRampSmoothness: 0.1
+    - _LightingRampThreshold: 0.5
     - _Metallic: 0
     - _NoiseBrighten: -0.9
     - _NoiseStrength: -1.53
@@ -134,6 +144,10 @@ Material:
     - _OutlineNoiseFramerate: 12
     - _OutlineNoiseFrequency: 5
     - _OutlineWidth: 0
+    - _PaperHueShift: 0
+    - _PaperSaturation: 1
+    - _PaperScale: 1
+    - _PaperValue: 1
     - _QueueControl: 0
     - _QueueOffset: 0
     - _RANDOM_OFFSETS_ENABLED: 0
@@ -155,12 +169,14 @@ Material:
     - Color_D9F05973: {r: 1, g: 0.9398213, b: 0.5235849, a: 0}
     - Color_DB04B181: {r: 0.6886792, g: 0.44785583, b: 0.23064259, a: 0}
     - _BaseColor: {r: 1, g: 0.7498599, b: 0.514151, a: 1}
+    - _BlenderNormalScale: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color2: {r: 0.29999998, g: 0.59, b: 0.61, a: 1}
     - _DeepShadowColor: {r: 0.13718647, g: 0.0747597, b: 0.1509434, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _GroundColor: {r: 1, g: 0.5294118, b: 0, a: 1}
     - _OutlineColor: {r: 0.6981132, g: 0.51684785, b: 0.28648987, a: 1}
+    - _PaperTiling: {r: 1, g: 1, b: 0, a: 0}
     - _ShadowColor: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SpecularColor: {r: 0, g: 0, b: 0, a: 0}
