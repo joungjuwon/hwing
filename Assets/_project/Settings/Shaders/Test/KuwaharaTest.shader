@@ -21,14 +21,10 @@ Shader "Custom/Test/KuwaharaTest"
         TEXTURE2D(_StructureTensorTex);
         SAMPLER(sampler_StructureTensorTex);
         
-        TEXTURE2D(_BlendTex);
-        SAMPLER(sampler_BlendTex);
-        
         float _KuwaharaSize;
         float _TensorSpread;
         float _Anisotropy;
         float _Sharpness;
-        float _BlendFactor;
         float _WeightH;
         float _WeightV;
         
@@ -203,35 +199,6 @@ Shader "Custom/Test/KuwaharaTest"
                 }
                 
                 return half4(finalColor / totalWeight, 1.0);
-            }
-            ENDHLSL
-        }
-        
-        // Pass 4: Blend (Layer 2 over Layer 1)
-        Pass
-        {
-            Name "Blend"
-            HLSLPROGRAM
-            #pragma vertex Vert
-            #pragma fragment Frag
-            
-            float4 _Layer2Offset;
-            
-            half4 Frag(Varyings input) : SV_Target
-            {
-                // Layer 1 is the Base (Fine details)
-                half4 layer1 = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, input.texcoord);
-                
-                // Layer 2 is the Overlay (Coarse shapes)
-                // Apply Offset: Convert pixel offset to UV space
-                float2 offsetUV = _Layer2Offset.xy * _BlitTexture_TexelSize.xy;
-                half4 layer2 = SAMPLE_TEXTURE2D(_BlendTex, sampler_BlendTex, input.texcoord + offsetUV);
-                
-                // Standard Alpha Blending: Layer 1 * (1 - alpha) + Layer 2 * alpha
-                // _BlendFactor controls the Opacity of Layer 2
-                float opacity = saturate(_BlendFactor);
-                
-                return lerp(layer1, layer2, opacity);
             }
             ENDHLSL
         }

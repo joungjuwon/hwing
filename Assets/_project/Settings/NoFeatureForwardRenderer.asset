@@ -27,8 +27,7 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: 1316232980798419994}
   - {fileID: 9193686558111390991}
-  - {fileID: 3582379534592228493}
-  m_RendererFeatureMap: 1ab4241eec3244120f5d83e03689967f8dbcffd9342bb731
+  m_RendererFeatureMap: 1ab4241eec3244120f5d83e03689967f
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -78,27 +77,6 @@ MonoBehaviour:
     dispersal1Texture: {fileID: 2800000, guid: 10e9d686769e62f4a8b00833232b0827, type: 3}
     dispersal2Texture: {fileID: 2800000, guid: 2d15b67ab1ece4d6e96772d635e2e9b8, type: 3}
     halfResolution: 1
---- !u!114 &3582379534592228493
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbb041dc07de2d5459eeadead8be7f3d, type: 3}
-  m_Name: InnerEdgeRenderFeature
-  m_EditorClassIdentifier: Assembly-CSharp::InnerEdgeRenderFeature
-  m_Active: 0
-  settings:
-    passEvent: 300
-    layerMask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    stencilShaderTag: WCStencil
-    edgeMaterial: {fileID: 2100000, guid: 2513472c3e3384c43a6debb020a2cff9, type: 2}
-    edgeMaterialPass: 0
 --- !u!114 &9193686558111390991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,18 +93,10 @@ MonoBehaviour:
   settings:
     renderPassEvent: 500
     material: {fileID: 2100000, guid: 58e22f6477a86864b8e23e6e4f8fb076, type: 2}
-    kernelSize1: 2
-    tensorSpread1: 0.1
+    kernelSize1: 5
+    tensorSpread1: 1.93
     weightH1: 1
-    weightV1: 1
-    anisotropy1: 1
-    sharpness1: 14.44
-    kernelSize2: 8
-    tensorSpread2: 2.28
-    weightH2: 1
-    weightV2: 0.373
-    anisotropy2: 1.224
-    sharpness2: 4.61
-    blendFactor: 0.17
-    layer2Offset: {x: 2.55, y: 0.51}
+    weightV1: 0.985
+    anisotropy1: 1.109
+    sharpness1: 9.62
     debugPass: 0

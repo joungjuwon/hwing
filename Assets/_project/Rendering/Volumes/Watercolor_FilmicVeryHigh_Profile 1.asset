@@ -21,7 +21,7 @@ MonoBehaviour:
     m_Value: 0
   densityBase:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.751
   densityContrast:
     m_OverrideState: 1
     m_Value: 0.5
@@ -30,13 +30,13 @@ MonoBehaviour:
     m_Value: 0.209
   turbulenceStrength:
     m_OverrideState: 1
-    m_Value: 0.103
+    m_Value: 0.367
   dispersal1Strength:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.307
   dispersal2Strength:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.302
   textureScale:
     m_OverrideState: 1
     m_Value: 1
@@ -51,7 +51,7 @@ MonoBehaviour:
     m_Value: 1
   blurSize:
     m_OverrideState: 1
-    m_Value: 0.57
+    m_Value: 0.64
   blurIterations:
     m_OverrideState: 1
     m_Value: 1
@@ -98,7 +98,7 @@ MonoBehaviour:
   active: 1
   mode:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 1
   neutralHDRRangeReductionMode:
     m_OverrideState: 0
     m_Value: 2
@@ -138,13 +138,13 @@ MonoBehaviour:
   active: 1
   lift:
     m_OverrideState: 1
-    m_Value: {x: 0.9255972, y: 0.98259425, z: 1, w: 0.2644068}
+    m_Value: {x: 1, y: 1, z: 1, w: 0}
   gamma:
     m_OverrideState: 1
-    m_Value: {x: 0.9371808, y: 0.92105573, z: 1, w: -0.1559322}
+    m_Value: {x: 1, y: 1, z: 1, w: 0}
   gain:
     m_OverrideState: 1
-    m_Value: {x: 0.9827482, y: 1, z: 0.9010721, w: -0.1559322}
+    m_Value: {x: 1, y: 1, z: 1, w: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

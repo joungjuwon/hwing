@@ -28,7 +28,7 @@ MonoBehaviour:
   - {fileID: 3639343787593450266}
   m_RendererFeatureMap: 1a43088be48b8132
   m_UseNativeRenderPass: 0
-  xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
+  xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_AssetVersion: 3
   m_PrepassLayerMask:
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f3535f62ae750048bfb2e0af8f8467a, type: 3}
   m_Name: LuftDeussenWatercolorFeature
   m_EditorClassIdentifier: Assembly-CSharp::LuftDeussenWatercolorFeature
-  m_Active: 1
+  m_Active: 0
   settings:
     renderPassEvent: 550
     shader: {fileID: 0}
