@@ -2,7 +2,6 @@
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Kino.Aqua.Universal.Runtime.csproj" />
-  <Project Path="ColliderDrivenPathEffects.csproj" />
   <Project Path="OccaSoftware.OutlineObjects.Demo.csproj" />
   <Project Path="Kino.Aqua.Runtime.csproj" />
   <Project Path="OccaSoftware.OutlineObjects.Editor.csproj" />

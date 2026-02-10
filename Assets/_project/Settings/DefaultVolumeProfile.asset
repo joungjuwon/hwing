@@ -342,6 +342,9 @@ MonoBehaviour:
   skyOcclusionIntensityMultiplier:
     m_OverrideState: 1
     m_Value: 1
+  worldOffset:
+    m_OverrideState: 1
+    m_Value: {x: 0, y: 0, z: 0}
 --- !u!114 &-1216621516061285780
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -430,6 +433,61 @@ MonoBehaviour:
   p31:
     m_OverrideState: 1
     m_Value: {r: 0, g: 0, b: 0, a: 1}
+--- !u!114 &-291776083095291060
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7186a5c46bcb2244abd257c12a8f196e, type: 3}
+  m_Name: LuftDeussenWatercolorVolume
+  m_EditorClassIdentifier: Assembly-CSharp::LuftDeussenWatercolorVolume
+  active: 1
+  edgeThreshold:
+    m_OverrideState: 1
+    m_Value: 2
+  edgeDarkening:
+    m_OverrideState: 1
+    m_Value: 0.5
+  densityBase:
+    m_OverrideState: 1
+    m_Value: 1
+  densityContrast:
+    m_OverrideState: 1
+    m_Value: 0.5
+  paperStrength:
+    m_OverrideState: 1
+    m_Value: 0.3
+  turbulenceStrength:
+    m_OverrideState: 1
+    m_Value: 0.5
+  dispersal1Strength:
+    m_OverrideState: 1
+    m_Value: 0.25
+  dispersal2Strength:
+    m_OverrideState: 1
+    m_Value: 0.125
+  textureScale:
+    m_OverrideState: 1
+    m_Value: 1
+  wobbleStrength:
+    m_OverrideState: 1
+    m_Value: 0.5
+  colorSteps:
+    m_OverrideState: 1
+    m_Value: 8
+  enableQuantization:
+    m_OverrideState: 1
+    m_Value: 0
+  blurSize:
+    m_OverrideState: 1
+    m_Value: 1
+  blurIterations:
+    m_OverrideState: 1
+    m_Value: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -462,8 +520,7 @@ MonoBehaviour:
   - {fileID: -6288072647309666549}
   - {fileID: 7518938298396184218}
   - {fileID: -1410297666881709256}
-  - {fileID: -7750755424749557576}
-  - {fileID: -5139089513906902183}
+  - {fileID: -291776083095291060}
 --- !u!114 &853819529557874667
 MonoBehaviour:
   m_ObjectHideFlags: 3
