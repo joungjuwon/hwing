@@ -38,8 +38,8 @@ public class SpawnAreaTrigger : MonoBehaviour
     private bool hasTriggered = false;
 
     // 터레인 복구를 위한 백업 데이터
-    private Dictionary<int, int[,]> originalDetailBackups = new Dictionary<int, int[,]>();
-    private Terrain backedUpTerrain;
+    // static으로 변경하여 모든 트리거가 최초의 원본 상태를 공유하도록 함 (중복 백업 방지 및 메모리 절약)
+    private static Dictionary<Terrain, Dictionary<int, int[,]>> globalDetailBackups = new Dictionary<Terrain, Dictionary<int, int[,]>>();
 
     private void Start()
     {
@@ -49,15 +49,23 @@ public class SpawnAreaTrigger : MonoBehaviour
         // 게임 시작 시점의 터레인 디테일 데이터 백업
         if (targetTerrain != null && detailLayerIndices != null)
         {
-            backedUpTerrain = targetTerrain;
+            if (!globalDetailBackups.ContainsKey(targetTerrain))
+            {
+                globalDetailBackups[targetTerrain] = new Dictionary<int, int[,]>();
+            }
+
             TerrainData td = targetTerrain.terrainData;
 
             foreach (int layerIndex in detailLayerIndices)
             {
                 if (layerIndex >= 0 && layerIndex < td.detailPrototypes.Length)
                 {
-                    int[,] data = td.GetDetailLayer(0, 0, td.detailWidth, td.detailHeight, layerIndex);
-                    originalDetailBackups[layerIndex] = data;
+                    // 이미 백업된 데이터가 있다면 건너뜀 (최초의 깨끗한 상태 보존)
+                    if (!globalDetailBackups[targetTerrain].ContainsKey(layerIndex))
+                    {
+                        int[,] data = td.GetDetailLayer(0, 0, td.detailWidth, td.detailHeight, layerIndex);
+                        globalDetailBackups[targetTerrain][layerIndex] = data;
+                    }
                 }
             }
         }
@@ -66,13 +74,17 @@ public class SpawnAreaTrigger : MonoBehaviour
     private void OnDestroy()
     {
         // 게임 종료 또는 객체 파괴 시 터레인 복구
-        if (backedUpTerrain != null && originalDetailBackups.Count > 0)
+        if (targetTerrain != null && globalDetailBackups.ContainsKey(targetTerrain) && detailLayerIndices != null)
         {
-            foreach (var kvp in originalDetailBackups)
+            var backups = globalDetailBackups[targetTerrain];
+            foreach (int layerIndex in detailLayerIndices)
             {
-                backedUpTerrain.terrainData.SetDetailLayer(0, 0, kvp.Key, kvp.Value);
+                if (backups.ContainsKey(layerIndex))
+                {
+                    targetTerrain.terrainData.SetDetailLayer(0, 0, layerIndex, backups[layerIndex]);
+                }
             }
-            originalDetailBackups.Clear();
+            // 주의: static 백업 데이터는 Clear()하지 않음 (다른 트리거가 복구할 때 필요할 수 있음)
         }
     }
 
