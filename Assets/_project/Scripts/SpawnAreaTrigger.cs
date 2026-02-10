@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SpawnAreaTrigger : MonoBehaviour
 {
@@ -31,6 +32,8 @@ public class SpawnAreaTrigger : MonoBehaviour
     public int plantingRadius = 5;
     [Tooltip("심을 밀도 (한 셀당 생성할 개수)")]
     public int plantingDensity = 10;
+    [Tooltip("심을 영역을 정의하는 콜라이더 리스트 (비워두면 위 반경 설정 사용)")]
+    public List<Collider> plantingAreaColliders;
 
     private bool hasTriggered = false;
 
@@ -121,6 +124,16 @@ public class SpawnAreaTrigger : MonoBehaviour
         int detailWidth = terrainData.detailWidth;
         int detailHeight = terrainData.detailHeight;
 
+        // 0. 콜라이더 리스트가 있다면 해당 영역에 심기
+        if (plantingAreaColliders != null && plantingAreaColliders.Count > 0)
+        {
+            foreach (var col in plantingAreaColliders)
+            {
+                if (col != null) PlantDetailsInCollider(col, targetTerrain, terrainData, detailWidth, detailHeight);
+            }
+            return; // 콜라이더 모드 사용 시 반경 모드는 무시
+        }
+
         // 월드 좌표를 터레인 디테일 맵 좌표로 변환
         Vector3 relativePos = centerPos - targetTerrain.transform.position;
         int centerX = (int)(relativePos.x / terrainData.size.x * detailWidth);
@@ -158,6 +171,63 @@ public class SpawnAreaTrigger : MonoBehaviour
 
             // 변경된 데이터 적용
             terrainData.SetDetailLayer(startX, startY, layerIndex, map);
+        }
+    }
+
+    private void PlantDetailsInCollider(Collider col, Terrain terrain, TerrainData terrainData, int detailWidth, int detailHeight)
+    {
+        Bounds bounds = col.bounds;
+        Vector3 terrainPos = terrain.transform.position;
+        Vector3 terrainSize = terrainData.size;
+
+        // 콜라이더 바운드에 해당하는 디테일 맵 범위 계산
+        int startX = Mathf.FloorToInt((bounds.min.x - terrainPos.x) / terrainSize.x * detailWidth);
+        int startY = Mathf.FloorToInt((bounds.min.z - terrainPos.z) / terrainSize.z * detailHeight);
+        int endX = Mathf.CeilToInt((bounds.max.x - terrainPos.x) / terrainSize.x * detailWidth);
+        int endY = Mathf.CeilToInt((bounds.max.z - terrainPos.z) / terrainSize.z * detailHeight);
+
+        startX = Mathf.Clamp(startX, 0, detailWidth);
+        startY = Mathf.Clamp(startY, 0, detailHeight);
+        endX = Mathf.Clamp(endX, 0, detailWidth);
+        endY = Mathf.Clamp(endY, 0, detailHeight);
+
+        int width = endX - startX;
+        int height = endY - startY;
+
+        if (width <= 0 || height <= 0) return;
+
+        foreach (int layerIndex in detailLayerIndices)
+        {
+            if (layerIndex < 0 || layerIndex >= terrainData.detailPrototypes.Length) continue;
+
+            int[,] map = terrainData.GetDetailLayer(startX, startY, width, height, layerIndex);
+            bool modified = false;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    // 현재 셀의 월드 좌표 계산
+                    float normX = (startX + x) / (float)detailWidth;
+                    float normY = (startY + y) / (float)detailHeight;
+                    float worldX = terrainPos.x + normX * terrainSize.x;
+                    float worldZ = terrainPos.z + normY * terrainSize.z;
+                    float worldY = terrain.SampleHeight(new Vector3(worldX, 0, worldZ)) + terrainPos.y;
+
+                    // 콜라이더 내부에 있는지 확인 (ClosestPoint 이용)
+                    Vector3 worldPos = new Vector3(worldX, worldY, worldZ);
+                    if (Vector3.SqrMagnitude(col.ClosestPoint(worldPos) - worldPos) < 0.01f)
+                    {
+                        map[y, x] = Mathf.Max(map[y, x], plantingDensity);
+                        modified = true;
+                    }
+                }
+            }
+
+            if (modified)
+            {
+                terrainData.SetDetailLayer(startX, startY, layerIndex, map);
+            }
         }
     }
 }

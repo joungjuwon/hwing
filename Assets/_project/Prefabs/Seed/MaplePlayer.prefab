@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6632040914819750144}
   - component: {fileID: 4693065875316191078}
   - component: {fileID: 7264999911526304622}
+  - component: {fileID: -139733966406861851}
   m_Layer: 0
   m_Name: MaplePlayer
   m_TagString: Player
@@ -194,6 +195,33 @@ MonoBehaviour:
   timeInterval: 0.2
   shaderPropertyBaseName: _TargetTurbulencePose
   useLegacyNamingForTwoPoints: 1
+--- !u!114 &-139733966406861851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4000990181738476334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea52cefb9b52b7f47a5ec8258ebb0dab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TPSController
+  moveSpeed: 6
+  maxSpeed: 15
+  maxRotationSpeed: 15
+  rotationCorrectionSpeed: 5
+  rotationSpeed: 10
+  jumpForce: 4
+  moveInterval: 1
+  moveDamping: 1
+  stopDamping: 5
+  groundCheckDistance: 1.1
+  groundCheckRadius: 0.3
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  cameraTransform: {fileID: 0}
 --- !u!1 &4817076873063884614
 GameObject:
   m_ObjectHideFlags: 0
