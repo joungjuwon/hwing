@@ -30,7 +30,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: abc00000000007026408763318894545, type: 3}
+        m_Texture: {fileID: 2800000, guid: abc00000000010662217790646257684, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -54,7 +54,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: abc00000000012526330225986770540, type: 3}
+        m_Texture: {fileID: 2800000, guid: abc00000000002392844980775142755, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -74,23 +74,23 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampEdgeA:
-        m_Texture: {fileID: 2800000, guid: adda3c3d923c6d64088db56b957be785, type: 3}
+        m_Texture: {fileID: 2800000, guid: 3f27a89ab4272d44ea8014a691fc0596, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampEdgeB:
-        m_Texture: {fileID: 2800000, guid: 5f51dfbbe44c7cb4bbf783b018d10044, type: 3}
+        m_Texture: {fileID: 2800000, guid: 81e3df2f7293368488c8b3c37d639293, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampEdgeCol:
-        m_Texture: {fileID: 2800000, guid: 4aabd59a813175643902225d107a0ee2, type: 3}
+        m_Texture: {fileID: 2800000, guid: d711b15db5f1b4340a10d64cb926b4d1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampLightingA:
-        m_Texture: {fileID: 2800000, guid: c8d0f314dac4b434b953b9f95f7646cc, type: 3}
+        m_Texture: {fileID: 2800000, guid: 195791b53acaf974a9e86eb970f698cf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RampLightingB:
-        m_Texture: {fileID: 2800000, guid: 33f1d956b9f3a2342b66b42895ffe209, type: 3}
+        m_Texture: {fileID: 2800000, guid: d681720ca3144234e8c8c382cf8467ed, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -173,6 +173,8 @@ Material:
     - _WC_PigmentNoiseStrength: 0.085
     - _WC_PigmentScale: 0.5
     - _WC_PigmentStrength: 0
+    - _WC_ShadowFloor: 0.2
+    - _WC_ShadowPower: 1.8
     - _WindFrequency: 0.21
     - _WindGust: 0.5
     - _WindHeightPower: 3.32
@@ -183,7 +185,7 @@ Material:
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.6556604, g: 1, b: 0.93911064, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _InnerOutlineColor: {r: 0.1509434, g: 0.059407268, b: 0.017799927, a: 1}

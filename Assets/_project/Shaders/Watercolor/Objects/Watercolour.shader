@@ -41,8 +41,8 @@ Shader "Watercolor/URP/Watercolour"
         _RampEdgeCol("Ramp Edge Color", 2D) = "white" {}
         
         _LayerBlend("Edge Blend Strength", Range(0, 1)) = 0.2
-        _WC_ShadowPower("Shadow Power", Range(0.5, 3.0)) = 1.8
-        _WC_ShadowFloor("Shadow Floor", Range(0, 1)) = 0.2
+        _WC_ShadowPower("Shadow Power", Range(0.5, 3.0)) = 1.0
+        _WC_ShadowFloor("Shadow Floor", Range(0, 1)) = 0.0
 
 
 
@@ -314,6 +314,8 @@ Shader "Watercolor/URP/Watercolour"
                 );
 
                 float shadowMul = lerp(_WC_ShadowFloor, 1.0, shadowAttenRemap);
+                // Slightly relax physical shadow darkness (~15%) for object watercolor look.
+                shadowMul = lerp(1.0, shadowMul, 0.85);
                 watercolorColor = dbgTone * detailMul * shadowMul;
 
                 // (Inner line/pigment removed — now handled by front overlay pass)

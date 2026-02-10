@@ -140,6 +140,9 @@ namespace MysticForgeRuntime
         private bool _isUpdateQueued = false;
         private void OnValidate()
         {
+            // Prevent running on Prefab Assets (Project View)
+            if (PrefabUtility.IsPartOfPrefabAsset(this)) return;
+
             // Debounce OnValidate to prevent freezes during slider dragging
             if (_isUpdateQueued) return;
             _isUpdateQueued = true;
@@ -153,6 +156,9 @@ namespace MysticForgeRuntime
         [ContextMenu("Generate")]
         public void GenerateTree()
         {
+#if UNITY_EDITOR
+            if (PrefabUtility.IsPartOfPrefabAsset(this)) return;
+#endif
             InitializeComponents();
             
             // USE A LOCAL SEED to avoid OnValidate feedback loops

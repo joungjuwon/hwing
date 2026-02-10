@@ -21,7 +21,7 @@ Material:
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
-  m_LockedProperties: 
+  m_LockedProperties: _NoiseRoughness
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -124,21 +124,22 @@ Material:
     - _EnvironmentReflections: 1
     - _FlutterScale: 10
     - _FlutterSpeed: 2
-    - _FlutterStrength: 0.05
+    - _FlutterStrength: 0.104
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _LayerBlend: 0.835
+    - _LayerBlend: 0.61
     - _Metallic: 0
-    - _NoiseDetail: 2
-    - _NoiseDistortion: 1
-    - _NoiseRoughness: 0.5
-    - _NoiseScale: 5.57
+    - _NoiseDetail: 0.58
+    - _NoiseDistortion: 0
+    - _NoiseRoughness: 1.94
+    - _NoiseScale: 3.53
     - _NoiseStrength: 0
-    - _NormalFlatten: 0
-    - _NormalSpherize: 0.495
+    - _NormalFlatten: 0.421
+    - _NormalSpherize: 0.591
     - _OcclusionStrength: 1
-    - _PaperStrength: 0
+    - _Opacity: 0.579
+    - _PaperStrength: 0.176
     - _PaperTiling: 0.3
     - _Parallax: 0.005
     - _QueueOffset: 0
@@ -149,13 +150,13 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _WC_BaseDetailStrength: 0.491
-    - _WC_InnerLinePower: 4.11
-    - _WC_InnerLineStrength: 1
-    - _WC_PaletteStrength: 0.533
+    - _WC_BaseDetailStrength: 1
+    - _WC_InnerLinePower: 2.36
+    - _WC_InnerLineStrength: 0.202
+    - _WC_PaletteStrength: 0
     - _WC_PigmentNoiseStrength: 0
-    - _WC_PigmentScale: 1.2
-    - _WC_PigmentStrength: 0
+    - _WC_PigmentScale: 0.23
+    - _WC_PigmentStrength: 0.27
     - _WindFrequency: 0.21
     - _WindSpeed: 0.07
     - _WindStrength: 0.094
@@ -163,11 +164,11 @@ Material:
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.8726415, g: 0.95372343, b: 1, a: 1}
+    - _BaseColor: {r: 0.9764151, g: 1, b: 0.99929273, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _WC_InnerLineColor: {r: 0.8537736, g: 1, b: 0.8537736, a: 1}
+    - _WC_InnerLineColor: {r: 0.8349056, g: 1, b: 0.9643039, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &7108964685169825108

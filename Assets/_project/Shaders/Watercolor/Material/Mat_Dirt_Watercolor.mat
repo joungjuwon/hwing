@@ -173,6 +173,8 @@ Material:
     - _WC_PigmentNoiseStrength: 0.085
     - _WC_PigmentScale: 0.5
     - _WC_PigmentStrength: 0
+    - _WC_ShadowFloor: 0.2
+    - _WC_ShadowPower: 3
     - _WindFrequency: 0.21
     - _WindGust: 0.5
     - _WindHeightPower: 3.32

@@ -165,11 +165,11 @@ void WatercolorLightingComplex_float(
     // URP's mainLight.direction sign can vary by version/pipeline.
     // Make it robust by choosing the direction that gives the lit side (positive N·L).
     float ndl = dot(NormalWS, LightDir);
-    float NdotL = saturate(ndl * 0.5 + 0.5);
+    float NdotL = saturate(ndl);
 
-    // Soft shadow remap: lower floor so shadowed regions don't stay overly bright.
-    float softShadow = lerp(0.2, 1.0, saturate(ShadowAtten));
-    float lightIntensity = pow(max(NdotL * softShadow, 0.01), 0.85);
+    // Physically closer response: no half-lambert lift, no forced minimum light floor.
+    float softShadow = saturate(ShadowAtten);
+    float lightIntensity = saturate(NdotL * softShadow);
 
     float3 rampA = SAMPLE_TEXTURE2D(RampLightA, SamplerA, float2(lightIntensity, 0.5)).rgb;
     float rampAFactor = dot(rampA, float3(0.3, 0.59, 0.11));
@@ -221,10 +221,10 @@ void WatercolorLightingComplex_Debug_float(
 )
 {
     float ndl = dot(NormalWS, LightDir);
-    float NdotL = saturate(ndl * 0.5 + 0.5);
+    float NdotL = saturate(ndl);
 
-    float softShadow = lerp(0.2, 1.0, saturate(ShadowAtten));
-    LightIntensity = pow(max(NdotL * softShadow, 0.01), 0.85);
+    float softShadow = saturate(ShadowAtten);
+    LightIntensity = saturate(NdotL * softShadow);
 
     float3 rampA = SAMPLE_TEXTURE2D(RampLightA, SamplerA, float2(LightIntensity, 0.5)).rgb;
     RampAFactor = dot(rampA, float3(0.3, 0.59, 0.11));
