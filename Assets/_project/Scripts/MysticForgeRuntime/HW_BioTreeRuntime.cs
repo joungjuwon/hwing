@@ -54,8 +54,10 @@ namespace MysticForgeRuntime
         private List<Transform> bones = new List<Transform>();
         private List<Matrix4x4> bindPoses = new List<Matrix4x4>();
         private List<BoneWeight> boneWeights = new List<BoneWeight>();
-        // New: Stiffness for animation
+        // New: Stiffness for sway
         private List<float> stiffnessList = new List<float>();
+        // New: Birth time for growth animation (0..1 normalized depth)
+        private List<float> birthTimeList = new List<float>();
 
         private class BioNode
         {
@@ -132,7 +134,61 @@ namespace MysticForgeRuntime
             {
                 growthCycle += Time.deltaTime * growthSpeed;
                 if (growthCycle > 1f) growthCycle = 1f;
-                GenerateTree();
+                // No longer calls GenerateTree()! Just updates transforms.
+                UpdateGrowth();
+            }
+            // If in editor and growthCycle changed via slider, we also want to update visual without regenerating mesh
+            // But OnValidate handles that logic usually.
+        }
+
+        // Optimized Growth Update: Scales bones instead of rebuilding mesh
+        private void UpdateGrowth()
+        {
+            if (bones == null || bones.Count == 0 || birthTimeList.Count != bones.Count) return;
+
+            // We want the whole tree to finish growing when growthCycle = 1.
+            // birthTime is 0..1. 
+            
+            for(int i=0; i<bones.Count; i++)
+            {
+                Transform bone = bones[i];
+                if (bone == null) continue;
+
+                float birthTime = birthTimeList[i];
+                
+                // If growthCycle < birthTime, bone is effectively invisible (scale 0)
+                // We use a small window for transition "pop" or smooth scale
+                
+                float age = growthCycle - birthTime;
+                
+                // Local Growth logic: 
+                // We want branches to ELONGATE first (Y axis), then THICKEN (X/Z axis).
+                // Let's define a "growth duration" for each segment.
+                float segmentDuration = 0.3f; // Overlap for smoothness
+                float normalizedAge = Mathf.Clamp01(age / segmentDuration);
+
+                if (normalizedAge <= 0.001f)
+                {
+                    bone.localScale = Vector3.zero;
+                    continue;
+                }
+
+                // Smart Scaling:
+                // Lengthen first: 0 -> 1 over first 60%
+                // Thicken second: 0 -> 1 start at 30% -> 100%
+                
+                float lengthScale = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(normalizedAge * 1.5f)); 
+                float thickScale = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((normalizedAge - 0.2f) * 1.25f));
+                
+                // If this is a leaf bone (logic: usually high generation), we might want simpler scaling?
+                // Actually leaves are merged into the mesh, but attached to bones.
+                // If the bone scales 0, the leaves attached to it (weighted) will collapse to the parent joint.
+                // However, leaf scales are baked into the mesh.
+                // If the bone is scaled 0, the leaf geometry implicitly scales to 0 IF it's fully weighted to this bone.
+                // Our leaves are weighted to 'startNode.boneIndex'. 
+                // So if startNode bone scales to 0, leaf scales to 0. Correct.
+                
+                bone.localScale = new Vector3(thickScale, lengthScale, thickScale);
             }
         }
 
@@ -140,12 +196,26 @@ namespace MysticForgeRuntime
         private bool _isUpdateQueued = false;
         private void OnValidate()
         {
+            // Prevent running on Prefab Assets (Project View)
+            if (PrefabUtility.IsPartOfPrefabAsset(this)) return;
+
             // Debounce OnValidate to prevent freezes during slider dragging
             if (_isUpdateQueued) return;
             _isUpdateQueued = true;
             EditorApplication.delayCall += () => {
                 _isUpdateQueued = false;
-                if (this != null) GenerateTree();
+                // If we are just changing growthCycle, maybe we can just UpdateGrowth?
+                // But for safety during parameter tuning, we Regenerate if structure might change.
+                // For now, let's keep full regeneration on manual change to ensure consistency, 
+                // OR we can detect if only growthCycle changed. 
+                // Let's just Regenerate to be safe in Editor, but Animation uses Update().
+                if (this != null && !PrefabUtility.IsPartOfPrefabAsset(this)) 
+                {
+                    // If playing, we assume structure is baked and we just want to update growth?
+                    // Actually if we change Seed/MaxRecursion, we MUST regenerate.
+                    GenerateTree(); 
+                    if(Application.isPlaying) UpdateGrowth(); // Apply immediate growth pose
+                }
             };
         }
 #endif
@@ -153,6 +223,9 @@ namespace MysticForgeRuntime
         [ContextMenu("Generate")]
         public void GenerateTree()
         {
+#if UNITY_EDITOR
+            if (PrefabUtility.IsPartOfPrefabAsset(this)) return;
+#endif
             InitializeComponents();
             
             // USE A LOCAL SEED to avoid OnValidate feedback loops
@@ -168,6 +241,7 @@ namespace MysticForgeRuntime
             bones.Clear();
             bindPoses.Clear();
             stiffnessList.Clear();
+            birthTimeList.Clear(); // Clear birth times
             
             // Clear old bone hierarchy
             Transform existingRoot = transform.Find("RootBone");
@@ -185,11 +259,13 @@ namespace MysticForgeRuntime
                  else DestroyImmediate(existingLeaves.gameObject);
             }
 
-            // SKELETON DATA GENERATION
-            float height = maxTrunkHeight * growthCycle;
-            float rootThick = maxTrunkThickness * Mathf.Clamp01(growthCycle);
+            // SKELETON DATA GENERATION - FULL SIZE always
+            // We ignore growthCycle for structural size calc. 
+            // But we keep height/thickness params.
+            float targetHeight = maxTrunkHeight; // Full height
+            float targetThick = maxTrunkThickness; // Full thickness
             
-            rootNode = GenerateSkeletonNode(Vector3.zero, Vector3.up, height, rootThick, 0, 0, masterSeed, Quaternion.LookRotation(Vector3.up), true, rootThick, null, 0f, null);
+            rootNode = GenerateSkeletonNode(Vector3.zero, Vector3.up, targetHeight, targetThick, 0, 0, masterSeed, Quaternion.LookRotation(Vector3.up), true, targetThick, null, 0f, null);
 
             if (rootNode != null)
             {
@@ -200,12 +276,10 @@ namespace MysticForgeRuntime
                 BuildLimbMesh(rootNode); // This now populates boneWeights too
                 
                 // 3. LEAF GENERATION (Merged Skinned)
-                int currentMaxGen = (int)(growthCycle * maxRecursion);
-                if (growthCycle >= 0.99f) currentMaxGen = maxRecursion;
-
+                // Always generate MAX foliage for baked mesh
                 if(leafPrefab != null)
                 {
-                    CollectAndMergeLeaves(rootNode, masterSeed, currentMaxGen);
+                    CollectAndMergeLeaves(rootNode, masterSeed, maxRecursion);
                 }
 
                 // 4. APPLY TO SKINNED MESH
@@ -238,9 +312,15 @@ namespace MysticForgeRuntime
                 HW_ProceduralSway sway = GetComponent<HW_ProceduralSway>();
                 if(sway == null) sway = gameObject.AddComponent<HW_ProceduralSway>();
                 sway.BindBones(bones, stiffnessList);
+                
+                // Initial Pose Update
+                UpdateGrowth();
             }
         }
-
+        
+        // ... (ConfigureTreeRenderer, GenerateSkeletonNode are same but need modification for growthCycle removal)
+        // I will target them in next chunks.
+        
         private static void ConfigureTreeRenderer(Renderer renderer)
         {
             if (renderer == null) return;
@@ -287,7 +367,8 @@ namespace MysticForgeRuntime
                     float thinFactor = 1f - Mathf.Clamp01(current.radius / maxTrunkThickness);
                     float progressFactor = (float)(s + 1) / segments;
                     float genFactor = (float)generation / maxRecursion;
-                    float growthFactor = Mathf.Clamp01((growthCycle - 0.3f) * 2f); 
+                    // FORCE FULL GROWTH for bake
+                    float growthFactor = 1.0f; 
                     
                     float droopAmount = thinFactor * progressFactor * genFactor * growthFactor * gravityStrength * 0.5f;
                     nextDirChoice = Vector3.Lerp(nextDirChoice, Vector3.down, droopAmount).normalized;
@@ -308,10 +389,8 @@ namespace MysticForgeRuntime
             }
 
             // Growth progression
-            float step = 1.0f / (maxRecursion + 1);
-            float depthThreshold = generation * step;
-            float rawGrowth = Mathf.Clamp01((growthCycle - depthThreshold) / (step * 0.8f)); 
-            float localGrowth = rawGrowth * rawGrowth * (3f - 2f * rawGrowth); 
+            // FORCE FULL GROWTH for bake
+            float localGrowth = 1.0f;
             
             if (localGrowth > 0.05f && generation < maxRecursion)
             {
@@ -482,6 +561,16 @@ namespace MysticForgeRuntime
             float stiff = Mathf.Clamp01(node.radius / (maxTrunkThickness + 0.001f));
             stiffnessList.Add(stiff);
 
+            // Calculate Birth Time (0..1)
+            // Based on generation and depth step
+            // Simple linear progression:
+            float totalSteps = maxRecursion + 1f;
+            float birthTime = (float)node.generation / totalSteps;
+            // Add slight offset for segments within a branch if depth matters? 
+            // node.depth tracks depth from root, but generation tracks branching level.
+            // Using generation is safer for main flow.
+            birthTimeList.Add(birthTime);
+
             // Traverse children
             if (node.mainChild != null)
             {
@@ -651,7 +740,10 @@ namespace MysticForgeRuntime
              if(leavesPerBranch <= 0) return;
              if(endNode == null) endNode = startNode; 
 
-             float growthFactor = Mathf.Clamp01((growthCycle - 0.05f) / 0.95f);
+             // FORCE FULL GROWTH for bake
+             float growthFactor = 1.0f; 
+             // float growthFactor = Mathf.Clamp01((growthCycle - 0.05f) / 0.95f);
+             
              if(growthFactor <= 0.001f) return;
 
              float currentScale = Mathf.Lerp(0.1f, 1.0f, growthFactor) * leafScale; 

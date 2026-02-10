@@ -24,6 +24,8 @@ public class IntroSequenceController : MonoBehaviour
     public GameObject playerCharacter;
 
     [Header("Seed Animation Settings")]
+    [Tooltip("낙하 시작 높이 (목표 지점 기준 상대 높이)")]
+    public float dropHeight = 50f;
     [Tooltip("씨앗이 떨어지기 시작할 위치")]
     public Transform startPoint;
     [Tooltip("씨앗이 도달할 목표 위치(플레이어 스폰 위치)")]
@@ -131,7 +133,7 @@ public class IntroSequenceController : MonoBehaviour
         if (endPoint != null) endPoint.position = landingPosition;
         
         // 떨어지는 시작점 계산 (목표지점 바로 위 하늘)
-        Vector3 startPos = landingPosition + Vector3.up * 50f; // 높이 50에서 떨어짐
+        Vector3 startPos = landingPosition + Vector3.up * dropHeight; 
         if (startPoint != null) startPoint.position = startPos;
 
         // 플레이어 위치를 시작점으로 이동
@@ -260,4 +262,3 @@ public class IntroSequenceController : MonoBehaviour
         }
     }
 }
-

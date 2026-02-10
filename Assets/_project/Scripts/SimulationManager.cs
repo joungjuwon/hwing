@@ -290,7 +290,11 @@ public class SimulationManager : MonoBehaviour
 
         // 1. 플레이어 캐릭터 먼저 생성 (위치는 나중에 IntroController가 덮어씌움)
         if (playerPrefabs == null || playerPrefabs.Length == 0) return;
-        int index = Mathf.Clamp(currentSeedIndex, 0, playerPrefabs.Length - 1);
+        
+        // 랜덤한 캐릭터 선택
+        int index = Random.Range(0, playerPrefabs.Length);
+        currentSeedIndex = index; // 현재 선택된 인덱스 업데이트 (디버그용)
+
         GameObject selectedPrefab = playerPrefabs[index];
         if (selectedPrefab == null) return;
 

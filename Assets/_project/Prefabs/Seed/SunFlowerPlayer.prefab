@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 8893475369103294382}
   m_Layer: 0
   m_Name: SunFlowerPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 307.037, y: 5593.2715, z: -656.27814}
-  m_LocalScale: {x: 1, y: 0.8, z: 1}
+  m_LocalScale: {x: 0.40929618, y: 0.32743695, z: 0.40929618}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7625370939072986092}
@@ -176,6 +176,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  suppressSproutEvent: 0
 --- !u!114 &8893475369103294382
 MonoBehaviour:
   m_ObjectHideFlags: 0
