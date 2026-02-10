@@ -18,6 +18,9 @@ public class PlayerLifeCycle : MonoBehaviour
     [Tooltip("싹이 트고 환경이 변하기 시작할 때 호출되는 이벤트")]
     public SproutEvent onSprout; 
 
+    [HideInInspector]
+    public bool suppressSproutEvent = false; // 이벤트 발생 억제 플래그 (연출용)
+
     // 외부(SimulationManager)에서 접근 가능한 생존율 속성 (0.0 ~ 1.0)
     public float LifeRatio => Mathf.Clamp01(currentLifeTime / maxLifeTime);
 
@@ -98,7 +101,11 @@ public class PlayerLifeCycle : MonoBehaviour
             }
             
             Instantiate(deathSpawnPrefab, spawnPosition, spawnRotation);
-            onSprout?.Invoke(spawnPosition);
+            
+            if (!suppressSproutEvent)
+            {
+                onSprout?.Invoke(spawnPosition);
+            }
         }
 
         Destroy(gameObject);
