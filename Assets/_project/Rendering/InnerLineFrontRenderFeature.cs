@@ -35,10 +35,9 @@ public class InnerLineFrontRenderFeature : ScriptableRendererFeature
             _filtering = new FilteringSettings(range, settings.layerMask);
         }
 
-        [System.Obsolete]
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            // Compatibility mode fallback
+            // Skip preview / reflection / etc if needed
             if (renderingData.cameraData.isPreviewCamera)
                 return;
 
@@ -47,49 +46,6 @@ public class InnerLineFrontRenderFeature : ScriptableRendererFeature
             drawingSettings.perObjectData = PerObjectData.None;
 
             context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref _filtering);
-        }
-
-        public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
-        {
-            UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
-            UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
-
-            if (cameraData.isPreviewCamera) return;
-
-            // 1. Create RendererList
-            var sortFlags = cameraData.defaultOpaqueSortFlags;
-            var renderQueueRange = (_settings.renderQueue == RenderQueueType.Transparent) ? RenderQueueRange.transparent : RenderQueueRange.opaque;
-            var filterSettings = new FilteringSettings(renderQueueRange, _settings.layerMask);
-            
-            // CreateDrawingSettings logic inside RG:
-            // We need to construct parameters similar to CreateDrawingSettings
-            var drawSettings = CreateDrawingSettings(_shaderTagId, ref cameraData, sortFlags);
-            drawSettings.perObjectData = PerObjectData.None; // Match old logic
-            
-            var param = new RendererListParams(cameraData.cullingResults, drawSettings, filterSettings);
-            var rendererListHandle = renderGraph.CreateRendererList(param);
-
-            // 2. Schedule Pass
-            using (var builder = renderGraph.AddRasterRenderPass<PassData>("InnerLineFront Pass", out var passData))
-            {
-                passData.rendererListHandle = rendererListHandle;
-                
-                // Set extraction target (Color), assume Depth is inherited or needed?
-                // We are drawing ON TOP of opaques, so we need the current color/depth.
-                builder.UseRendererList(rendererListHandle);
-                builder.SetRenderAttachment(resourceData.activeColorTexture, 0);
-                builder.SetRenderAttachment(resourceData.activeDepthTexture, AccessFlags.Write); // Depth test?
-
-                builder.SetRenderFunc((PassData data, RasterGraphContext context) =>
-                {
-                    context.cmd.DrawRendererList(data.rendererListHandle);
-                });
-            }
-        }
-
-        private class PassData
-        {
-            public RendererListHandle rendererListHandle;
         }
     }
 
