@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering.RenderGraphModule;
+
 
 // Renders the "InnerLineFront" shader pass as an extra draw after opaques.
 // This is required because URP's forward opaque pass selects only ONE pass per object

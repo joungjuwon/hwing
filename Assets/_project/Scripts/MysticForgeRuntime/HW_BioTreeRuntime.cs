@@ -54,6 +54,8 @@ namespace MysticForgeRuntime
         private List<Transform> bones = new List<Transform>();
         private List<Matrix4x4> bindPoses = new List<Matrix4x4>();
         private List<BoneWeight> boneWeights = new List<BoneWeight>();
+        // New: Stiffness for sway
+        private List<float> stiffnessList = new List<float>();
         // New: Birth time for growth animation (0..1 normalized depth)
         private List<float> birthTimeList = new List<float>();
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering.RenderGraphModule;
 
 // Screen-space inner edge pass (depth/normal) masked to watercolor objects only.
 // Workflow:
