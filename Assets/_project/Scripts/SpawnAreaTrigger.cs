@@ -37,9 +37,6 @@ public class SpawnAreaTrigger : MonoBehaviour
 
     private bool hasTriggered = false;
 
-    // 터레인 복구를 위한 백업 데이터
-    // static으로 변경하여 모든 트리거가 최초의 원본 상태를 공유하도록 함 (중복 백업 방지 및 메모리 절약)
-    private static Dictionary<Terrain, Dictionary<int, int[,]>> globalDetailBackups = new Dictionary<Terrain, Dictionary<int, int[,]>>();
 
     private void Start()
     {
@@ -49,9 +46,11 @@ public class SpawnAreaTrigger : MonoBehaviour
         // 게임 시작 시점의 터레인 디테일 데이터 백업
         if (targetTerrain != null && detailLayerIndices != null)
         {
-            if (!globalDetailBackups.ContainsKey(targetTerrain))
+            // TerrainManager가 없으면 자동으로 생성
+            if (TerrainManager.Instance == null)
             {
-                globalDetailBackups[targetTerrain] = new Dictionary<int, int[,]>();
+                GameObject go = new GameObject("TerrainManager");
+                go.AddComponent<TerrainManager>();
             }
 
             TerrainData td = targetTerrain.terrainData;
@@ -60,12 +59,8 @@ public class SpawnAreaTrigger : MonoBehaviour
             {
                 if (layerIndex >= 0 && layerIndex < td.detailPrototypes.Length)
                 {
-                    // 이미 백업된 데이터가 있다면 건너뜀 (최초의 깨끗한 상태 보존)
-                    if (!globalDetailBackups[targetTerrain].ContainsKey(layerIndex))
-                    {
-                        int[,] data = td.GetDetailLayer(0, 0, td.detailWidth, td.detailHeight, layerIndex);
-                        globalDetailBackups[targetTerrain][layerIndex] = data;
-                    }
+                    // TerrainManager에게 백업 요청
+                    TerrainManager.Instance.BackupDetailLayer(targetTerrain, layerIndex);
                 }
             }
         }
@@ -73,19 +68,6 @@ public class SpawnAreaTrigger : MonoBehaviour
 
     private void OnDestroy()
     {
-        // 게임 종료 또는 객체 파괴 시 터레인 복구
-        if (targetTerrain != null && globalDetailBackups.ContainsKey(targetTerrain) && detailLayerIndices != null)
-        {
-            var backups = globalDetailBackups[targetTerrain];
-            foreach (int layerIndex in detailLayerIndices)
-            {
-                if (backups.ContainsKey(layerIndex))
-                {
-                    targetTerrain.terrainData.SetDetailLayer(0, 0, layerIndex, backups[layerIndex]);
-                }
-            }
-            // 주의: static 백업 데이터는 Clear()하지 않음 (다른 트리거가 복구할 때 필요할 수 있음)
-        }
     }
 
     private void OnTriggerEnter(Collider other)
