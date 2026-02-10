@@ -37,6 +37,45 @@ public class SpawnAreaTrigger : MonoBehaviour
 
     private bool hasTriggered = false;
 
+    // 터레인 복구를 위한 백업 데이터
+    private Dictionary<int, int[,]> originalDetailBackups = new Dictionary<int, int[,]>();
+    private Terrain backedUpTerrain;
+
+    private void Start()
+    {
+        // 터레인이 할당되지 않았다면 활성화된 터레인 찾기
+        if (targetTerrain == null) targetTerrain = Terrain.activeTerrain;
+
+        // 게임 시작 시점의 터레인 디테일 데이터 백업
+        if (targetTerrain != null && detailLayerIndices != null)
+        {
+            backedUpTerrain = targetTerrain;
+            TerrainData td = targetTerrain.terrainData;
+
+            foreach (int layerIndex in detailLayerIndices)
+            {
+                if (layerIndex >= 0 && layerIndex < td.detailPrototypes.Length)
+                {
+                    int[,] data = td.GetDetailLayer(0, 0, td.detailWidth, td.detailHeight, layerIndex);
+                    originalDetailBackups[layerIndex] = data;
+                }
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // 게임 종료 또는 객체 파괴 시 터레인 복구
+        if (backedUpTerrain != null && originalDetailBackups.Count > 0)
+        {
+            foreach (var kvp in originalDetailBackups)
+            {
+                backedUpTerrain.terrainData.SetDetailLayer(0, 0, kvp.Key, kvp.Value);
+            }
+            originalDetailBackups.Clear();
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (triggerOnce && hasTriggered) return;
