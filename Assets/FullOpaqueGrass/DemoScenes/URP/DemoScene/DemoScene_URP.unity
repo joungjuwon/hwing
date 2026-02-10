@@ -136,6 +136,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VFX_Firefly
       objectReference: {fileID: 0}
+    - target: {fileID: 6039596271292569481, guid: 5adb3f4a0e5fa5d4fb46f7be9f4a9a46, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6265887584016494623, guid: 5adb3f4a0e5fa5d4fb46f7be9f4a9a46, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -253,6 +257,10 @@ PrefabInstance:
     - target: {fileID: 6829905712877141195, guid: 3e09a0e4bded461488ac239cc78b6763, type: 3}
       propertyPath: m_Name
       value: PostProcess
+      objectReference: {fileID: 0}
+    - target: {fileID: 6829905712877141195, guid: 3e09a0e4bded461488ac239cc78b6763, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -581,9 +589,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: WindManager
       objectReference: {fileID: 0}
+    - target: {fileID: 4288646657955908100, guid: 3090c2fa64ca9e24fadc3789e3f8bc6c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4495903793272370575, guid: 3090c2fa64ca9e24fadc3789e3f8bc6c, type: 3}
       propertyPath: windSize
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4495903793272370575, guid: 3090c2fa64ca9e24fadc3789e3f8bc6c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4495903793272370575, guid: 3090c2fa64ca9e24fadc3789e3f8bc6c, type: 3}
       propertyPath: windDirection.x
@@ -684,14 +700,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1425998381}
   - component: {fileID: 1425998382}
-  - component: {fileID: 1425998383}
   m_Layer: 0
   m_Name: Reflection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1425998381
 Transform:
   m_ObjectHideFlags: 0
@@ -740,18 +755,6 @@ ReflectionProbe:
   m_UseOcclusionCulling: 1
   m_Importance: 1
   m_CustomBakedTexture: {fileID: 0}
---- !u!114 &1425998383
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1425998380}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0ef8dc2c2eabfa4e8cb77be57a837c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7017975096710265488
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -786,7 +789,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1136022680335644330, guid: 09c5544d21ca5cb41806464bcd07945d, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1708544609320104293, guid: 09c5544d21ca5cb41806464bcd07945d, type: 3}
       propertyPath: m_Mesh

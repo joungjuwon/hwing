@@ -14,9 +14,21 @@ public class PlayerLifeCycle : MonoBehaviour
     public GameObject playerVisuals; // 플레이어 모델
     public float deathStopDamping = 5.0f; // 죽은 뒤 멈출 때 적용할 마찰력
 
+    [Header("Terrain Effect Settings")]
+    [Tooltip("터레인을 변경할지 여부")]
+    public bool enableTerrainModification = true;
+    [Tooltip("변화시킬 반경 (터레인 그리드 단위)")]
+    public int effectRadius = 4;
+    [Tooltip("변경할 바닥 텍스처(Splat)의 레이어 인덱스 (예: 1 = 풀)")]
+    public int targetGroundLayerIndex = 1;
+    [Tooltip("심을 잔디(Detail)의 레이어 인덱스")]
+    public int targetGrassLayerIndex = 0;
+    [Tooltip("심을 잔디의 밀도 (0~16)")]
+    public int grassDensity = 8;
+
     [Header("Events")]
     [Tooltip("싹이 트고 환경이 변하기 시작할 때 호출되는 이벤트")]
-    public SproutEvent onSprout; 
+    public SproutEvent onSprout;
 
     [HideInInspector]
     public bool suppressSproutEvent = false; // 이벤트 발생 억제 플래그 (연출용)
@@ -53,7 +65,7 @@ public class PlayerLifeCycle : MonoBehaviour
         if (controller != null && controller.IsGrounded)
         {
             currentLifeTime -= Time.fixedDeltaTime;
-            
+
             if (currentLifeTime <= 0f)
             {
                 Die();
@@ -93,15 +105,24 @@ public class PlayerLifeCycle : MonoBehaviour
         if (deathSpawnPrefab != null)
         {
             Vector3 spawnPosition = transform.position;
-            Quaternion spawnRotation = Quaternion.identity; 
+            Quaternion spawnRotation = Quaternion.identity;
 
+            // 바닥 위치 보정 (Raycast)
             if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, Mathf.Infinity))
             {
                 spawnPosition = hit.point;
             }
-            
+
+            // 1. 싹 오브젝트 생성
             Instantiate(deathSpawnPrefab, spawnPosition, spawnRotation);
-            
+
+            // 2. 터레인 변경 (옵션이 켜져있을 때만)
+            if (enableTerrainModification)
+            {
+                ApplyTerrainChanges(spawnPosition);
+            }
+
+            // 3. 이벤트 발생 (억제 플래그 체크)
             if (!suppressSproutEvent)
             {
                 onSprout?.Invoke(spawnPosition);
@@ -109,5 +130,81 @@ public class PlayerLifeCycle : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// 지정된 위치 주변의 터레인 텍스처(Splatmap)를 바꾸고 잔디(DetailLayer)를 심습니다.
+    /// </summary>
+    private void ApplyTerrainChanges(Vector3 worldPos)
+    {
+        Terrain terrain = Terrain.activeTerrain;
+        if (terrain == null) return;
+
+        TerrainData data = terrain.terrainData;
+
+        // --- 1. 바닥 텍스처(Splatmap) 변경 ---
+        // 월드 좌표 -> 알파맵 좌표 변환
+        int mapX = Mathf.FloorToInt((worldPos.x - terrain.transform.position.x) / data.size.x * data.alphamapWidth);
+        int mapZ = Mathf.FloorToInt((worldPos.z - terrain.transform.position.z) / data.size.z * data.alphamapHeight);
+
+        // 수정할 범위 계산 (배열 범위를 넘지 않게 Clamp)
+        int startX = Mathf.Max(0, mapX - effectRadius);
+        int startZ = Mathf.Max(0, mapZ - effectRadius);
+        int width = Mathf.Min(data.alphamapWidth - startX, effectRadius * 2 + 1);
+        int height = Mathf.Min(data.alphamapHeight - startZ, effectRadius * 2 + 1);
+
+        // 현재 데이터 가져오기
+        float[,,] splatmapData = data.GetAlphamaps(startX, startZ, width, height);
+        int numLayers = data.alphamapLayers;
+
+        // 원형으로 칠하기 위해 거리 계산 루프
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                // 중심점(effectRadius, effectRadius)으로부터의 거리 체크
+                if (Vector2.Distance(new Vector2(x, y), new Vector2(effectRadius, effectRadius)) <= effectRadius)
+                {
+                    // 타겟 레이어를 1로, 나머지는 0으로 설정
+                    for (int i = 0; i < numLayers; i++)
+                    {
+                        splatmapData[y, x, i] = (i == targetGroundLayerIndex) ? 1.0f : 0.0f;
+                    }
+                }
+            }
+        }
+        // 변경된 알파맵 적용
+        data.SetAlphamaps(startX, startZ, splatmapData);
+
+
+        // --- 2. 잔디(Detail Layer) 심기 ---
+        // 잔디 맵은 알파맵과 해상도가 다를 수 있으므로 별도 좌표 계산
+        int detailX = Mathf.FloorToInt((worldPos.x - terrain.transform.position.x) / data.size.x * data.detailResolution);
+        int detailZ = Mathf.FloorToInt((worldPos.z - terrain.transform.position.z) / data.size.z * data.detailResolution);
+
+        // 비율에 맞춰 반경 재조정 (Splatmap 해상도 vs Detail 해상도 비율)
+        float resolutionRatio = (float)data.detailResolution / data.alphamapResolution;
+        int detailRadius = Mathf.RoundToInt(effectRadius * resolutionRatio);
+
+        int dStartX = Mathf.Max(0, detailX - detailRadius);
+        int dStartZ = Mathf.Max(0, detailZ - detailRadius);
+        int dWidth = Mathf.Min(data.detailResolution - dStartX, detailRadius * 2 + 1);
+        int dHeight = Mathf.Min(data.detailResolution - dStartZ, detailRadius * 2 + 1);
+
+        // 현재 잔디 데이터 가져오기
+        int[,] detailMap = data.GetDetailLayer(dStartX, dStartZ, dWidth, dHeight, targetGrassLayerIndex);
+
+        for (int y = 0; y < dHeight; y++)
+        {
+            for (int x = 0; x < dWidth; x++)
+            {
+                if (Vector2.Distance(new Vector2(x, y), new Vector2(detailRadius, detailRadius)) <= detailRadius)
+                {
+                    detailMap[y, x] = grassDensity; // 잔디 심기
+                }
+            }
+        }
+        // 변경된 잔디 적용
+        data.SetDetailLayer(dStartX, dStartZ, targetGrassLayerIndex, detailMap);
     }
 }

@@ -159,9 +159,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLifeCycle
   maxLifeTime: 30
-  deathSpawnPrefab: {fileID: 7207991665247980607, guid: ab9da033673c1ef45ad05a33ab96d114, type: 3}
+  deathSpawnPrefab: {fileID: 8478611524763863045, guid: 34184c5844940404bb75fe2a4dcf68c1, type: 3}
   playerVisuals: {fileID: 863187880206487651}
   deathStopDamping: 5
+  enableTerrainModification: 1
+  effectRadius: 10
+  targetGroundLayerIndex: 1
+  targetGrassLayerIndex: 0
+  grassDensity: 500
   onSprout:
     m_PersistentCalls:
       m_Calls:
