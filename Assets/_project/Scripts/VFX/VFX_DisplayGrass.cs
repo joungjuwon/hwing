@@ -63,39 +63,17 @@ namespace GrassDisplay
             GenerateInstances(mesh, generatedContainer);
         }
 
-        [Header("Vertex Color Masking")]
-        public bool useVertexColorMask = false;
-        public enum ColorChannel { Red, Green, Blue, Alpha }
-        public ColorChannel maskChannel = ColorChannel.Red;
-
         private void GenerateInstances(Mesh mesh, GameObject container)
         {
             int spawned = 0;
             int attempts = 0;
-            int maxAttempts = density * 50; // Increased margin for masked areas
-
-            Color[] colors = mesh.colors;
-            bool hasColors = colors != null && colors.Length > 0;
+            int maxAttempts = density * 10; // marge pour respecter les contraintes d'angle
 
             while (spawned < density && attempts < maxAttempts)
             {
                 attempts++;
                 Vector3 localPoint, localNormal;
-                Color vertexColor;
-                RandomPointOnMesh(mesh, out localPoint, out localNormal, out vertexColor);
-
-                // Vertex Color Masking Logic
-                if (useVertexColorMask && hasColors)
-                {
-                    float maskValue = 1f;
-                    if (maskChannel == ColorChannel.Red) maskValue = vertexColor.r;
-                    else if (maskChannel == ColorChannel.Green) maskValue = vertexColor.g;
-                    else if (maskChannel == ColorChannel.Blue) maskValue = vertexColor.b;
-                    else if (maskChannel == ColorChannel.Alpha) maskValue = vertexColor.a;
-
-                    if (Random.value > maskValue)
-                        continue;
-                }
+                RandomPointOnMesh(mesh, out localPoint, out localNormal);
 
                 // Passage en espace monde
                 Vector3 worldPos = transform.TransformPoint(localPoint);
@@ -131,7 +109,7 @@ namespace GrassDisplay
 
             if (spawned == 0)
             {
-                Debug.LogWarning("Aucune instance n'a été générée : vérifie les contraintes d'angle, les normales du mesh ou le masque de couleur.");
+                Debug.LogWarning("Aucune instance n'a été générée : vérifie les contraintes d'angle et les normales du mesh.");
             }
         }
 
@@ -139,12 +117,11 @@ namespace GrassDisplay
         /// Génère un point aléatoire sur la surface d'un mesh (pondéré par l'aire des triangles)
         /// et calcule sa normale interpolée via les coordonnées barycentriques.
         /// </summary>
-        private void RandomPointOnMesh(Mesh mesh, out Vector3 outPoint, out Vector3 outNormal, out Color outColor)
+        private void RandomPointOnMesh(Mesh mesh, out Vector3 outPoint, out Vector3 outNormal)
         {
             int[] triangles = mesh.triangles;
             Vector3[] vertices = mesh.vertices;
             Vector3[] normals = mesh.normals;
-            Color[] colors = mesh.colors;
             int triangleCount = triangles.Length / 3;
 
             float[] areas = new float[triangleCount];
@@ -203,18 +180,6 @@ namespace GrassDisplay
             else
             {
                 outNormal = Vector3.Cross(v1 - v0, v2 - v0).normalized;
-            }
-
-            if (colors != null && colors.Length > 0)
-            {
-                Color c0 = colors[i0];
-                Color c1 = colors[i1];
-                Color c2 = colors[i2];
-                outColor = c0 * r0 + c1 * r1 + c2 * r2;
-            }
-            else
-            {
-                outColor = Color.white;
             }
         }
     }

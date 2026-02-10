@@ -14,5 +14,5 @@ AssetOrigin:
   productId: 313863
   packageName: Full Opaque Grass Physics & Wind
   packageVersion: 3.1
-  assetPath: Assets/FullOpaqueWater&Waterfall/Script/VFX_TargetPosition_5Point.cs
+  assetPath: Assets/_project/Scripts/VFX/VFX_TargetPosition_5Point.cs
   uploadId: 759154

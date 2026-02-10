@@ -80,7 +80,7 @@ Material:
     - _Cliff_BlendColor: 1
     - _Cliff_BlendHeight: 10
     - _Cliff_BlendTexture: 0.197
-    - _Cliff_SlopeAngle: 0.02
+    - _Cliff_SlopeAngle: 0.5
     - _Cliff_SlopeFade: 0.07
     - _Cliff_SlopeTexture: 0.502
     - _Cliff_Tiling: 0.02

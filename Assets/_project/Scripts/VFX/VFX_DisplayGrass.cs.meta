@@ -16,5 +16,5 @@ AssetOrigin:
   productId: 313863
   packageName: Full Opaque Grass Physics & Wind
   packageVersion: 3.1
-  assetPath: Assets/FullOpaqueWater&Waterfall/Script/VFX_DisplayGrass.cs
+  assetPath: Assets/_project/Scripts/VFX/VFX_DisplayGrass.cs
   uploadId: 759154
