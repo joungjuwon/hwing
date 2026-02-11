@@ -1,0 +1,22 @@
+3809: "m_BlendMode": 0,
+5676: "m_Type": "UnityEditor.ShaderGraph.LerpNode",
+6833: "m_Type": "UnityEditor.ShaderGraph.SaturateNode",
+8418: "m_Type": "UnityEditor.ShaderGraph.SaturateNode",
+8562: "m_Type": "UnityEditor.ShaderGraph.SaturateNode",
+9482: "m_Type": "UnityEditor.ShaderGraph.SaturateNode",
+9697: "m_Type": "UnityEditor.ShaderGraph.LerpNode",
+10132: "m_Type": "UnityEditor.ShaderGraph.RemapNode",
+10817: "m_Type": "UnityEditor.ShaderGraph.SaturateNode",
+10860: "m_BlendModePreserveSpecular": true
+10932: "m_Type": "UnityEditor.ShaderGraph.RemapNode",
+10977: "m_DisplayName": "Base Color",
+11488: "m_Type": "UnityEditor.ShaderGraph.SaturateNode",
+12174: "m_Type": "UnityEditor.ShaderGraph.SaturateNode",
+13370: "m_Type": "UnityEditor.ShaderGraph.SaturateNode",
+14220: "m_BlendMode": 15
+14948: "m_Type": "UnityEditor.ShaderGraph.RemapNode",
+15120: "m_BlendMode": 15
+16333: "m_Type": "UnityEditor.ShaderGraph.SaturateNode",
+16622: "m_Type": "UnityEditor.ShaderGraph.LerpNode",
+16755: "m_Type": "UnityEditor.ShaderGraph.SaturateNode",
+17057: "m_Type": "UnityEditor.ShaderGraph.LerpNode",

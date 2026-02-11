@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_S_Vegetation_Interactive_HLSL
+  m_Name: M_Grass_Interactive_HLSL
   m_Shader: {fileID: 4800000, guid: 63dd0cf492f4440c9da36dc9c2fa78bc, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -30,7 +30,7 @@ Material:
     - _FakeLightStrength: 0.5
     - _Grass_BlendHeight: 13.6
     - _Grass_BlendHeightSmooth: 6
-    - _InteractionHorizontalPush: 2
+    - _InteractionHorizontalPush: 0.2
     - _InteractionVerticalPush: 1
     - _InteractionWindSuppression: 0
     - _Mountain_ProceduralHeight: 270
