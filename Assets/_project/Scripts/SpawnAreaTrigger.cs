@@ -16,6 +16,12 @@ public class SpawnAreaTrigger : MonoBehaviour
     [Tooltip("이 구역에 진입하면 플레이어를 죽일지 여부")]
     public bool killPlayerOnEnter = false;
 
+    [Tooltip("플레이어 사망 시 생성할 추가 프리팹 (선택 사항)")]
+    public GameObject deathSpawnPrefab;
+
+    [Tooltip("사망 시 프리팹이 생성될 위치 (비워두면 플레이어 사망 위치)")]
+    public Transform customDeathSpawnPoint;
+
     [Tooltip("연출용 카메라 (활성화 시 뒤로 빠지는 연출, Cinemachine Virtual Camera 권장)")]
     public GameObject pullBackCamera;
 
@@ -134,11 +140,24 @@ public class SpawnAreaTrigger : MonoBehaviour
     {
         // 0. 위치 저장 및 플레이어 사망 처리
         Vector3 deathPosition = player.transform.position;
+        Quaternion spawnRotation = Quaternion.identity;
+
+        if (customDeathSpawnPoint != null)
+        {
+            deathPosition = customDeathSpawnPoint.position;
+            spawnRotation = customDeathSpawnPoint.rotation;
+        }
+
         var lifeCycle = player.GetComponent<PlayerLifeCycle>();
         if (lifeCycle != null)
         {
             lifeCycle.suppressSproutEvent = true;
             lifeCycle.Die();
+        }
+
+        if (deathSpawnPrefab != null)
+        {
+            Instantiate(deathSpawnPrefab, deathPosition, spawnRotation);
         }
 
         CinemachineCamera pullBackVCam = null;
