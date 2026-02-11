@@ -26,6 +26,8 @@ public class TPSController : MonoBehaviour
     private Vector2 moveInput;
     private bool isGrounded;
     public bool IsGrounded => isGrounded; // 외부에서 접근 가능하도록 프로퍼티 추가
+    private RaycastHit groundHit;
+    public int CurrentGroundLayer => (isGrounded && groundHit.collider != null) ? groundHit.collider.gameObject.layer : 0;
     private float nextMoveTime; // 다음 이동 가능 시간
     private Vector3 currentForward; // 캐릭터의 정방향 (이동 방향)
 
@@ -169,6 +171,11 @@ public class TPSController : MonoBehaviour
             // 지정되었다면, 현재 발 밑에 있는 표면이 'jumpableLayer'에 속하는지 확인
             if (jumpableLayer.value == 0 || Physics.SphereCast(transform.position + Vector3.up * 0.5f, groundCheckRadius, Vector3.down, out _, groundCheckDistance, jumpableLayer))
             {
+                // 점프 직전 수직 속도를 초기화하여 이동 관성이나 경사면 속도가 점프 높이에 영향을 주지 않도록 함
+                Vector3 velocity = rb.linearVelocity;
+                velocity.y = 0f;
+                rb.linearVelocity = velocity;
+
                 // 즉각적인 힘을 가해 점프 (ForceMode.Impulse)
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             }
@@ -179,7 +186,7 @@ public class TPSController : MonoBehaviour
     {
         // 캐릭터 중심에서 아래로 레이를 쏘아 바닥 감지
         // 씨앗처럼 둥근 캐릭터는 Raycast보다 SphereCast가 가장자리나 경사면에서 더 안정적입니다.
-        isGrounded = Physics.SphereCast(transform.position + Vector3.up * 0.5f, groundCheckRadius, Vector3.down, out _, groundCheckDistance, groundLayer);
+        isGrounded = Physics.SphereCast(transform.position + Vector3.up * 0.5f, groundCheckRadius, Vector3.down, out groundHit, groundCheckDistance, groundLayer);
     }
     
     // 바닥 체크 시각화 (디버깅용)

@@ -33,7 +33,25 @@ public class SmartTerrainCamera : CinemachineExtension
     [Tooltip("카메라를 들어올리는 최대 높이 제한")]
     public float maxLiftHeight = 5.0f;
 
+    [Header("Occlusion Detection (Anti-Clip)")]
+    [Tooltip("활성화 시, 타겟과 카메라 사이에 장애물이 있으면 카메라를 당깁니다. (CinemachineCollider 대체용)")]
+    public bool enableOcclusion = true;
+
+    [Tooltip("장애물 감지 레이어 (Wall 등)")]
+    public LayerMask occlusionLayer = 1;
+
+    [Tooltip("장애물 감지 반경")]
+    public float occlusionRadius = 0.2f;
+
+    [Tooltip("장애물 감지 시 카메라 이동 부드러움 (Damping 시간)")]
+    public float occlusionSmoothTime = 0.1f;
+
+    [Tooltip("타겟과의 최소 거리 (이보다 가까워지지는 않음)")]
+    public float minDistanceFromTarget = 0.5f;
+
     private float currentLiftOffset = 0f;
+    private Vector3 currentOcclusionCorrection = Vector3.zero;
+    private Vector3 occlusionVelocity = Vector3.zero;
 
     protected override void PostPipelineStageCallback(
         CinemachineVirtualCameraBase vcam,

@@ -13,6 +13,7 @@ public class PlayerLifeCycle : MonoBehaviour
     public GameObject deathSpawnPrefab; // 죽을 때 생성할 오브젝트
     public GameObject playerVisuals; // 플레이어 모델
     public float deathStopDamping = 5.0f; // 죽은 뒤 멈출 때 적용할 마찰력
+    public LayerMask lifeDecreaseLayer; // 수명이 줄어드는 지형 레이어
 
     [Header("Terrain Effect Settings")]
     [Tooltip("터레인을 변경할지 여부")]
@@ -64,11 +65,15 @@ public class PlayerLifeCycle : MonoBehaviour
         // 컨트롤러가 있고 땅에 있을 때만 시간 감소
         if (controller != null && controller.IsGrounded)
         {
-            currentLifeTime -= Time.fixedDeltaTime;
-
-            if (currentLifeTime <= 0f)
+            // 지정된 레이어(예: 땅) 위에 있을 때만 수명 감소
+            if (((1 << controller.CurrentGroundLayer) & lifeDecreaseLayer) != 0)
             {
-                Die();
+                currentLifeTime -= Time.fixedDeltaTime;
+
+                if (currentLifeTime <= 0f)
+                {
+                    Die();
+                }
             }
         }
     }

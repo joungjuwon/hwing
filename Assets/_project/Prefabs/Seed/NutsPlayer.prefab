@@ -161,6 +161,9 @@ MonoBehaviour:
   deathSpawnPrefab: {fileID: 8478611524763863045, guid: 34184c5844940404bb75fe2a4dcf68c1, type: 3}
   playerVisuals: {fileID: 1713881784235912235}
   deathStopDamping: 5
+  lifeDecreaseLayer:
+    serializedVersion: 2
+    m_Bits: 8
   enableTerrainModification: 1
   effectRadius: 10
   targetGroundLayerIndex: 1
@@ -199,15 +202,18 @@ MonoBehaviour:
   maxRotationSpeed: 15
   rotationCorrectionSpeed: 5
   rotationSpeed: 10
-  jumpForce: 4
+  jumpForce: 8
   moveInterval: 1
   moveDamping: 1
   stopDamping: 5
   groundCheckDistance: 1.1
   groundCheckRadius: 0.3
+  jumpableLayer:
+    serializedVersion: 2
+    m_Bits: 136
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 136
   cameraTransform: {fileID: 0}
 --- !u!1 &4628689769957596287
 GameObject:
