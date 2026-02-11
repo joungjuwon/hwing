@@ -1,6 +1,11 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_6000_0_OR_NEWER
+using Unity.Cinemachine; 
+#else
+using Cinemachine; 
+#endif
 
 public class SpawnAreaTrigger : MonoBehaviour
 {
@@ -44,6 +49,10 @@ public class SpawnAreaTrigger : MonoBehaviour
     [Header("Environment Control")]
     [Tooltip("연출 시 제어할 구름 시스템 (선택 사항)")]
     public CloudSystem cloudSystem;
+    [Tooltip("구름/날씨 등 환경 변화 시작 전 딜레이")]
+    public float environmentChangeDelay = 1.0f;
+    [Tooltip("연출 후 변경될 날씨 상태")]
+    public WeatherState targetWeather = WeatherState.Rain;
 
     private bool hasTriggered = false;
 
@@ -132,8 +141,16 @@ public class SpawnAreaTrigger : MonoBehaviour
             lifeCycle.Die();
         }
 
+        CinemachineCamera pullBackVCam = null;
+
         // 1. BGM 재생 및 연출 카메라 활성화
-        if (pullBackCamera != null) pullBackCamera.SetActive(true);
+        if (pullBackCamera != null)
+        {
+            pullBackCamera.SetActive(true);
+            pullBackVCam = pullBackCamera.GetComponent<CinemachineCamera>();
+            if (pullBackVCam != null) pullBackVCam.Priority = 100; // 높은 우선순위로 강제 전환
+        }
+
         if (sequenceBgm != null)
         {
             AudioSource audio = gameObject.AddComponent<AudioSource>();
@@ -149,8 +166,21 @@ public class SpawnAreaTrigger : MonoBehaviour
         if (simManager != null)
         {
             simManager.EnableSimulationMode(deathPosition);
-            
-            if (pullBackCamera != null) pullBackCamera.SetActive(false);
+
+            if (pullBackCamera != null)
+            {
+                if (pullBackVCam != null)
+                {
+                    pullBackVCam.Priority = 0; // 우선순위 초기화
+                }
+                pullBackCamera.SetActive(false);
+            }
+        }
+
+        // 3.5 환경 변화 전 딜레이
+        if (environmentChangeDelay > 0f)
+        {
+            yield return new WaitForSeconds(environmentChangeDelay);
         }
 
         // 4. 시뮬레이션 뷰 전환 후, 구름 제거 및 날씨 변경
@@ -162,7 +192,7 @@ public class SpawnAreaTrigger : MonoBehaviour
             {
                 cloudSystem.FadeOutAndDisable(weatherTransitionDuration);
             }
-            WeatherManager.Instance.SetWeather(WeatherState.Rain);
+            WeatherManager.Instance.SetWeather(targetWeather);
         }
     }
 
@@ -175,6 +205,8 @@ public class SpawnAreaTrigger : MonoBehaviour
         {
             PlantDetailsOnTerrain(centerPos, 1.0f);
             PaintTerrain(centerPos, 1.0f);
+            // 즉시 종료하지 않고 설정된 시간만큼 대기하여 연출 시간을 확보합니다.
+            yield return new WaitForSeconds(duration);
             yield break;
         }
 

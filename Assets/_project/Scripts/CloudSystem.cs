@@ -244,6 +244,11 @@ public class CloudSystem : MonoBehaviour
 
     public void FadeOutAndDisable(float duration)
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            globalAlpha = 0f;
+            return;
+        }
         StartCoroutine(FadeOutRoutine(duration));
     }
 

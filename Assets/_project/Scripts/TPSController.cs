@@ -15,6 +15,7 @@ public class TPSController : MonoBehaviour
     public float stopDamping = 5.0f;  // 멈출 때의 저항 (높을수록 빨리 멈춤)
     public float groundCheckDistance = 1.1f; // 캡슐 높이의 절반 + 여유값
     public float groundCheckRadius = 0.3f; // 바닥 체크를 위한 구의 반지름
+    public LayerMask jumpableLayer; // 점프 가능한 표면을 위한 레이어 마스크
     public LayerMask groundLayer;
 
     [Header("References")]
@@ -161,10 +162,16 @@ public class TPSController : MonoBehaviour
 
     private void Jump()
     {
+        // isGrounded는 점프하기 위한 전제 조건 (어떤 땅이든 밟고 있어야 함)
         if (isGrounded)
         {
-            // 즉각적인 힘을 가해 점프 (ForceMode.Impulse)
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            // jumpableLayer가 지정되지 않았다면(Nothing), 모든 지면에서 점프 가능하도록 처리
+            // 지정되었다면, 현재 발 밑에 있는 표면이 'jumpableLayer'에 속하는지 확인
+            if (jumpableLayer.value == 0 || Physics.SphereCast(transform.position + Vector3.up * 0.5f, groundCheckRadius, Vector3.down, out _, groundCheckDistance, jumpableLayer))
+            {
+                // 즉각적인 힘을 가해 점프 (ForceMode.Impulse)
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            }
         }
     }
 

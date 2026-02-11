@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum WeatherState
 {
@@ -36,13 +37,39 @@ public class WeatherManager : MonoBehaviour
     public float rainFogDensity = 0.02f;
     public float rainWindStrength = 20f;
     [Range(0f, 1f)] public float rainVolume = 1.0f;
+    [Tooltip("비가 올 때 활성화할 오브젝트들")]
+    public GameObject[] rainPropsToActivate;
+    [Tooltip("비가 올 때 Y축을 내릴 터레인")]
+    public Terrain rainTargetTerrain;
+    [Tooltip("터레인을 내릴 높이")]
+    public float terrainLowerAmount = 5f;
+    [Tooltip("비가 올 때 Y축을 올릴 물 오브젝트들")]
+    public Transform[] waterObjectsToRaise;
+    [Tooltip("물을 올릴 높이")]
+    public float waterRaiseAmount = 5f;
+    [Tooltip("터레인이 이동하는 데 걸리는 시간")]
+    public float terrainTransitionDuration = 2.0f;
+    [Tooltip("물이 이동하는 데 걸리는 시간")]
+    public float waterTransitionDuration = 2.0f;
 
     [Header("Transition")]
-    public float transitionDuration = 2.0f;
+    public float transitionDuration = 2.0f; // 조명 및 안개용
 
     private float targetLightIntensity;
     private Color targetFogColor;
     private float targetFogDensity;
+
+    private Vector3 originalTerrainPosition;
+    private Vector3 startTerrainPosition; // 이동 시작 위치
+    private Vector3 targetTerrainPosition;
+    private float currentTerrainTime; // 터레인 이동 경과 시간
+    private bool terrainPositionBackedUp = false;
+
+    private List<Vector3> originalWaterPositions = new List<Vector3>();
+    private List<Vector3> startWaterPositions = new List<Vector3>(); // 이동 시작 위치들
+    private List<Vector3> targetWaterPositions = new List<Vector3>();
+    private float currentWaterTime; // 물 이동 경과 시간
+    private bool waterPositionsBackedUp = false;
 
     private void Awake()
     {
@@ -78,6 +105,29 @@ public class WeatherManager : MonoBehaviour
             RenderSettings.fogColor = Color.Lerp(RenderSettings.fogColor, targetFogColor, Time.deltaTime / transitionDuration);
             RenderSettings.fogDensity = Mathf.Lerp(RenderSettings.fogDensity, targetFogDensity, Time.deltaTime / transitionDuration);
         }
+
+        // 터레인 및 물 높이 부드러운 전환
+        if (terrainPositionBackedUp && rainTargetTerrain != null && currentTerrainTime < terrainTransitionDuration)
+        {
+            currentTerrainTime += Time.deltaTime;
+            float t = Mathf.Clamp01(currentTerrainTime / terrainTransitionDuration);
+            rainTargetTerrain.transform.position = Vector3.Lerp(startTerrainPosition, targetTerrainPosition, t);
+        }
+
+        if (waterPositionsBackedUp && waterObjectsToRaise != null && currentWaterTime < waterTransitionDuration)
+        {
+            currentWaterTime += Time.deltaTime;
+            float t = Mathf.Clamp01(currentWaterTime / waterTransitionDuration);
+
+            for (int i = 0; i < waterObjectsToRaise.Length; i++)
+            {
+                if (waterObjectsToRaise[i] != null && i < startWaterPositions.Count && i < targetWaterPositions.Count)
+                {
+                    // 시작 위치에서 목표 위치로 시간(t)에 따라 이동
+                    waterObjectsToRaise[i].position = Vector3.Lerp(startWaterPositions[i], targetWaterPositions[i], t);
+                }
+            }
+        }
     }
 
     public void SetWeather(WeatherState newState)
@@ -103,6 +153,23 @@ public class WeatherManager : MonoBehaviour
                 if (rainAudioSource != null) StartCoroutine(FadeOutSound(rainAudioSource, transitionDuration));
                 
                 if (globalWind != null) globalWind.strength = sunnyWindStrength;
+
+                if (rainPropsToActivate != null)
+                {
+                    foreach (var prop in rainPropsToActivate)
+                    {
+                        if (prop != null) prop.SetActive(false);
+                    }
+                }
+
+                if (terrainPositionBackedUp && rainTargetTerrain != null)
+                {
+                    targetTerrainPosition = originalTerrainPosition;
+                }
+                if (waterPositionsBackedUp && waterObjectsToRaise != null)
+                {
+                    targetWaterPositions = new List<Vector3>(originalWaterPositions);
+                }
                 break;
 
             case WeatherState.Rain:
@@ -119,7 +186,61 @@ public class WeatherManager : MonoBehaviour
                 }
 
                 if (globalWind != null) globalWind.strength = rainWindStrength;
+
+                if (rainPropsToActivate != null)
+                {
+                    foreach (var prop in rainPropsToActivate)
+                    {
+                        if (prop != null) prop.SetActive(true);
+                    }
+                }
+
+                if (rainTargetTerrain != null)
+                {
+                    if (!terrainPositionBackedUp)
+                    {
+                        originalTerrainPosition = rainTargetTerrain.transform.position;
+                        terrainPositionBackedUp = true;
+                    }
+                    targetTerrainPosition = originalTerrainPosition - new Vector3(0, terrainLowerAmount, 0);
+                }
+
+                if (waterObjectsToRaise != null && waterObjectsToRaise.Length > 0)
+                {
+                    if (!waterPositionsBackedUp)
+                    {
+                        originalWaterPositions.Clear();
+                        foreach (var water in waterObjectsToRaise)
+                        {
+                            if (water != null) originalWaterPositions.Add(water.position);
+                        }
+                        waterPositionsBackedUp = true;
+                    }
+
+                    targetWaterPositions.Clear();
+                    foreach (var originalPos in originalWaterPositions)
+                    {
+                        targetWaterPositions.Add(originalPos + new Vector3(0, waterRaiseAmount, 0));
+                    }
+                }
                 break;
+        }
+
+        // 이동 시작 전 현재 위치 저장 및 타이머 초기화
+        if (rainTargetTerrain != null)
+        {
+            startTerrainPosition = rainTargetTerrain.transform.position;
+            currentTerrainTime = 0f;
+        }
+
+        if (waterObjectsToRaise != null)
+        {
+            startWaterPositions.Clear();
+            foreach (var water in waterObjectsToRaise)
+            {
+                if (water != null) startWaterPositions.Add(water.position);
+            }
+            currentWaterTime = 0f;
         }
 
         if (immediate)
@@ -131,12 +252,46 @@ public class WeatherManager : MonoBehaviour
             StopAllCoroutines();
             if (rainAudioSource != null)
             {
-                if (state == WeatherState.Rain) rainAudioSource.volume = rainVolume;
+                if (state == WeatherState.Rain)
+                {
+                    rainAudioSource.volume = rainVolume;
+                    if (!rainAudioSource.isPlaying) rainAudioSource.Play();
+                }
                 else 
                 {
                     rainAudioSource.volume = 0f;
                     rainAudioSource.Stop();
                 }
+            }
+
+            if (rainPropsToActivate != null)
+            {
+                foreach (var prop in rainPropsToActivate)
+                {
+                    if (prop != null) prop.SetActive(state == WeatherState.Rain);
+                }
+            }
+
+            if (terrainPositionBackedUp && rainTargetTerrain != null)
+            {
+                rainTargetTerrain.transform.position = targetTerrainPosition;
+                currentTerrainTime = terrainTransitionDuration; // 즉시 완료 처리
+            }
+            if (waterPositionsBackedUp && waterObjectsToRaise != null)
+            {
+                int posIndex = 0;
+                for (int i = 0; i < waterObjectsToRaise.Length; i++)
+                {
+                    if (waterObjectsToRaise[i] != null)
+                    {
+                        if (posIndex < targetWaterPositions.Count)
+                        {
+                            waterObjectsToRaise[i].position = targetWaterPositions[posIndex];
+                            posIndex++;
+                        }
+                    }
+                }
+                currentWaterTime = waterTransitionDuration; // 즉시 완료 처리
             }
         }
     }
