@@ -197,8 +197,8 @@ MonoBehaviour:
   moveInterval: 1
   moveDamping: 1
   stopDamping: 5
-  groundCheckDistance: 1.1
-  groundCheckRadius: 0.3
+  groundCheckDistance: 0.5
+  groundCheckRadius: 0.2
   jumpableLayer:
     serializedVersion: 2
     m_Bits: 136
@@ -219,12 +219,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLifeCycle
   maxLifeTime: 30
-  deathSpawnPrefab: {fileID: 8478611524763863045, guid: 34184c5844940404bb75fe2a4dcf68c1, type: 3}
+  deathSpawnPrefab: {fileID: 0}
   playerVisuals: {fileID: 6821408077786863926}
   deathStopDamping: 5
   lifeDecreaseLayer:
     serializedVersion: 2
     m_Bits: 8
+  waterLayer:
+    serializedVersion: 2
+    m_Bits: 16
   enableTerrainModification: 1
   effectRadius: 10
   targetGroundLayerIndex: 1

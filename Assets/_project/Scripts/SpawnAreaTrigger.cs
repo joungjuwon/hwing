@@ -12,6 +12,12 @@ public class SpawnAreaTrigger : MonoBehaviour
     [Tooltip("플레이어가 이 구역에 들어오면 변경될 새로운 스폰 영역 콜라이더")]
     public Collider targetSpawnArea;
 
+    [Header("Object Control")]
+    [Tooltip("트리거 진입 시 비활성화할 오브젝트들")]
+    public List<GameObject> objectsToDisable;
+
+    [Tooltip("트리거 진입 시 활성화할 오브젝트들")]
+    public List<GameObject> objectsToEnable;
     [Header("Death Sequence Settings")]
     [Tooltip("이 구역에 진입하면 플레이어를 죽일지 여부")]
     public bool killPlayerOnEnter = false;
@@ -123,6 +129,23 @@ public class SpawnAreaTrigger : MonoBehaviour
                 Debug.Log($"[SpawnAreaTrigger] Spawn area updated to: {targetSpawnArea.name}");
             }
 
+            // 1.5 오브젝트 비활성화
+            if (objectsToDisable != null)
+            {
+                foreach (var obj in objectsToDisable)
+                {
+                    if (obj != null) obj.SetActive(false);
+                }
+            }
+
+             // 1.6 오브젝트 활성화
+            if (objectsToEnable != null)
+            {
+                foreach (var obj in objectsToEnable)
+                {
+                    if (obj != null) obj.SetActive(true);
+                }
+            }
             // 2. 죽음 및 연출 처리
             if (killPlayerOnEnter)
             {
@@ -135,6 +158,7 @@ public class SpawnAreaTrigger : MonoBehaviour
             }
         }
     }
+
 
     private IEnumerator PlayDeathSequence(GameObject player, SimulationManager simManager)
     {

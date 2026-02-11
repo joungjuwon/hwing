@@ -136,6 +136,14 @@ public class PlayerLifeCycle : MonoBehaviour
                 onSprout?.Invoke(spawnPosition);
             }
         }
+        else
+        {
+            // 물에 빠져 죽는 경우 등 오브젝트 생성을 안 하더라도 시뮬레이션 모드 전환을 위해 이벤트 발생
+            if (!suppressSproutEvent)
+            {
+                onSprout?.Invoke(transform.position);
+            }
+        }
 
         Destroy(gameObject);
     }
