@@ -273,9 +273,6 @@ Shader "Shader Graphs/S_Vegetation_Interactive_HLSL"
                 float3 displacedWS = positionWS + (swayDirection * swayStrength);
                 displacedWS += ComputeInteractivePushWS(positionOS, uvY, trailMask);
 
-                float cameraFade = saturate((length(_WorldSpaceCameraPos - positionWS) - 10.0) / _FadeOutDistance);
-                displacedWS = lerp(displacedWS, positionWS, cameraFade);
-
                 return TransformWorldToObject(displacedWS);
             }
 
@@ -321,20 +318,8 @@ Shader "Shader Graphs/S_Vegetation_Interactive_HLSL"
                 float4 fakeLightColor = lerp(_FakeShadowColor, _FakeLightColor, fakeLightT);
                 float overlayOpacity = saturate(trailMask + (IN.uv0.y * _FakeLightStrength));
 
-                float3 objectPositionWS = GetObjectToWorldMatrix()._m03_m13_m23;
-                float2 objectNoiseUV = float2(objectPositionWS.x, objectPositionWS.z);
-                float objectNoiseA = SGSimpleNoise(objectNoiseUV, 1.0);
-                float objectNoiseB = SGSimpleNoise(objectNoiseUV, 4.0);
-                float objectNoiseOverlay = SGBlendMode15(objectNoiseA, objectNoiseB, 0.10000000149011612);
-
-                float slopeBase = saturate(SGRemap(normalWS.y, float2(_Cliff_SlopeAngle, 1.0), float2(0.0, 0.99)) - (objectNoiseOverlay * IN.uv0.y));
-                float shadowToMid = saturate(SGRemap(slopeBase, float2(0.0, 0.5), float2(0.0, 1.0)));
-                float midToHigh = saturate(SGRemap(slopeBase, float2(0.5, 1.0), float2(0.0, 1.0)));
-
-                float4 grassTone = saturate(lerp(lerp(_Grass_Shadow, _Grass_MidTone, shadowToMid), _Grass_HighLight, midToHigh));
-
-                float mountainBlend = saturate(((((1.0 - (20.0 * normalWS.y)) + (IN.positionWS.y - (_Mountain_ProceduralHeight - (2.0 * _Mountain_ProceduralSmooth)))) / _Mountain_ProceduralSmooth) + _Grass_BlendHeight) / _Grass_BlendHeightSmooth);
-                float4 terrainColor = lerp(grassTone, _Grass_Dry, mountainBlend);
+                float bladeGradient = saturate(IN.uv0.y);
+                float4 terrainColor = lerp(_Grass_MidTone, _Grass_HighLight, bladeGradient * bladeGradient);
 
                 float4 blendedColor = SGBlendMode15(terrainColor, fakeLightColor, overlayOpacity);
 

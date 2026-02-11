@@ -31,7 +31,7 @@ Material:
     - _Grass_BlendHeight: 13.6
     - _Grass_BlendHeightSmooth: 6
     - _InteractionHorizontalPush: 2
-    - _InteractionVerticalPush: 0.839
+    - _InteractionVerticalPush: 1
     - _InteractionWindSuppression: 0
     - _Mountain_ProceduralHeight: 270
     - _Mountain_ProceduralSmooth: 15

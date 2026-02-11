@@ -192,14 +192,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1713881784235912235}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f2f42819328515438297278640be308, type: 3}
+  m_Script: {fileID: 11500000, guid: c96a203adbea4fc429cbfd763bb3f373, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 8907696177444119508, guid: 7e2b957ac2dc9aa46a0a89a01954ea70, type: 3}
-  numberOfPoints: 2
-  timeInterval: 0.2
-  shaderPropertyBaseName: _TargetTurbulencePose
-  useLegacyNamingForTwoPoints: 1
+  target: {fileID: 4824271705152727447}
 --- !u!114 &-9132790675205045365
 MonoBehaviour:
   m_ObjectHideFlags: 0
