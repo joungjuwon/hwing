@@ -25,24 +25,27 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Cliff_SlopeAngle: 0.753
-    - _FadeOutDistance: 100
+    - _Cliff_SlopeAngle: 0.5
+    - _FadeOutDistance: 200
     - _FakeLightStrength: 0.5
     - _Grass_BlendHeight: 13.6
     - _Grass_BlendHeightSmooth: 6
-    - _Mountain_ProceduralHeight: 180
-    - _Mountain_ProceduralSmooth: 10
+    - _InteractionHorizontalPush: 2
+    - _InteractionVerticalPush: 0.839
+    - _InteractionWindSuppression: 0
+    - _Mountain_ProceduralHeight: 270
+    - _Mountain_ProceduralSmooth: 15
     - _TargetTurbulenceSize: 1
     - _WindSpeed: 0
     - _WindStrength: 0
     - _Wind_Wave_Size: 1
     m_Colors:
     - _FakeLightColor: {r: 1, g: 0.9166667, b: 0, a: 0}
-    - _FakeShadowColor: {r: 0, g: 0.6666667, b: 1, a: 1}
-    - _Grass_Dry: {r: 0.58431375, g: 0.3803921, b: 0.23529407, a: 1}
-    - _Grass_HighLight: {r: 0.5333333, g: 0.62352943, b: 0.050980374, a: 1}
-    - _Grass_MidTone: {r: 0.25490195, g: 0.4470588, b: 0.090196066, a: 1}
-    - _Grass_Shadow: {r: 0.18039212, g: 0.35686272, b: 0.29411763, a: 1}
+    - _FakeShadowColor: {r: 0, g: 0.666667, b: 1, a: 1}
+    - _Grass_Dry: {r: 0.58431375, g: 0.3803922, b: 0.23529413, a: 1}
+    - _Grass_HighLight: {r: 0.5803922, g: 0.74509805, b: 0.227451, a: 1}
+    - _Grass_MidTone: {r: 0.13725491, g: 0.45882356, b: 0.015686275, a: 1}
+    - _Grass_Shadow: {r: 0, g: 0.41960788, b: 0.27058825, a: 1}
     - _TargetTurbulencePose1: {r: 0, g: 0, b: 0, a: 0}
     - _TargetTurbulencePose2: {r: 0, g: 0, b: 0, a: 0}
     - _TargetTurbulencePose3: {r: 0, g: 0, b: 0, a: 0}
