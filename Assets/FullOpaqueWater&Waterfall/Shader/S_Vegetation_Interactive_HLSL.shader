@@ -21,6 +21,9 @@ Shader "Shader Graphs/S_Vegetation_Interactive_HLSL"
         _FakeLightStrength ("FakeLightStrength", Float) = 0.5
 
         _TargetTurbulenceSize ("TargetTurbulenceSize", Float) = 1
+        _InteractionHorizontalPush ("Interaction Horizontal Push", Range(0, 2)) = 0.8
+        _InteractionVerticalPush ("Interaction Vertical Push", Range(0, 1)) = 0.45
+        _InteractionWindSuppression ("Interaction Wind Suppression", Range(0, 1)) = 0.8
     }
 
     SubShader
@@ -107,6 +110,9 @@ Shader "Shader Graphs/S_Vegetation_Interactive_HLSL"
                 float _FakeLightStrength;
                 float _Grass_BlendHeight;
                 float _Grass_BlendHeightSmooth;
+                float _InteractionHorizontalPush;
+                float _InteractionVerticalPush;
+                float _InteractionWindSuppression;
                 float _Mountain_ProceduralHeight;
                 float _Mountain_ProceduralSmooth;
                 float _TargetTurbulenceSize;
@@ -246,8 +252,8 @@ Shader "Shader Graphs/S_Vegetation_Interactive_HLSL"
                 float2 radialDirOS = radialOS / radialLen;
                 float3 radialDirWS = TransformObjectToWorldDir(float3(radialDirOS.x, 0.0, radialDirOS.y), true);
 
-                float horizontalPush = interaction * _TargetTurbulenceSize * 0.8;
-                float verticalPush = interaction * 0.45;
+                float horizontalPush = interaction * _TargetTurbulenceSize * _InteractionHorizontalPush;
+                float verticalPush = interaction * _InteractionVerticalPush;
 
                 return (radialDirWS * horizontalPush) + float3(0.0, -verticalPush, 0.0);
             }
@@ -260,7 +266,7 @@ Shader "Shader Graphs/S_Vegetation_Interactive_HLSL"
 
                 float noise = ComputeWindNoiseVertex(positionWS, uvY);
                 float swayScalar = (noise - 0.30000001192092896) * _WindStrength;
-                float windFadeByInteraction = 1.0 - (interactionMask * 0.8);
+                float windFadeByInteraction = 1.0 - (interactionMask * _InteractionWindSuppression);
                 float swayStrength = swayScalar * uvY * windFadeByInteraction;
 
                 float3 swayDirection = float3(_WindDirection.x, -1.0, _WindDirection.y);
