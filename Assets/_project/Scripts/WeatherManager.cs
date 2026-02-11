@@ -88,6 +88,23 @@ public class WeatherManager : MonoBehaviour
         // 안개 활성화
         RenderSettings.fog = true;
 
+        // 시작 시점의 위치를 원본(Sunny) 위치로 미리 백업하여 기준점을 고정합니다.
+        if (rainTargetTerrain != null)
+        {
+            originalTerrainPosition = rainTargetTerrain.transform.position;
+            terrainPositionBackedUp = true;
+        }
+
+        if (waterObjectsToRaise != null)
+        {
+            originalWaterPositions.Clear();
+            foreach (var water in waterObjectsToRaise)
+            {
+                if (water != null) originalWaterPositions.Add(water.position);
+            }
+            waterPositionsBackedUp = true;
+        }
+
         // 초기 상태 적용 (즉시)
         ApplyWeather(currentState, true);
     }
@@ -167,7 +184,7 @@ public class WeatherManager : MonoBehaviour
                 // {
                 //     targetTerrainPosition = originalTerrainPosition;
                 // }
-                if (waterPositionsBackedUp && waterObjectsToRaise != null)
+                if (waterPositionsBackedUp)
                 {
                     targetWaterPositions = new List<Vector3>(originalWaterPositions);
                 }
@@ -208,20 +225,14 @@ public class WeatherManager : MonoBehaviour
 
                 if (waterObjectsToRaise != null && waterObjectsToRaise.Length > 0)
                 {
-                    if (!waterPositionsBackedUp)
-                    {
-                        originalWaterPositions.Clear();
-                        foreach (var water in waterObjectsToRaise)
-                        {
-                            if (water != null) originalWaterPositions.Add(water.position);
-                        }
-                        waterPositionsBackedUp = true;
-                    }
-
                     targetWaterPositions.Clear();
-                    foreach (var originalPos in originalWaterPositions)
+                    // Start에서 저장한 원본 위치를 기준으로 목표 위치 계산
+                    if (waterPositionsBackedUp)
                     {
-                        targetWaterPositions.Add(originalPos + new Vector3(0, waterRaiseAmount, 0));
+                        foreach (var originalPos in originalWaterPositions)
+                        {
+                            targetWaterPositions.Add(originalPos + new Vector3(0, waterRaiseAmount, 0));
+                        }
                     }
                 }
                 break;

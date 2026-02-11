@@ -164,6 +164,9 @@ MonoBehaviour:
   lifeDecreaseLayer:
     serializedVersion: 2
     m_Bits: 8
+  waterLayer:
+    serializedVersion: 2
+    m_Bits: 16
   enableTerrainModification: 1
   effectRadius: 10
   targetGroundLayerIndex: 1
