@@ -45,7 +45,10 @@ public class SimulationManager : MonoBehaviour
     public float raycastDistance = 100f;
     [Tooltip("바닥에서 띄울 높이")]
     public float spawnOffset = 0.1f;
-    public LayerMask groundLayer; // 바닥 감지용 레이어
+    [Tooltip("리스폰 UI가 바닥에서 떠있을 추가 높이")]
+    public float respawnUiHeightOffset = 2.0f;
+    [Tooltip("낙하 위치 감지용 레이어 (기본값: Everything)")]
+    public LayerMask collisionLayer = -1; // 모든 레이어와 충돌
 
     [Header("Game Flow")]
     [Tooltip("게임 시작 시 자동으로 인트로 재생 (시작하자마자 떨어짐)")]
@@ -239,7 +242,10 @@ public class SimulationManager : MonoBehaviour
 
         Vector3 randomPos = GetRandomPositionOnMap();
 
-        currentSpawnUi = Instantiate(spawnUiPrefab, randomPos, Quaternion.identity);
+        // UI 위치는 바닥 위치보다 높게 설정
+        Vector3 uiPos = randomPos + Vector3.up * respawnUiHeightOffset;
+
+        currentSpawnUi = Instantiate(spawnUiPrefab, uiPos, Quaternion.identity);
 
         if (simulationCamera != null)
         {
@@ -253,6 +259,14 @@ public class SimulationManager : MonoBehaviour
             btn.onClick.AddListener(() => 
             {
                 Debug.Log("[SimManager] Respawn Button Clicked!");
+                
+                // UI 즉시 제거
+                if (currentSpawnUi != null)
+                {
+                    Destroy(currentSpawnUi);
+                    currentSpawnUi = null;
+                }
+
                 RespawnPlayer(randomPos);
             });
         }
@@ -275,7 +289,7 @@ public class SimulationManager : MonoBehaviour
             Vector3 searchPos = new Vector3(randomX, bounds.max.y + 0.1f, randomZ);
             float checkDist = bounds.size.y + raycastDistance; // 콜라이더 높이 + 여유 거리
 
-            if (Physics.Raycast(searchPos, Vector3.down, out RaycastHit hit, checkDist, groundLayer))
+            if (Physics.Raycast(searchPos, Vector3.down, out RaycastHit hit, checkDist, collisionLayer))
             {
                 return hit.point + Vector3.up * spawnOffset;
             }
@@ -289,7 +303,7 @@ public class SimulationManager : MonoBehaviour
         Vector3 center = transform.position;
         Vector3 rayStartPos = new Vector3(center.x + offsetX, center.y + raycastHeight, center.z + offsetZ);
 
-        if (Physics.Raycast(rayStartPos, Vector3.down, out RaycastHit rayHit, raycastDistance, groundLayer))
+        if (Physics.Raycast(rayStartPos, Vector3.down, out RaycastHit rayHit, raycastDistance, collisionLayer))
         {
             return rayHit.point + Vector3.up * spawnOffset;
         }

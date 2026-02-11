@@ -14,6 +14,7 @@ public class PlayerLifeCycle : MonoBehaviour
     public GameObject playerVisuals; // 플레이어 모델
     public float deathStopDamping = 5.0f; // 죽은 뒤 멈출 때 적용할 마찰력
     public LayerMask lifeDecreaseLayer; // 수명이 줄어드는 지형 레이어
+    public LayerMask waterLayer; // 물 레이어 (닿으면 사망 및 생성 없음)
 
     [Header("Terrain Effect Settings")]
     [Tooltip("터레인을 변경할지 여부")]
@@ -42,6 +43,7 @@ public class PlayerLifeCycle : MonoBehaviour
     private float currentLifeTime;
     private bool isDead = false;
     private bool hasSpawnedDeathObject = false;
+    private bool shouldSpawnDeathObject = true; // 죽을 때 오브젝트 생성 여부
 
     private void Awake()
     {
@@ -78,10 +80,11 @@ public class PlayerLifeCycle : MonoBehaviour
         }
     }
 
-    public void Die()
+    public void Die(bool spawnObject = true)
     {
         if (isDead) return;
         isDead = true;
+        shouldSpawnDeathObject = spawnObject;
 
         if (controller != null)
         {
@@ -107,7 +110,7 @@ public class PlayerLifeCycle : MonoBehaviour
     {
         hasSpawnedDeathObject = true;
 
-        if (deathSpawnPrefab != null)
+        if (shouldSpawnDeathObject && deathSpawnPrefab != null)
         {
             Vector3 spawnPosition = transform.position;
             Quaternion spawnRotation = Quaternion.identity;
@@ -211,5 +214,14 @@ public class PlayerLifeCycle : MonoBehaviour
         }
         // 변경된 잔디 적용
         data.SetDetailLayer(dStartX, dStartZ, targetGrassLayerIndex, detailMap);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // 물 레이어에 닿으면 즉시 사망하되, 식물은 생성하지 않음
+        if (((1 << other.gameObject.layer) & waterLayer) != 0)
+        {
+            Die(false);
+        }
     }
 }

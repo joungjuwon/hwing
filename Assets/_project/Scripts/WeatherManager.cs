@@ -162,10 +162,11 @@ public class WeatherManager : MonoBehaviour
                     }
                 }
 
-                if (terrainPositionBackedUp && rainTargetTerrain != null)
-                {
-                    targetTerrainPosition = originalTerrainPosition;
-                }
+                // 터레인은 비가 그쳐도 다시 올라오지 않도록 복구 로직 제거
+                // if (terrainPositionBackedUp && rainTargetTerrain != null)
+                // {
+                //     targetTerrainPosition = originalTerrainPosition;
+                // }
                 if (waterPositionsBackedUp && waterObjectsToRaise != null)
                 {
                     targetWaterPositions = new List<Vector3>(originalWaterPositions);
@@ -292,6 +293,35 @@ public class WeatherManager : MonoBehaviour
                     }
                 }
                 currentWaterTime = waterTransitionDuration; // 즉시 완료 처리
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        RestoreEnvironment();
+    }
+
+    private void OnApplicationQuit()
+    {
+        RestoreEnvironment();
+    }
+
+    private void RestoreEnvironment()
+    {
+        if (terrainPositionBackedUp && rainTargetTerrain != null)
+        {
+            rainTargetTerrain.transform.position = originalTerrainPosition;
+        }
+
+        if (waterPositionsBackedUp && waterObjectsToRaise != null)
+        {
+            for (int i = 0; i < waterObjectsToRaise.Length; i++)
+            {
+                if (waterObjectsToRaise[i] != null && i < originalWaterPositions.Count)
+                {
+                    waterObjectsToRaise[i].position = originalWaterPositions[i];
+                }
             }
         }
     }
