@@ -123,40 +123,17 @@ public class SpawnAreaTrigger : MonoBehaviour
 
     private IEnumerator PlayDeathSequence(GameObject player, SimulationManager simManager)
     {
-        // 플레이어가 파괴될 수 있으므로 위치를 미리 저장
+        // 0. 위치 저장 및 플레이어 사망 처리
         Vector3 deathPosition = player.transform.position;
-
-        // 1. 플레이어 제어권 박탈 및 사망 처리
         var lifeCycle = player.GetComponent<PlayerLifeCycle>();
         if (lifeCycle != null)
         {
-            // 중요: 이벤트 발생을 억제하여 SimulationManager가 자동으로 전환되는 것을 방지
             lifeCycle.suppressSproutEvent = true;
             lifeCycle.Die();
         }
 
-        // 1.5. 터레인에 잔디/꽃 심기
-        PlantDetailsOnTerrain(deathPosition);
-
-        // 1.6. 터레인 칠하기 (텍스처 변경)
-        PaintTerrain(deathPosition);
-
-        // 날씨 변경 (비)
-        if (WeatherManager.Instance != null)
-        {
-            WeatherManager.Instance.SetWeather(WeatherState.Rain);
-        }
-
-        // 구름 페이드 아웃
-        if (cloudSystem != null)
-        {
-            cloudSystem.FadeOutAndDisable(sequenceDuration);
-        }
-
-        // 2. 카메라 연출 시작 (뒤로 빠지는 카메라 활성화)
+        // 1. BGM 재생 및 연출 카메라 활성화
         if (pullBackCamera != null) pullBackCamera.SetActive(true);
-
-        // 3. BGM 재생
         if (sequenceBgm != null)
         {
             AudioSource audio = gameObject.AddComponent<AudioSource>();
@@ -165,20 +142,60 @@ public class SpawnAreaTrigger : MonoBehaviour
             audio.Play();
         }
 
-        // 4. 연출 시간 대기
-        yield return new WaitForSeconds(sequenceDuration);
+        // 2. 터레인 변화 연출 (중심에서부터 차오르기)
+        yield return StartCoroutine(AnimateTerrainChanges(deathPosition, sequenceDuration));
 
-        // 5. 시뮬레이션 모드로 전환
+        // 3. 시뮬레이션 모드로 전환
         if (simManager != null)
         {
             simManager.EnableSimulationMode(deathPosition);
             
-            // 연출 카메라 끄기 (SimulationManager가 켜는 카메라로 자연스럽게 전환)
             if (pullBackCamera != null) pullBackCamera.SetActive(false);
+        }
+
+        // 4. 시뮬레이션 뷰 전환 후, 구름 제거 및 날씨 변경
+        if (WeatherManager.Instance != null)
+        {
+            float weatherTransitionDuration = WeatherManager.Instance.transitionDuration;
+
+            if (cloudSystem != null)
+            {
+                cloudSystem.FadeOutAndDisable(weatherTransitionDuration);
+            }
+            WeatherManager.Instance.SetWeather(WeatherState.Rain);
         }
     }
 
-    private void PlantDetailsOnTerrain(Vector3 centerPos)
+    private IEnumerator AnimateTerrainChanges(Vector3 centerPos, float duration)
+    {
+        if (targetTerrain == null) yield break;
+
+        // 콜라이더 영역 모드에서는 애니메이션을 지원하지 않으므로 즉시 적용하고 종료합니다.
+        if (plantingAreaColliders != null && plantingAreaColliders.Count > 0)
+        {
+            PlantDetailsOnTerrain(centerPos, 1.0f);
+            PaintTerrain(centerPos, 1.0f);
+            yield break;
+        }
+
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float progress = Mathf.Clamp01(elapsedTime / duration);
+
+            PlantDetailsOnTerrain(centerPos, progress);
+            PaintTerrain(centerPos, progress);
+
+            yield return null;
+        }
+
+        // 연출이 끝난 후, 100% 상태로 최종 적용 보장
+        PlantDetailsOnTerrain(centerPos, 1.0f);
+        PaintTerrain(centerPos, 1.0f);
+    }
+
+    private void PlantDetailsOnTerrain(Vector3 centerPos, float progress = 1.0f)
     {
         // 터레인이 할당되지 않았다면 활성화된 터레인 찾기
         if (targetTerrain == null) targetTerrain = Terrain.activeTerrain;
@@ -203,16 +220,18 @@ public class SpawnAreaTrigger : MonoBehaviour
         int centerX = (int)(relativePos.x / terrainData.size.x * detailWidth);
         int centerY = (int)(relativePos.z / terrainData.size.z * detailHeight);
 
+        int currentRadius = Mathf.CeilToInt(plantingRadius * progress);
+
         foreach (int layerIndex in detailLayerIndices)
         {
             // 유효한 레이어 인덱스인지 확인
             if (layerIndex < 0 || layerIndex >= terrainData.detailPrototypes.Length) continue;
 
             // 수정할 영역 계산 (전체 맵을 가져오면 느리므로 필요한 부분만 가져옴)
-            int startX = Mathf.Max(0, centerX - plantingRadius);
-            int startY = Mathf.Max(0, centerY - plantingRadius);
-            int width = Mathf.Min(detailWidth, centerX + plantingRadius) - startX;
-            int height = Mathf.Min(detailHeight, centerY + plantingRadius) - startY;
+            int startX = Mathf.Max(0, centerX - currentRadius);
+            int startY = Mathf.Max(0, centerY - currentRadius);
+            int width = Mathf.Min(detailWidth, centerX + currentRadius) - startX;
+            int height = Mathf.Min(detailHeight, centerY + currentRadius) - startY;
 
             if (width <= 0 || height <= 0) continue;
 
@@ -226,7 +245,7 @@ public class SpawnAreaTrigger : MonoBehaviour
                 {
                     // 중심에서의 거리 체크
                     float dist = Vector2.Distance(new Vector2(startX + x, startY + y), new Vector2(centerX, centerY));
-                    if (dist <= plantingRadius)
+                    if (dist <= currentRadius)
                     {
                         map[y, x] = Mathf.Max(map[y, x], plantingDensity); // 기존 밀도보다 낮으면 덮어쓰지 않음
                     }
@@ -295,9 +314,9 @@ public class SpawnAreaTrigger : MonoBehaviour
         }
     }
 
-    private void PaintTerrain(Vector3 centerPos)
+    private void PaintTerrain(Vector3 centerPos, float progress = 1.0f)
     {
-        if (targetTerrain == null || paintLayerIndex < 0) return;
+        if (targetTerrain == null || paintLayerIndex < 0 || progress <= 0) return;
 
         TerrainData terrainData = targetTerrain.terrainData;
         if (paintLayerIndex >= terrainData.alphamapLayers) return;
@@ -324,12 +343,13 @@ public class SpawnAreaTrigger : MonoBehaviour
         // plantingRadius는 디테일 맵 기준이므로 알파맵 해상도에 맞춰 비율 조정 필요할 수 있으나, 
         // 여기서는 편의상 같은 값을 사용하거나 비율을 곱해줍니다.
         float resolutionRatio = (float)alphamapWidth / terrainData.detailWidth;
-        int paintRadius = Mathf.Max(1, (int)(plantingRadius * resolutionRatio));
+        int maxPaintRadius = Mathf.Max(1, (int)(plantingRadius * resolutionRatio));
+        int currentPaintRadius = Mathf.CeilToInt(maxPaintRadius * progress);
 
-        int startX = Mathf.Max(0, centerX - paintRadius);
-        int startY = Mathf.Max(0, centerY - paintRadius);
-        int width = Mathf.Min(alphamapWidth, centerX + paintRadius) - startX;
-        int height = Mathf.Min(alphamapHeight, centerY + paintRadius) - startY;
+        int startX = Mathf.Max(0, centerX - currentPaintRadius);
+        int startY = Mathf.Max(0, centerY - currentPaintRadius);
+        int width = Mathf.Min(alphamapWidth, centerX + currentPaintRadius) - startX;
+        int height = Mathf.Min(alphamapHeight, centerY + currentPaintRadius) - startY;
 
         if (width <= 0 || height <= 0) return;
 
@@ -340,7 +360,7 @@ public class SpawnAreaTrigger : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                if (Vector2.Distance(new Vector2(startX + x, startY + y), new Vector2(centerX, centerY)) <= paintRadius)
+                if (Vector2.Distance(new Vector2(startX + x, startY + y), new Vector2(centerX, centerY)) <= currentPaintRadius)
                 {
                     ApplyPaintToSplatmap(splatmapData, x, y, numLayers);
                 }
