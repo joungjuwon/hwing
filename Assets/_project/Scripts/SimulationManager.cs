@@ -58,6 +58,15 @@ public class SimulationManager : MonoBehaviour
     public VineGrowthController vineController;
 
     [Header("Growth Phases")]
+    [Tooltip("체크 시 페이즈 방식 대신 수명에 따라 연속적으로 덩굴이 자랍니다.")]
+    public bool useContinuousGrowth = true; 
+    [Tooltip("수명(X축: 1->0)에 따른 덩굴 성장(Y축: 0->1) 그래프")]
+    public AnimationCurve lifeToGrowthCurve = AnimationCurve.Linear(1f, 0f, 0f, 1f);
+
+    [Tooltip("덩굴의 최대 성장치 (0.0 ~ 1.0)")]
+    [Range(0f, 1f)]
+    public float maxContinuousGrowth = 1.0f;
+
     [Tooltip("생명력 잔량에 따른 성장 단계 설정 (높은 Threshold -> 낮은 Threshold 순서로 체크됨)")]
     public List<GrowthPhase> growthPhases = new List<GrowthPhase>();
 
@@ -130,8 +139,30 @@ public class SimulationManager : MonoBehaviour
         // 덩굴 성장 페이즈 업데이트 (플레이어가 살아있고 시뮬레이션 모드가 아닐 때)
         if (!isSimulationActive && currentPlayer != null && vineController != null)
         {
-            CheckLifePhase();
+            if (useContinuousGrowth)
+            {
+                UpdateContinuousGrowth();
+            }
+            else
+            {
+                CheckLifePhase();
+            }
         }
+    }
+
+    private void UpdateContinuousGrowth()
+    {
+        // LifeRatio: 1.0 (Full) -> 0.0 (Dead)
+        float ratio = currentPlayer.LifeRatio;
+        
+        // Curve Evaluate: X(Life) -> Y(Growth)
+        // 기본 Linear 커브 기준: Life 1일 때 Growth 0, Life 0일 때 Growth 1
+        float curveValue = lifeToGrowthCurve.Evaluate(ratio);
+
+        // 최대치 제한 적용
+        float targetGrowth = curveValue * maxContinuousGrowth;
+
+        vineController.SetGrowthTarget(targetGrowth);
     }
     
     private void CheckLifePhase()

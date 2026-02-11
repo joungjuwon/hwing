@@ -89,7 +89,6 @@ public class VineGrowthController : MonoBehaviour
     /// </summary>
     public void SetGrowthTarget(float value)
     {
-        Debug.Log($"[VineController] Receiving Growth Target: {value}");
         targetGrowth = Mathf.Clamp01(value);
     }
 
