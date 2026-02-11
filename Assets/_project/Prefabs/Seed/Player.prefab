@@ -46,7 +46,6 @@ GameObject:
   - component: {fileID: 3945191205796151168}
   - component: {fileID: 2449218805230744002}
   - component: {fileID: 7572842050540717156}
-  - component: {fileID: 2319107241917117154}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -241,23 +240,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   suppressSproutEvent: 0
---- !u!114 &2319107241917117154
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6821408077786863926}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f2f42819328515438297278640be308, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 8907696177444119508, guid: 7e2b957ac2dc9aa46a0a89a01954ea70, type: 3}
-  numberOfPoints: 2
-  timeInterval: 0.2
-  shaderPropertyBaseName: _TargetTurbulencePose
-  useLegacyNamingForTwoPoints: 1
 --- !u!1001 &6397046236243082211
 PrefabInstance:
   m_ObjectHideFlags: 0

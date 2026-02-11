@@ -1,9 +1,9 @@
-Shader "Hwing/SimpleWatercolorCloud_Smooth"
+Shader "Hwing/SimpleWatercolorCloud_Solid"
 {
     Properties
     {
         [Header(Base Settings)]
-        _BaseColor ("Cloud Color", Color) = (1, 1, 1, 1) // 기본 알파를 1로 변경
+        _BaseColor ("Cloud Color", Color) = (0.3, 0.3, 0.35, 1) // 기본값을 약간 어두운 색으로
         
         [Header(Shape Settings)]
         _WobbleSpeed ("Wobble Speed", Float) = 0.5
@@ -11,11 +11,9 @@ Shader "Hwing/SimpleWatercolorCloud_Smooth"
         _WobbleAmount ("Wobble Amount (Strength)", Float) = 0.3
         
         [Header(Watercolor Effect)]
-        _RimPower ("Rim Power (Softness)", Range(0.1, 5.0)) = 2.0
-        _RimColor ("Rim Color", Color) = (0.9, 0.95, 1.0, 0.5)
-        
-        // [추가됨] 중심부 불투명도 조절 슬라이더 (1.0이면 완전히 불투명)
-        _CenterOpacity ("Center Opacity", Range(0.0, 1.0)) = 0.9
+        _RimPower ("Rim Power (Sharpness)", Range(0.1, 10.0)) = 3.0
+        _RimColor ("Rim Color", Color) = (0.8, 0.8, 0.8, 1.0) // 림 컬러
+        _RimIntensity ("Rim Intensity", Range(0.0, 1.0)) = 0.5 // [추가] 림 라이트 강도 조절
     }
 
     SubShader
@@ -29,7 +27,12 @@ Shader "Hwing/SimpleWatercolorCloud_Smooth"
         }
 
         Blend SrcAlpha OneMinusSrcAlpha
-        ZWrite Off
+        
+        // [핵심 수정] ZWrite를 On으로 켜서 내부 겹침 현상을 해결합니다.
+        // 단, 투명도(Alpha)가 섞이면서 약간의 경계가 보일 수 있으니 
+        // 완벽한 투명보다는 '반투명한 고체' 느낌을 냅니다.
+        ZWrite On 
+        
         Cull Back
 
         Pass
@@ -61,7 +64,7 @@ Shader "Hwing/SimpleWatercolorCloud_Smooth"
                 float _WobbleAmount;
                 float _RimPower;
                 float4 _RimColor;
-                float _CenterOpacity; // [추가됨] 변수 선언
+                float _RimIntensity; // [추가]
             CBUFFER_END
 
             float GetSmoothWave(float3 posWS, float time)
@@ -100,20 +103,20 @@ Shader "Hwing/SimpleWatercolorCloud_Smooth"
 
                 // 림 라이트
                 float NdotV = 1.0 - saturate(dot(normal, viewDir));
-                float rimIntensity = pow(NdotV, _RimPower);
+                float rimCalculation = pow(NdotV, _RimPower);
+                
+                // [수정] 림 강도 적용
+                rimCalculation *= _RimIntensity;
 
                 // 색상 합성
-                half4 finalColor = lerp(_BaseColor, _RimColor, rimIntensity);
+                // 림 라이트가 BaseColor 위에 덧씌워지는 느낌 (Additive가 아닌 Interpolation)
+                half3 finalRGB = lerp(_BaseColor.rgb, _RimColor.rgb, rimCalculation);
                 
-                // [수정됨] 투명도 조절 로직
-                // 이전 코드: lerp(0.6, 1.0, rimIntensity) -> 강제로 0.6배 투명해짐
-                // 수정 코드: lerp(_CenterOpacity, 1.0, rimIntensity) -> 설정값만큼만 투명해짐
-                
-                // Rim(가장자리)는 무조건 불투명(1.0)하게 유지하여 윤곽을 살리고,
-                // Center(중심)는 _CenterOpacity 값(0~1)을 따릅니다.
-                finalColor.a = _BaseColor.a * lerp(_CenterOpacity, 1.0, rimIntensity);
+                // 알파값
+                // 림 부분은 조금 더 불투명하게, 안쪽은 BaseColor 알파 따라가기
+                half finalAlpha = saturate(_BaseColor.a + rimCalculation);
 
-                return finalColor;
+                return half4(finalRGB, finalAlpha);
             }
             ENDHLSL
         }

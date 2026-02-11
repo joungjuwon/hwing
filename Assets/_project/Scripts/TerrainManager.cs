@@ -7,6 +7,7 @@ public class TerrainManager : MonoBehaviour
 
     // 터레인별, 레이어별 원본 데이터 저장
     private Dictionary<Terrain, Dictionary<int, int[,]>> originalDetailBackups = new Dictionary<Terrain, Dictionary<int, int[,]>>();
+    private Dictionary<Terrain, float[,,]> originalAlphamapBackups = new Dictionary<Terrain, float[,,]>();
 
     private void Awake()
     {
@@ -43,6 +44,21 @@ public class TerrainManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 특정 터레인의 알파맵(텍스처) 전체를 백업합니다. (이미 백업되어 있으면 무시)
+    /// </summary>
+    public void BackupAlphamaps(Terrain terrain)
+    {
+        if (terrain == null) return;
+
+        if (!originalAlphamapBackups.ContainsKey(terrain))
+        {
+            float[,,] maps = terrain.terrainData.GetAlphamaps(0, 0, terrain.terrainData.alphamapWidth, terrain.terrainData.alphamapHeight);
+            originalAlphamapBackups[terrain] = maps;
+            Debug.Log($"[TerrainManager] Backed up alphamaps for {terrain.name}");
+        }
+    }
+
+    /// <summary>
     /// 저장된 모든 터레인 데이터를 원본 상태로 복구합니다.
     /// </summary>
     public void RestoreAllTerrains()
@@ -61,8 +77,17 @@ public class TerrainManager : MonoBehaviour
                 }
             }
         }
+
+        foreach (var entry in originalAlphamapBackups)
+        {
+            if (entry.Key != null && entry.Key.terrainData != null)
+            {
+                entry.Key.terrainData.SetAlphamaps(0, 0, entry.Value);
+            }
+        }
         
         originalDetailBackups.Clear();
+        originalAlphamapBackups.Clear();
         Debug.Log("[TerrainManager] All terrains restored to original state.");
     }
 

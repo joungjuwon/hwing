@@ -35,6 +35,16 @@ public class SpawnAreaTrigger : MonoBehaviour
     [Tooltip("심을 영역을 정의하는 콜라이더 리스트 (비워두면 위 반경 설정 사용)")]
     public List<Collider> plantingAreaColliders;
 
+    [Header("Terrain Painting Settings")]
+    [Tooltip("칠할 터레인 레이어 인덱스 (Terrain Inspector의 Layers 탭 순서, 0부터 시작, -1이면 사용 안 함)")]
+    public int paintLayerIndex = -1;
+    [Tooltip("칠할 불투명도 (0~1)")]
+    [Range(0f, 1f)] public float paintOpacity = 1.0f;
+
+    [Header("Environment Control")]
+    [Tooltip("연출 시 제어할 구름 시스템 (선택 사항)")]
+    public CloudSystem cloudSystem;
+
     private bool hasTriggered = false;
 
 
@@ -63,6 +73,12 @@ public class SpawnAreaTrigger : MonoBehaviour
                     TerrainManager.Instance.BackupDetailLayer(targetTerrain, layerIndex);
                 }
             }
+        }
+
+        // 터레인 텍스처(Alphamap) 데이터 백업
+        if (targetTerrain != null && paintLayerIndex >= 0)
+        {
+            TerrainManager.Instance.BackupAlphamaps(targetTerrain);
         }
     }
 
@@ -121,6 +137,21 @@ public class SpawnAreaTrigger : MonoBehaviour
 
         // 1.5. 터레인에 잔디/꽃 심기
         PlantDetailsOnTerrain(deathPosition);
+
+        // 1.6. 터레인 칠하기 (텍스처 변경)
+        PaintTerrain(deathPosition);
+
+        // 날씨 변경 (비)
+        if (WeatherManager.Instance != null)
+        {
+            WeatherManager.Instance.SetWeather(WeatherState.Rain);
+        }
+
+        // 구름 페이드 아웃
+        if (cloudSystem != null)
+        {
+            cloudSystem.FadeOutAndDisable(sequenceDuration);
+        }
 
         // 2. 카메라 연출 시작 (뒤로 빠지는 카메라 활성화)
         if (pullBackCamera != null) pullBackCamera.SetActive(true);
@@ -261,6 +292,116 @@ public class SpawnAreaTrigger : MonoBehaviour
             {
                 terrainData.SetDetailLayer(startX, startY, layerIndex, map);
             }
+        }
+    }
+
+    private void PaintTerrain(Vector3 centerPos)
+    {
+        if (targetTerrain == null || paintLayerIndex < 0) return;
+
+        TerrainData terrainData = targetTerrain.terrainData;
+        if (paintLayerIndex >= terrainData.alphamapLayers) return;
+
+        int alphamapWidth = terrainData.alphamapWidth;
+        int alphamapHeight = terrainData.alphamapHeight;
+
+        // 0. 콜라이더 리스트가 있다면 해당 영역 칠하기
+        if (plantingAreaColliders != null && plantingAreaColliders.Count > 0)
+        {
+            foreach (var col in plantingAreaColliders)
+            {
+                if (col != null) PaintTerrainInCollider(col, targetTerrain, terrainData, alphamapWidth, alphamapHeight);
+            }
+            return;
+        }
+
+        // 월드 좌표를 알파맵 좌표로 변환
+        Vector3 relativePos = centerPos - targetTerrain.transform.position;
+        int centerX = (int)(relativePos.x / terrainData.size.x * alphamapWidth);
+        int centerY = (int)(relativePos.z / terrainData.size.z * alphamapHeight);
+
+        // 수정할 영역 계산
+        // plantingRadius는 디테일 맵 기준이므로 알파맵 해상도에 맞춰 비율 조정 필요할 수 있으나, 
+        // 여기서는 편의상 같은 값을 사용하거나 비율을 곱해줍니다.
+        float resolutionRatio = (float)alphamapWidth / terrainData.detailWidth;
+        int paintRadius = Mathf.Max(1, (int)(plantingRadius * resolutionRatio));
+
+        int startX = Mathf.Max(0, centerX - paintRadius);
+        int startY = Mathf.Max(0, centerY - paintRadius);
+        int width = Mathf.Min(alphamapWidth, centerX + paintRadius) - startX;
+        int height = Mathf.Min(alphamapHeight, centerY + paintRadius) - startY;
+
+        if (width <= 0 || height <= 0) return;
+
+        float[,,] splatmapData = terrainData.GetAlphamaps(startX, startY, width, height);
+        int numLayers = terrainData.alphamapLayers;
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (Vector2.Distance(new Vector2(startX + x, startY + y), new Vector2(centerX, centerY)) <= paintRadius)
+                {
+                    ApplyPaintToSplatmap(splatmapData, x, y, numLayers);
+                }
+            }
+        }
+
+        terrainData.SetAlphamaps(startX, startY, splatmapData);
+    }
+
+    private void PaintTerrainInCollider(Collider col, Terrain terrain, TerrainData terrainData, int mapWidth, int mapHeight)
+    {
+        Bounds bounds = col.bounds;
+        Vector3 terrainPos = terrain.transform.position;
+        Vector3 terrainSize = terrainData.size;
+
+        int startX = Mathf.FloorToInt((bounds.min.x - terrainPos.x) / terrainSize.x * mapWidth);
+        int startY = Mathf.FloorToInt((bounds.min.z - terrainPos.z) / terrainSize.z * mapHeight);
+        int endX = Mathf.CeilToInt((bounds.max.x - terrainPos.x) / terrainSize.x * mapWidth);
+        int endY = Mathf.CeilToInt((bounds.max.z - terrainPos.z) / terrainSize.z * mapHeight);
+
+        startX = Mathf.Clamp(startX, 0, mapWidth);
+        startY = Mathf.Clamp(startY, 0, mapHeight);
+        endX = Mathf.Clamp(endX, 0, mapWidth);
+        endY = Mathf.Clamp(endY, 0, mapHeight);
+
+        int width = endX - startX;
+        int height = endY - startY;
+
+        if (width <= 0 || height <= 0) return;
+
+        float[,,] splatmapData = terrainData.GetAlphamaps(startX, startY, width, height);
+        int numLayers = terrainData.alphamapLayers;
+        bool modified = false;
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                float normX = (startX + x) / (float)mapWidth;
+                float normY = (startY + y) / (float)mapHeight;
+                Vector3 worldPos = new Vector3(terrainPos.x + normX * terrainSize.x, 0, terrainPos.z + normY * terrainSize.z);
+                worldPos.y = terrain.SampleHeight(worldPos) + terrainPos.y;
+
+                if (Vector3.SqrMagnitude(col.ClosestPoint(worldPos) - worldPos) < 0.01f)
+                {
+                    ApplyPaintToSplatmap(splatmapData, x, y, numLayers);
+                    modified = true;
+                }
+            }
+        }
+
+        if (modified) terrainData.SetAlphamaps(startX, startY, splatmapData);
+    }
+
+    private void ApplyPaintToSplatmap(float[,,] data, int x, int y, int numLayers)
+    {
+        // 다른 레이어들을 0으로 만들고 타겟 레이어를 1로 설정 (간단한 덮어쓰기)
+        // 부드러운 블렌딩이 필요하면 기존 값을 읽어서 비율 조정 로직 추가 가능
+        for (int i = 0; i < numLayers; i++)
+        {
+            data[y, x, i] = (i == paintLayerIndex) ? paintOpacity : 0f;
         }
     }
 }

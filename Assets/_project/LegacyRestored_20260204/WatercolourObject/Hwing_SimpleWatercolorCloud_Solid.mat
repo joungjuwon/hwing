@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Cloud
-  m_Shader: {fileID: 4800000, guid: 543af4da38d5665499f7646a689fa626, type: 3}
+  m_Name: Hwing_SimpleWatercolorCloud_Solid
+  m_Shader: {fileID: 4800000, guid: e9c73bbdb2f9b2749beed887b308e5de, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -25,13 +25,13 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _CenterOpacity: 1
-    - _RimPower: 5
-    - _WobbleAmount: 0.1
-    - _WobbleScale: 13.52
-    - _WobbleSpeed: 5.29
+    - _RimIntensity: 0.527
+    - _RimPower: 3
+    - _WobbleAmount: 0.3
+    - _WobbleScale: 1.5
+    - _WobbleSpeed: 5.3
     m_Colors:
-    - _BaseColor: {r: 0.71221966, g: 0.9091957, b: 0.9150943, a: 0.8}
-    - _RimColor: {r: 0.9, g: 0.95, b: 1, a: 0.5}
+    - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 0.4433962, g: 0.40784085, b: 0.40784085, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

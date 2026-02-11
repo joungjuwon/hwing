@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 4686726939582491041}
   - component: {fileID: 1326963547865930410}
   - component: {fileID: 7036053514552554640}
-  - component: {fileID: 6031177945880734005}
   - component: {fileID: -5674223320456987061}
   m_Layer: 0
   m_Name: MindulrePlayer
@@ -183,23 +182,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   suppressSproutEvent: 0
---- !u!114 &6031177945880734005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2988354985484196682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f2f42819328515438297278640be308, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 8907696177444119508, guid: 7e2b957ac2dc9aa46a0a89a01954ea70, type: 3}
-  numberOfPoints: 2
-  timeInterval: 0.2
-  shaderPropertyBaseName: _TargetTurbulencePose
-  useLegacyNamingForTwoPoints: 1
 --- !u!114 &-5674223320456987061
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -18,6 +18,13 @@ public class CloudSystem : MonoBehaviour
     [Header("페이드 효과 설정")]
     public float fadeDistance = 10.0f; // 양쪽 끝에서 페이드되는 거리
 
+    [Header("추가 구름 설정")]
+    public List<Renderer> standaloneClouds; // 따로 배치된 구름들
+    [Tooltip("이 오브젝트의 자식으로 있는 모든 구름들을 자동으로 등록합니다.")]
+    public Transform standaloneCloudsRoot;
+
+    private float globalAlpha = 1.0f; // 전체 투명도 제어
+
     // 내부 관리용 클래스
     private class CloudInstance
     {
@@ -27,7 +34,15 @@ public class CloudSystem : MonoBehaviour
         public Color originalColor;
     }
 
+    private class StandaloneCloudInstance
+    {
+        public Renderer renderer;
+        public MaterialPropertyBlock propertyBlock;
+        public Color originalColor;
+    }
+
     private List<CloudInstance> clouds = new List<CloudInstance>();
+    private List<StandaloneCloudInstance> standaloneInstances = new List<StandaloneCloudInstance>();
 
     void Start()
     {
@@ -41,6 +56,40 @@ public class CloudSystem : MonoBehaviour
         for (int i = 0; i < cloudCount; i++)
         {
             CreateCloud(i, true);
+        }
+
+        // 루트 오브젝트가 있다면 자식들에서 렌더러를 찾아 추가
+        if (standaloneCloudsRoot != null)
+        {
+            if (standaloneClouds == null) standaloneClouds = new List<Renderer>();
+            
+            Renderer[] childRenderers = standaloneCloudsRoot.GetComponentsInChildren<Renderer>();
+            foreach (var r in childRenderers)
+            {
+                if (r != null && !standaloneClouds.Contains(r))
+                {
+                    standaloneClouds.Add(r);
+                }
+            }
+        }
+
+        // 독립 구름 초기화
+        if (standaloneClouds != null)
+        {
+            foreach (var r in standaloneClouds)
+            {
+                if (r != null)
+                {
+                    var instance = new StandaloneCloudInstance();
+                    instance.renderer = r;
+                    instance.propertyBlock = new MaterialPropertyBlock();
+                    if (r.sharedMaterial != null && r.sharedMaterial.HasProperty("_BaseColor"))
+                        instance.originalColor = r.sharedMaterial.GetColor("_BaseColor");
+                    else
+                        instance.originalColor = Color.white;
+                    standaloneInstances.Add(instance);
+                }
+            }
         }
     }
 
@@ -71,13 +120,19 @@ public class CloudSystem : MonoBehaviour
             }
 
             // 3. 색상 적용
-            UpdateCloudAlpha(cloud, alpha);
+            UpdateCloudAlpha(cloud, alpha * globalAlpha);
 
             // 4. 도착 지점 통과 시 재활용
             if (currentDist > totalDist) 
             {
                 RecycleCloud(cloud);
             }
+        }
+
+        // 독립 구름 투명도 업데이트
+        foreach (var cloud in standaloneInstances)
+        {
+            UpdateStandaloneCloudAlpha(cloud, globalAlpha);
         }
     }
 
@@ -161,6 +216,18 @@ public class CloudSystem : MonoBehaviour
         cloud.renderer.SetPropertyBlock(cloud.propertyBlock);
     }
 
+    void UpdateStandaloneCloudAlpha(StandaloneCloudInstance cloud, float alpha)
+    {
+        if (cloud.renderer == null) return;
+
+        Color newColor = cloud.originalColor;
+        newColor.a = cloud.originalColor.a * alpha;
+
+        cloud.renderer.GetPropertyBlock(cloud.propertyBlock);
+        cloud.propertyBlock.SetColor("_BaseColor", newColor);
+        cloud.renderer.SetPropertyBlock(cloud.propertyBlock);
+    }
+
     Vector3 GetRandomPointInCollider(BoxCollider box)
     {
         Vector3 center = box.center;
@@ -173,5 +240,32 @@ public class CloudSystem : MonoBehaviour
         );
 
         return box.transform.TransformPoint(center + randomLocal);
+    }
+
+    public void FadeOutAndDisable(float duration)
+    {
+        StartCoroutine(FadeOutRoutine(duration));
+    }
+
+    private System.Collections.IEnumerator FadeOutRoutine(float duration)
+    {
+        float startAlpha = globalAlpha;
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            globalAlpha = Mathf.Lerp(startAlpha, 0f, t / duration);
+            yield return null;
+        }
+        globalAlpha = 0f;
+        
+        // 독립 구름 비활성화
+        foreach (var cloud in standaloneInstances)
+        {
+            if (cloud.renderer != null)
+                cloud.renderer.gameObject.SetActive(false);
+        }
+
+        gameObject.SetActive(false);
     }
 }

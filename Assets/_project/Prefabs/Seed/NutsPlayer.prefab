@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 1803276531839209057}
   - component: {fileID: 9221130943293495092}
   - component: {fileID: 1425155713481002893}
-  - component: {fileID: 3183219943840499114}
   - component: {fileID: -9132790675205045365}
   m_Layer: 0
   m_Name: NutsPlayer
@@ -183,23 +182,6 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   suppressSproutEvent: 0
---- !u!114 &3183219943840499114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1713881784235912235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f2f42819328515438297278640be308, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 8907696177444119508, guid: 7e2b957ac2dc9aa46a0a89a01954ea70, type: 3}
-  numberOfPoints: 2
-  timeInterval: 0.2
-  shaderPropertyBaseName: _TargetTurbulencePose
-  useLegacyNamingForTwoPoints: 1
 --- !u!114 &-9132790675205045365
 MonoBehaviour:
   m_ObjectHideFlags: 0
