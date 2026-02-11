@@ -197,7 +197,8 @@ Shader "Shader Graphs/S_Vegetation_Interactive_HLSL"
             float SGSegmentTrailValue(float3 p, float3 a, float3 b, float offset)
             {
                 float3 ab = b - a;
-                float t = saturate(dot(p - a, ab) / dot(ab, ab));
+                float abLenSq = max(dot(ab, ab), 0.0001);
+                float t = saturate(dot(p - a, ab) / abLenSq);
                 float dist = length((p - a) - (t * ab));
                 return dist + (t / 4.0) + offset;
             }
@@ -230,22 +231,46 @@ Shader "Shader Graphs/S_Vegetation_Interactive_HLSL"
                 return SGSimpleNoise(windUV + windOffset, 1.0);
             }
 
+            float ComputeInteractionMask(float uvY, float trailMask)
+            {
+                float tipMask = uvY * uvY;
+                return saturate(trailMask * tipMask);
+            }
+
+            float3 ComputeInteractivePushWS(float3 positionOS, float uvY, float trailMask)
+            {
+                float interaction = ComputeInteractionMask(uvY, trailMask);
+
+                float2 radialOS = positionOS.xz;
+                float radialLen = max(length(radialOS), 0.0001);
+                float2 radialDirOS = radialOS / radialLen;
+                float3 radialDirWS = TransformObjectToWorldDir(float3(radialDirOS.x, 0.0, radialDirOS.y), true);
+
+                float horizontalPush = interaction * _TargetTurbulenceSize * 0.8;
+                float verticalPush = interaction * 0.45;
+
+                return (radialDirWS * horizontalPush) + float3(0.0, -verticalPush, 0.0);
+            }
+
             float3 EvaluateVertexPositionOS(float3 positionOS, float3 positionWS, float2 uv0)
             {
                 float uvY = uv0.y;
                 float trailMask = ComputeTrailMask(positionWS);
+                float interactionMask = ComputeInteractionMask(uvY, trailMask);
 
                 float noise = ComputeWindNoiseVertex(positionWS, uvY);
                 float swayScalar = (noise - 0.30000001192092896) * _WindStrength;
-                float swayStrength = swayScalar * uvY;
+                float windFadeByInteraction = 1.0 - (interactionMask * 0.8);
+                float swayStrength = swayScalar * uvY * windFadeByInteraction;
 
                 float3 swayDirection = float3(_WindDirection.x, -1.0, _WindDirection.y);
                 float3 displacedWS = positionWS + (swayDirection * swayStrength);
-                float3 displacedOS = TransformWorldToObject(displacedWS);
+                displacedWS += ComputeInteractivePushWS(positionOS, uvY, trailMask);
 
                 float cameraFade = saturate((length(_WorldSpaceCameraPos - positionWS) - 10.0) / _FadeOutDistance);
+                displacedWS = lerp(displacedWS, positionWS, cameraFade);
 
-                return displacedOS - (uvY * trailMask) - cameraFade;
+                return TransformWorldToObject(displacedWS);
             }
 
             Varyings vert(Attributes input)
