@@ -59,6 +59,10 @@ public class IntroSequenceController : MonoBehaviour
     [Tooltip("게임 시작 시 자동으로 테스트 연출을 재생할지 여부")]
     public bool playOnStart = false;
 
+    [Header("Audio")]
+    [Tooltip("낙하 시작 시 재생할 사운드 데이터 (ScriptableObject)")]
+    public SoundData dropSoundData;
+
     // 내부 변수
     private GameObject currentSeedInstance;
     private System.Action callbackOnFinish; 
@@ -163,6 +167,12 @@ public class IntroSequenceController : MonoBehaviour
 
     private IEnumerator PlayIntroSequence(Vector3 startPos, Vector3 finalPos)
     {
+        // 사운드 재생 (SoundManager 사용)
+        if (dropSoundData != null && SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySFX(dropSoundData);
+        }
+
         // 게임플레이 스크립트 비활성화
         if (scriptsToDisable != null)
         {
