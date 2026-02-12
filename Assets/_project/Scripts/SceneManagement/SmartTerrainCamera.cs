@@ -11,7 +11,7 @@ using Cinemachine;
 /// </summary>
 [ExecuteInEditMode]
 [SaveDuringPlay]
-// [AddComponentMenu("")] // Hide from Add Component menu (Use Extensions)
+[AddComponentMenu("")] // Hide from Add Component menu (Use Extensions)
 public class SmartTerrainCamera : CinemachineExtension
 {
     [Header("Terrain Detection")]
@@ -24,34 +24,13 @@ public class SmartTerrainCamera : CinemachineExtension
     [Tooltip("바닥 감지 시 카메라를 들어올리는 반응 속도")]
     public float liftSmoothness = 10f;
 
-    [Tooltip("체크 시 부드럽게(Lerp), 해제 시 즉시(Hard) 들어올립니다.")]
-    public bool enableSmoothness = false; // 기본값을 false로 하여 즉각적인 반응 유도
-
     [Tooltip("카메라가 바닥에서 유지하려는 최소 높이")]
     public float minHeightFromGround = 0.5f;
     
     [Tooltip("카메라를 들어올리는 최대 높이 제한")]
     public float maxLiftHeight = 5.0f;
 
-    [Header("Occlusion Detection (Anti-Clip)")]
-    [Tooltip("활성화 시, 타겟과 카메라 사이에 장애물이 있으면 카메라를 당깁니다. (CinemachineCollider 대체용)")]
-    public bool enableOcclusion = true;
-
-    [Tooltip("장애물 감지 레이어 (Wall 등)")]
-    public LayerMask occlusionLayer = 1;
-
-    [Tooltip("장애물 감지 반경")]
-    public float occlusionRadius = 0.2f;
-
-    [Tooltip("장애물 감지 시 카메라 이동 부드러움 (Damping 시간)")]
-    public float occlusionSmoothTime = 0.1f;
-
-    [Tooltip("타겟과의 최소 거리 (이보다 가까워지지는 않음)")]
-    public float minDistanceFromTarget = 0.5f;
-
     private float currentLiftOffset = 0f;
-    private Vector3 currentOcclusionCorrection = Vector3.zero;
-    private Vector3 occlusionVelocity = Vector3.zero;
 
     protected override void PostPipelineStageCallback(
         CinemachineVirtualCameraBase vcam,
@@ -59,45 +38,52 @@ public class SmartTerrainCamera : CinemachineExtension
         ref CameraState state,
         float deltaTime)
     {
-        // 카메라 위치(Aim)가 결정된 후 처리를 위해 Body 단계 이후에 실행
-        // (CinemachineCollider와 충돌하지 않도록 Body 단계에서 처리)
+        // 카메라의 최종 위치(Aim)가 결정된 후 처리를 위해 Aim 단계 이후에 실행
         if (stage != CinemachineCore.Stage.Body) return;
 
+        // 1. 현재 카메라 위치 확인
         Vector3 camPos = state.RawPosition;
+        
+        // 2. 바닥 감지 (SphereCast Down/Back)
+        // 카메라 위치에서 아래로 쏘는 것보다는, '카메라가 파묻혔는지' 확인이 중요.
+        // Check 1: 카메라 위치 자체가 파묻혔는지 확인 (Physics.CheckSphere)
+        // Check 2: 카메라 바로 아래에 땅이 있는지 확인 (Raycast)
+        
         float targetLift = 0f;
-
-        // 카메라 위쪽에서 아래로 SphereCast를 쏴서 바닥을 감지합니다.
-        // (단순 Raycast보다 넓은 범위를 감지하여 안정적)
+        
+        // 카메라 위치에서 아래로 레이캐스트
         RaycastHit hit;
-        Vector3 castOrigin = camPos + Vector3.up * 2.0f; // 카메라보다 2m 위에서 시작
-        float castDist = 2.0f + maxLiftHeight; // 아래로 쏠 거리
+        Vector3 castStart = camPos + Vector3.up * maxLiftHeight; // 위에서 아래로 쏨
+        float castDistance = maxLiftHeight + minHeightFromGround; 
 
-        if (Physics.SphereCast(castOrigin, collideRadius, Vector3.down, out hit, castDist, collideAgainst))
+        // 카메라 위치 주변의 지형을 탐색
+        if (Physics.SphereCast(camPos + Vector3.up * 2.0f, collideRadius, Vector3.down, out hit, 5.0f, collideAgainst))
         {
-            // 바닥(Ground)을 감지했습니다.
+            // 땅을 발견함.
+            // 땅 표면 위치: hit.point
+            // 카메라가 위치해야 할 최소 높이: hit.point.y + minHeightFromGround
+            
             float groundY = hit.point.y;
             float desiredY = groundY + minHeightFromGround;
 
-            // 현재 카메라 높이가 지면보다 낮거나, 최소 높이보다 낮다면 들어올려야 함
+            // 현재 카메라가 이 높이보다 낮다면, 들어올려야 함
             if (camPos.y < desiredY)
             {
                 targetLift = desiredY - camPos.y;
             }
         }
 
-        // 부드럽게 보정값 적용 (Damping)
-        if (deltaTime >= 0 && enableSmoothness)
+        // 3. 부드럽게 보정값 적용
+        if (deltaTime >= 0)
         {
-            // 내려갈 때는 천천히, 올라갈 때는 빠르게 반응하도록 설정 가능하지만,
-            // 여기서는 균일하게 Smooth Damp를 적용합니다.
             currentLiftOffset = Mathf.Lerp(currentLiftOffset, targetLift, deltaTime * liftSmoothness);
         }
         else
         {
-            currentLiftOffset = targetLift; // 즉시 반영 (Hard Clamp)
+            currentLiftOffset = targetLift; // Editor mode instant update
         }
 
-        // 최종 위치 보정
+        // 4. 카메라 위치 수정 (위로 들어올리기)
         if (currentLiftOffset > 0.001f)
         {
             state.PositionCorrection += Vector3.up * currentLiftOffset;

@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 3945191205796151168}
   - component: {fileID: 2449218805230744002}
   - component: {fileID: 7572842050540717156}
+  - component: {fileID: 6524217015920305025}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -219,7 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLifeCycle
   maxLifeTime: 30
-  deathSpawnPrefab: {fileID: 0}
+  deathSpawnPrefab: {fileID: 7207991665247980607, guid: ab9da033673c1ef45ad05a33ab96d114, type: 3}
   playerVisuals: {fileID: 6821408077786863926}
   deathStopDamping: 5
   lifeDecreaseLayer:
@@ -249,6 +250,19 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   suppressSproutEvent: 0
+--- !u!114 &6524217015920305025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6821408077786863926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c96a203adbea4fc429cbfd763bb3f373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VFX_Variant.TargetPosition5Points
+  target: {fileID: 8127058123214293585}
 --- !u!1001 &6397046236243082211
 PrefabInstance:
   m_ObjectHideFlags: 0

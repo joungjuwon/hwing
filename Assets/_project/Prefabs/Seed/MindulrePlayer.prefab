@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1326963547865930410}
   - component: {fileID: 7036053514552554640}
   - component: {fileID: -5674223320456987061}
+  - component: {fileID: -5569107948875047730}
   m_Layer: 0
   m_Name: MindulrePlayer
   m_TagString: Player
@@ -32,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 304.93, y: 5593.2715, z: -656.27814}
-  m_LocalScale: {x: 0.40929618, y: 0.32743695, z: 0.40929618}
+  m_LocalScale: {x: 0.64590603, y: 0.5167248, z: 0.64590603}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7592312816605913560}
@@ -114,10 +115,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.13508606
-  m_Height: 0.7763672
+  m_Radius: 0.2
+  m_Height: 0.6
   m_Direction: 1
-  m_Center: {x: -0.013595581, y: 0.03540039, z: -0.007244408}
+  m_Center: {x: 0, y: -0.04, z: 0}
 --- !u!54 &1326963547865930410
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -158,7 +159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLifeCycle
   maxLifeTime: 30
-  deathSpawnPrefab: {fileID: 0}
+  deathSpawnPrefab: {fileID: 7207991665247980607, guid: ab9da033673c1ef45ad05a33ab96d114, type: 3}
   playerVisuals: {fileID: 2988354985484196682}
   deathStopDamping: 5
   lifeDecreaseLayer:
@@ -218,6 +219,19 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 136
   cameraTransform: {fileID: 0}
+--- !u!114 &-5569107948875047730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2988354985484196682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c96a203adbea4fc429cbfd763bb3f373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VFX_Variant.TargetPosition5Points
+  target: {fileID: 5924525334594010911}
 --- !u!1 &7539894700216848504
 GameObject:
   m_ObjectHideFlags: 0

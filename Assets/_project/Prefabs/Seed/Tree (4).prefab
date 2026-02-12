@@ -43094,8 +43094,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6e433523e081994b8aa2ee982872a98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MysticForgeRuntime.HW_BioTreeRuntime
+  parameterPreset: {fileID: 11400000, guid: ca0bb81160a69ae439e1f0b05f5ab2ad, type: 2}
+  usePresetParameters: 0
+  randomizeSeedOnGenerate: 1
+  randomSeed: 1713
   growthCycle: 0.026
-  growthSpeed: 0.1
+  secondsToFullGrowth: 0.1
   autoGrow: 1
   maxTrunkHeight: 5.04
   maxTrunkThickness: 0.56
@@ -43105,7 +43109,6 @@ MonoBehaviour:
   noiseIntensity: 0.67
   lengthRandomness: 0
   maxVerticalAngle: 110
-  randomSeed: 1713
   sensingSamples: 4
   repulsionStrength: 0.5
   gravityStrength: 0.3
