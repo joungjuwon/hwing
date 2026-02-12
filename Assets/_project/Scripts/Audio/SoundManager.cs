@@ -447,10 +447,10 @@ public class SoundManager : MonoBehaviour
     }
 
     // --- Random Loop Management ---
-    public int RegisterRandomLoop(SoundData data, float loopDelay)
+    public int RegisterRandomLoop(SoundData data, float minDelay, float maxDelay)
     {
         int id = nextLoopId++;
-        Coroutine routine = StartCoroutine(RandomLoopRoutine(id, data, loopDelay));
+        Coroutine routine = StartCoroutine(RandomLoopRoutine(id, data, minDelay, maxDelay));
         activeRandomLoops.Add(id, routine);
         return id;
     }
@@ -464,7 +464,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    private System.Collections.IEnumerator RandomLoopRoutine(int id, SoundData data, float extraDelay)
+    private System.Collections.IEnumerator RandomLoopRoutine(int id, SoundData data, float minDelay, float maxDelay)
     {
         while (true)
         {
@@ -477,14 +477,16 @@ public class SoundManager : MonoBehaviour
             // 재생 (SoundManager의 PlaySFX 사용)
             AudioClip playedClip = PlaySFX(data, true);
 
-            // 대기
+            // 클립 길이만큼 대기
             if (playedClip != null)
                 yield return new WaitForSeconds(playedClip.length);
             else
                 yield return new WaitForSeconds(1f);
 
-            if (extraDelay > 0f)
-                yield return new WaitForSeconds(extraDelay);
+            // 랜덤 딜레이 적용
+            float delay = Random.Range(minDelay, maxDelay);
+            if (delay > 0f)
+                yield return new WaitForSeconds(delay);
         }
     }
 

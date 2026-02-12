@@ -12,11 +12,20 @@ public class SoundRandomLooper : MonoBehaviour
     [Tooltip("재생할 사운드 데이터 (Clips에 여러 개 등록 권장)")]
     public SoundData soundData;
 
-    [Tooltip("재생 간 추가 딜레이 (초) \n0이면 앞 소리가 끝나자마자 바로 다음 소리 재생")]
-    public float extraDelay = 0f;
+    [Tooltip("루프 딜레이 최소값 (초)")]
+    [Min(0f)]
+    public float minDelay = 1f;
+
+    [Tooltip("루프 딜레이 최대값 (초)")]
+    [Min(0f)]
+    public float maxDelay = 5f;
 
     [Tooltip("활성화 시 자동 재생 여부")]
     public bool playOnEnable = true;
+
+    [Header("Runtime Control")]
+    [Tooltip("루프 활성화 여부 (런타임에서 On/Off 전환 가능)")]
+    public bool isLooping = false;
 
     private int loopId = -1;
 
@@ -26,8 +35,8 @@ public class SoundRandomLooper : MonoBehaviour
     public void Init(SoundData data)
     {
         this.soundData = data;
-        this.extraDelay = data.loopDelay;
-        // playOnEnable = true; // 필요 시 설정
+        this.minDelay = data.minLoopDelay;
+        this.maxDelay = data.maxLoopDelay;
         PlayLoop();
     }
 
@@ -52,7 +61,8 @@ public class SoundRandomLooper : MonoBehaviour
         StopLoop(); // 이미 돌고 있으면 재시작
         if (SoundManager.Instance != null && soundData != null)
         {
-            loopId = SoundManager.Instance.RegisterRandomLoop(soundData, extraDelay);
+            loopId = SoundManager.Instance.RegisterRandomLoop(soundData, minDelay, maxDelay);
+            isLooping = true;
         }
     }
 
@@ -66,7 +76,17 @@ public class SoundRandomLooper : MonoBehaviour
             SoundManager.Instance.UnregisterRandomLoop(loopId);
             loopId = -1;
         }
+        isLooping = false;
     }
 
-    // LoopRoutine은 SoundManager로 이관됨
+    /// <summary>
+    /// 루프 On/Off를 토글합니다.
+    /// </summary>
+    public void ToggleLoop()
+    {
+        if (isLooping)
+            StopLoop();
+        else
+            PlayLoop();
+    }
 }
