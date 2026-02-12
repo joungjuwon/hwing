@@ -34,7 +34,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _ColorMask: 15
-    - _DissolveAmount: 0.18955088
+    - _DissolveAmount: 0
     - _EdgeWidth: 0.1
     - _Gravity: 50
     - _NoiseScale: 20
