@@ -5,7 +5,9 @@ using System.Collections.Generic;
 public enum WeatherState
 {
     Sunny,
-    Rain
+    Rain,
+    RainStop,
+    Windy
 }
 
 public class WeatherManager : MonoBehaviour
@@ -26,6 +28,17 @@ public class WeatherManager : MonoBehaviour
     public AudioClip windClip;
     [Tooltip("전역 바람 영역 (선택 사항)")]
     public WindArea globalWind;
+
+    [Header("BGM Settings (Phases)")]
+    public AudioClip rainBGM;
+    public AudioClip rainStopBGM;
+    public AudioClip windBGM;
+
+    [Header("3D Audio Settings")]
+    [Tooltip("비가 올 때 물 오브젝트에서 재생할 3D 오디오 클립")]
+    public AudioClip waterRainClip;
+    [Range(0f, 1f)] public float waterRainVolume = 1.0f;
+    public float waterRainMaxDistance = 20.0f;
 
     [Header("Sunny Settings")]
     public float sunnyLightIntensity = 1.5f;
@@ -53,6 +66,17 @@ public class WeatherManager : MonoBehaviour
     public float terrainTransitionDuration = 2.0f;
     [Tooltip("물이 이동하는 데 걸리는 시간")]
     public float waterTransitionDuration = 2.0f;
+
+    [Header("RainStop Settings")]
+    public float rainStopLightIntensity = 1.0f;
+    public Color rainStopFogColor = new Color(0.5f, 0.6f, 0.7f);
+    public float rainStopFogDensity = 0.01f;
+
+    [Header("Windy Settings")]
+    public float windyLightIntensity = 1.2f;
+    public Color windyFogColor = new Color(0.6f, 0.65f, 0.7f);
+    public float windyFogDensity = 0.008f;
+    public float windyWindStrength = 30f;
 
     [Header("Transition")]
     public float transitionDuration = 2.0f; // 조명 및 안개용
@@ -138,7 +162,6 @@ public class WeatherManager : MonoBehaviour
         if (currentState == newState) return;
         
         currentState = newState;
-        currentState = newState;
         ApplyWeather(currentState, false, true); // 날씨 변경 시에는 오디오 재생
     }
 
@@ -154,14 +177,17 @@ public class WeatherManager : MonoBehaviour
                 targetFogDensity = sunnyFogDensity;
 
                 if (rainParticleSystem != null) rainParticleSystem.Stop();
-                if (rainParticleSystem != null) rainParticleSystem.Stop();
                 
-                // 사운드 전환: Rain -> Wind (playAudio가 true일 때만)
-                if (playAudio)
+                // Sunny는 보통 조용한 상태이거나 초기 상태 (BGM 정지 또는 타이틀 BGM)
+                // 필요하다면 여기서도 BGM 재생 가능
+                 if (playAudio)
                 {
+                    // Sunny 진입 시 효과음 정리
                     if (rainClip != null) SoundManager.Instance.StopLoop("Rain", transitionDuration);
-                    if (windClip != null) SoundManager.Instance.PlayLoop(windClip, "Wind", transitionDuration, true);
+                    if (windClip != null) SoundManager.Instance.StopLoop("Wind", transitionDuration);
                 }
+
+                SetWaterAudio(false); // 물 소리 끄기
                 
                 if (globalWind != null) globalWind.strength = sunnyWindStrength;
 
@@ -190,14 +216,17 @@ public class WeatherManager : MonoBehaviour
                 targetFogDensity = rainFogDensity;
 
                 if (rainParticleSystem != null) rainParticleSystem.Play();
-                if (rainParticleSystem != null) rainParticleSystem.Play();
 
-                // 사운드 전환: Wind -> Rain (playAudio가 true일 때만)
+                // 사운드 전환: Rain BGM + Rain Loop
                 if (playAudio)
                 {
+                    if (rainBGM != null) SoundManager.Instance.PlayBGM(rainBGM, 1f, true, transitionDuration);
+
                     if (windClip != null) SoundManager.Instance.StopLoop("Wind", transitionDuration);
                     if (rainClip != null) SoundManager.Instance.PlayLoop(rainClip, "Rain", transitionDuration, true);
                 }
+
+                SetWaterAudio(true); // 물 소리 켜기
 
                 if (globalWind != null) globalWind.strength = rainWindStrength;
 
@@ -238,24 +267,88 @@ public class WeatherManager : MonoBehaviour
                     }
                 }
                 break;
+
+            case WeatherState.RainStop: // 3페이즈: 비 그침
+                targetLightIntensity = rainStopLightIntensity;
+                targetFogColor = rainStopFogColor;
+                targetFogDensity = rainStopFogDensity;
+
+                if (rainParticleSystem != null) rainParticleSystem.Stop();
+
+                 if (playAudio)
+                {
+                    if (rainStopBGM != null) SoundManager.Instance.PlayBGM(rainStopBGM, 1f, true, transitionDuration);
+                    
+                    // 비 루프 소리 서서히 끄기
+                    if (rainClip != null) SoundManager.Instance.StopLoop("Rain", transitionDuration);
+                    if (windClip != null) SoundManager.Instance.StopLoop("Wind", transitionDuration);
+                }
+
+                SetWaterAudio(false); // 물 소리 끄기
+
+                if (globalWind != null) globalWind.strength = sunnyWindStrength; // 바람은 다시 약하게
+
+                if (rainPropsToActivate != null)
+                {
+                    foreach (var prop in rainPropsToActivate)
+                    {
+                        if (prop != null) prop.SetActive(false); // 비 관련 오브젝트 끄기
+                    }
+                }
+
+                // 물/터레인은 그대로 유지 (비가 그쳤다고 바로 물이 빠지는건 아닐 수 있음, 필요시 복구 로직 추가)
+                break;
+
+            case WeatherState.Windy: // 4페이즈: 바람
+                targetLightIntensity = windyLightIntensity;
+                targetFogColor = windyFogColor;
+                targetFogDensity = windyFogDensity;
+
+                if (rainParticleSystem != null) rainParticleSystem.Stop();
+
+                if (playAudio)
+                {
+                    if (windBGM != null) SoundManager.Instance.PlayBGM(windBGM, 1f, true, transitionDuration);
+
+                    // 바람 루프 소리 켜기
+                    if (rainClip != null) SoundManager.Instance.StopLoop("Rain", transitionDuration);
+                    if (windClip != null) SoundManager.Instance.PlayLoop(windClip, "Wind", transitionDuration, true);
+                }
+
+                SetWaterAudio(false); // 물 소리 끄기
+
+                if (globalWind != null) globalWind.strength = windyWindStrength; // 강한 바람
+
+                if (rainPropsToActivate != null)
+                {
+                    foreach (var prop in rainPropsToActivate)
+                    {
+                        if (prop != null) prop.SetActive(false);
+                    }
+                }
+                break;
         }
 
-        // 이동 시작 전 현재 위치 저장 및 타이머 초기화
-        if (rainTargetTerrain != null)
+        // 이동 시작 전 현재 위치 저장 및 타이머 초기화 (터레인/물 이동 필요 시 동작)
+        if (state == WeatherState.Rain || state == WeatherState.Sunny) // RainStop/Windy에서는 위치 이동이 없다면 조건문 조정 필요
         {
-            startTerrainPosition = rainTargetTerrain.transform.position;
-            currentTerrainTime = 0f;
-        }
-
-        if (waterObjectsToRaise != null)
-        {
-            startWaterPositions.Clear();
-            foreach (var water in waterObjectsToRaise)
+             if (rainTargetTerrain != null)
             {
-                if (water != null) startWaterPositions.Add(water.position);
+                startTerrainPosition = rainTargetTerrain.transform.position;
+                currentTerrainTime = 0f;
             }
-            currentWaterTime = 0f;
+
+            if (waterObjectsToRaise != null)
+            {
+                startWaterPositions.Clear();
+                foreach (var water in waterObjectsToRaise)
+                {
+                    if (water != null) startWaterPositions.Add(water.position);
+                }
+                currentWaterTime = 0f;
+            }
         }
+       
 
         if (immediate)
         {
@@ -271,12 +364,14 @@ public class WeatherManager : MonoBehaviour
                     // Rain 즉시 재생, Wind 정지
                     if (rainClip != null) SoundManager.Instance.PlayLoop(rainClip, "Rain", 1f, true);
                     SoundManager.Instance.StopLoop("Wind", 0f);
+                    SetWaterAudio(true);
                 }
                 else 
                 {
                     // Wind 즉시 재생, Rain 정지
                     if (windClip != null) SoundManager.Instance.PlayLoop(windClip, "Wind", 1f, true);
                     SoundManager.Instance.StopLoop("Rain", 0f);
+                    SetWaterAudio(false);
                 }
             }
 
@@ -312,11 +407,46 @@ public class WeatherManager : MonoBehaviour
         }
     }
 
-
-
-    [ContextMenu("Toggle Weather")]
-    public void ToggleWeather()
+    private void SetWaterAudio(bool enable)
     {
-        SetWeather(currentState == WeatherState.Sunny ? WeatherState.Rain : WeatherState.Sunny);
+        if (waterObjectsToRaise == null) return;
+
+        foreach (var t in waterObjectsToRaise)
+        {
+            if (t == null) continue;
+
+            AudioSource source = t.GetComponent<AudioSource>();
+            if (enable)
+            {
+                if (source == null) source = t.gameObject.AddComponent<AudioSource>();
+                
+                if (!source.isPlaying || source.clip != waterRainClip)
+                {
+                    source.clip = waterRainClip;
+                    source.loop = true;
+                    source.spatialBlend = 1.0f; // 3D Sound
+                    source.minDistance = 1.0f;
+                    source.maxDistance = waterRainMaxDistance;
+                    source.rolloffMode = AudioRolloffMode.Logarithmic;
+                    source.volume = waterRainVolume;
+                    source.Play();
+                }
+            }
+            else
+            {
+                if (source != null && source.isPlaying && source.clip == waterRainClip)
+                {
+                    source.Stop();
+                }
+            }
+        }
+    }
+
+    [ContextMenu("Next Weather")]
+    public void NextWeather()
+    {
+        int next = (int)currentState + 1;
+        if (next > (int)WeatherState.Windy) next = 0;
+        SetWeather((WeatherState)next);
     }
 }
