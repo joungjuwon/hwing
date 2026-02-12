@@ -45,8 +45,8 @@ public class EndingSequenceController : MonoBehaviour
     public float fadeDuration = 1.0f;
 
     [Header("Scene Transition")]
-    [Tooltip("엔딩 후 이동할 타이틀 씬 이름")]
-    public string titleSceneName = "Title";
+    [Tooltip("엔딩 후 이동할 씨 인덱스 (Build Settings 기준)")]
+    public int titleSceneIndex = 0;
 
     private Coroutine endingCoroutine;
     private GameObject spawnedObject;
@@ -158,7 +158,7 @@ public class EndingSequenceController : MonoBehaviour
         // ── 4. 정리 및 씬 전환 ──
         isFollowing = false;
         Debug.Log("[Ending] Finished. Loading Title.");
-        SceneManager.LoadScene(titleSceneName);
+        SceneManager.LoadScene(titleSceneIndex);
     }
 
     private IEnumerator FallRoutine(float duration)
