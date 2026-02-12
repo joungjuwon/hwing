@@ -83,7 +83,29 @@ public class SFXLooperEditorWindow : EditorWindow
         EditorGUILayout.LabelField("Playback Settings", EditorStyles.boldLabel);
 
         volume = EditorGUILayout.Slider("Volume", volume, 0f, 1f);
+
+        // Pitch 설정 (Random 지원)
+        EditorGUILayout.BeginHorizontal();
         pitch = EditorGUILayout.Slider("Pitch", pitch, 0.1f, 3f);
+        useRandomPitch = EditorGUILayout.ToggleLeft("Random", useRandomPitch, GUILayout.Width(70));
+        EditorGUILayout.EndHorizontal();
+
+        if (useRandomPitch)
+        {
+            EditorGUI.indentLevel++;
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Min", GUILayout.Width(30));
+            minPitch = EditorGUILayout.FloatField(minPitch, GUILayout.Width(50));
+            EditorGUILayout.LabelField("Max", GUILayout.Width(30));
+            maxPitch = EditorGUILayout.FloatField(maxPitch, GUILayout.Width(50));
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.MinMaxSlider("Pitch Range", ref minPitch, ref maxPitch, 0.1f, 3f);
+            if (minPitch < 0.1f) minPitch = 0.1f;
+            if (maxPitch < minPitch) maxPitch = minPitch;
+            EditorGUI.indentLevel--;
+        }
+
         loop = EditorGUILayout.Toggle("Loop", loop);
         playOnEnable = EditorGUILayout.Toggle("Play On Enable", playOnEnable);
         spatialBlend = EditorGUILayout.Slider("Spatial Blend (0=2D, 1=3D)", spatialBlend, 0f, 1f);
@@ -246,6 +268,9 @@ public class SFXLooperEditorWindow : EditorWindow
         emitter.clips = clipList.Count > 0 ? clipList.ToArray() : null;
         emitter.volume = volume;
         emitter.pitch = pitch;
+        emitter.useRandomPitch = useRandomPitch;
+        emitter.minPitch = minPitch;
+        emitter.maxPitch = maxPitch;
         emitter.loop = loop;
         emitter.playOnEnable = playOnEnable;
         emitter.useRandomDelay = useRandomDelay;
