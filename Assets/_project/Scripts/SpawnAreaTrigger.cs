@@ -66,6 +66,12 @@ public class SpawnAreaTrigger : MonoBehaviour
     [Tooltip("연출 후 변경될 날씨 상태")]
     public WeatherState targetWeather = WeatherState.Rain;
 
+    [Header("Ending Settings")]
+    [Tooltip("이 구역에 진입하면 엔딩 컷신을 재생할지 여부")]
+    public bool isEndingTrigger = false;
+    [Tooltip("엔딩 연출 컨트롤러 (비워두면 자동으로 찾음)")]
+    public EndingSequenceController endingController;
+
     private bool hasTriggered = false;
 
 
@@ -146,8 +152,9 @@ public class SpawnAreaTrigger : MonoBehaviour
                     if (obj != null) obj.SetActive(true);
                 }
             }
+
             // 2. 죽음 및 연출 처리
-            if (killPlayerOnEnter)
+            if (killPlayerOnEnter || isEndingTrigger)
             {
                 hasTriggered = true; // 죽음 처리는 확실하게 한 번만
                 StartCoroutine(PlayDeathSequence(playerObj, simManager));
@@ -159,6 +166,28 @@ public class SpawnAreaTrigger : MonoBehaviour
         }
     }
 
+    private void TriggerEnding(GameObject player)
+    {
+        if (endingController == null)
+        {
+            endingController = FindAnyObjectByType<EndingSequenceController>();
+        }
+
+        if (endingController != null)
+        {
+            Debug.Log("[SpawnAreaTrigger] Starting Ending Sequence...");
+            
+            // 플레이어 비활성화 (엔딩 연출이 별도 오브젝트를 사용하므로)
+            if (player != null) player.SetActive(false);
+
+            // 엔딩 재생
+            endingController.PlayEnding();
+        }
+        else
+        {
+            Debug.LogError("[SpawnAreaTrigger] isEndingTrigger is true but EndingSequenceController not found!");
+        }
+    }
 
     private IEnumerator PlayDeathSequence(GameObject player, SimulationManager simManager)
     {
@@ -203,6 +232,13 @@ public class SpawnAreaTrigger : MonoBehaviour
         // 2. 터레인 변화 연출 (중심에서부터 차오르기)
         yield return StartCoroutine(AnimateTerrainChanges(deathPosition, sequenceDuration));
 
+        // 2.5 엔딩 트리거라면 여기서 엔딩으로 전환 (시뮬레이션 모드 진입 대신)
+        if (isEndingTrigger)
+        {
+            TriggerEnding(player);
+            yield break;
+        }
+
         // 3. 시뮬레이션 모드로 전환
         if (simManager != null)
         {
@@ -210,7 +246,7 @@ public class SpawnAreaTrigger : MonoBehaviour
 
             if (pullBackCamera != null)
             {
-                if (pullBackVCam != null)
+                if (pullBackVCam != null) // Add this check
                 {
                     pullBackVCam.Priority = 0; // 우선순위 초기화
                 }
