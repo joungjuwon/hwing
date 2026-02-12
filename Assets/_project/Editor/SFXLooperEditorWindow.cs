@@ -16,7 +16,11 @@ public class SFXLooperEditorWindow : EditorWindow
     private bool showClipList = false;
 
     private float volume = 1f;
+
     private float pitch = 1f;
+    private bool useRandomPitch = false;
+    private float minPitch = 0.9f;
+    private float maxPitch = 1.1f;
     private bool loop = false;
     private bool playOnEnable = true;
     private bool useRandomDelay = false;
