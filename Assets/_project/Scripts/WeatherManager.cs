@@ -276,17 +276,31 @@ public class WeatherManager : MonoBehaviour
                 targetFogDensity = phase3FogDensity;
                 if (globalWind != null) globalWind.strength = phase3WindStrength;
 
-                if (rainParticleSystem != null) rainParticleSystem.Stop();
+                if (rainParticleSystem != null)
+                {
+                    rainParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                }
 
-                SetWaterAudioToOriginal(); // 물 소리 원상복구 (3페이즈 핵심)
+                SetWaterAudioToOriginal(); // 물 소리 원상복구
 
                 if (rainPropsToActivate != null)
                 {
                     foreach (var prop in rainPropsToActivate) if (prop != null) prop.SetActive(false);
                 }
 
-                // RainStop에서는 물/터레인이 바로 복구되지 않고 유지될 수 있음 (기획 의도에 따라)
-                // 현재 로직상 별도 조치 없으면 Rain 상태의 위치(target) 유지됨.
+                // Restore/Reset positions Logic (All rain off) - Removed as per user request
+                // In Phase 3 (RainStop), Water/Terrain offsets are maintained.
+                /*
+                if (waterPositionsBackedUp && waterObjectsToRaise != null)
+                {
+                    targetWaterPositions = new List<Vector3>(originalWaterPositions);
+                }
+                
+                if (terrainPositionBackedUp && rainTargetTerrain != null)
+                {
+                    targetTerrainPosition = originalTerrainPosition;
+                }
+                */
 
                 targetBGM = phase3BGM;
                 targetAmbient = phase3Ambient;
@@ -368,7 +382,8 @@ public class WeatherManager : MonoBehaviour
         else if (playAudio)
         {
             // Smooth Audio Transition
-            if (targetBGM != null) SoundManager.Instance.PlayBGM(targetBGM, 1f, true, transitionDuration);
+            // useCrossFade: false (FadeOut -> FadeIn) as requested for Phase Transition
+            if (targetBGM != null) SoundManager.Instance.PlayBGM(targetBGM, 1f, true, transitionDuration, false);
             // Ambient는 CrossFade가 SoundManager에 있으면 좋지만, 여기서는 Stop -> Play (with fade support from SoundManager?)
             // SoundManager.StopLoop가 fade 지원하면 좋음. 지원함.
 

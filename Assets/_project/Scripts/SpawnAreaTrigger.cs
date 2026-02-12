@@ -63,8 +63,9 @@ public class SpawnAreaTrigger : MonoBehaviour
     public CloudSystem cloudSystem;
     [Tooltip("구름/날씨 등 환경 변화 시작 전 딜레이")]
     public float environmentChangeDelay = 1.0f;
-    [Tooltip("연출 후 변경될 날씨 상태")]
-    public WeatherState targetWeather = WeatherState.Rain;
+    [Tooltip("연출 후 변경될 날씨 페이즈 (1:Sunny, 2:Rain, 3:RainStop, 4:Windy)")]
+    [Range(1, 4)]
+    public int targetPhase = 2;
 
     [Header("Ending Settings")]
     [Tooltip("이 구역에 진입하면 엔딩 컷신을 재생할지 여부")]
@@ -269,14 +270,18 @@ public class SpawnAreaTrigger : MonoBehaviour
             {
                 cloudSystem.FadeOutAndDisable(weatherTransitionDuration);
             }
-            WeatherManager.Instance.SetWeather(targetWeather);
+            WeatherManager.Instance.SetPhase(targetPhase);
         }
 
-        // 시퀀스 종료 후 이벤트 BGM 정지
+        // 시퀀스 종료 후 이벤트 BGM 정지는 WeatherManager에 의해 처리됨 (또는 유지)
+        // 만약 WeatherManager가 없으면 BGM이 계속 재생될 수 있음.
+        // 하지만 WeatherManager가 있으면, SetWeather에서 CrossFade로 자연스럽게 전환됨.
+        /*
         if (sequenceBgm != null)
         {
             SoundManager.Instance.StopBGM();
         }
+        */
     }
 
     private IEnumerator AnimateTerrainChanges(Vector3 centerPos, float duration)

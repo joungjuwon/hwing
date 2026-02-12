@@ -91,13 +91,14 @@ public class SoundManager : MonoBehaviour
     /// <param name="clip">재생할 오디오 클립</param>
     /// <param name="volume">볼륨 (기본값 1.0)</param>
     /// <summary>
-    /// 배경음악을 재생합니다. (Cross-Fade 지원)
+    /// 배경음악을 재생합니다. (Cross-Fade 또는 FadeOut -> FadeIn 지원)
     /// </summary>
     /// <param name="clip">재생할 오디오 클립</param>
     /// <param name="volume">목표 볼륨</param>
     /// <param name="loop">반복 여부</param>
     /// <param name="fadeDuration">전환 시간 (초). 0이면 즉시 전환.</param>
-    public void PlayBGM(AudioClip clip, float volume = 1f, bool loop = true, float fadeDuration = 1.0f)
+    /// <param name="useCrossFade">true면 CrossFade, false면 FadeOut 후 FadeIn</param>
+    public void PlayBGM(AudioClip clip, float volume = 1f, bool loop = true, float fadeDuration = 1.0f, bool useCrossFade = true)
     {
         if (clip == null) return;
 
@@ -109,7 +110,6 @@ public class SoundManager : MonoBehaviour
         if (currentSource.isPlaying && currentSource.clip == clip)
         {
             // 볼륨/루프 상태만 업데이트하고 페이드 효과 없이 유지
-            // (필요 시 볼륨 페이드는 따로 구현 가능하나 여기선 즉시 적용)
             currentSource.volume = volume;
             currentSource.loop = loop;
             return;
@@ -120,10 +120,20 @@ public class SoundManager : MonoBehaviour
 
         if (fadeDuration > 0f)
         {
-            // Cross-Fade 시작
-            bgmFadeCoroutine = StartCoroutine(CrossFadeRoutine(currentSource, nextSource, clip, volume, loop, fadeDuration));
-            // 활성 소스 플래그 토글
-            isUsingMainBGM = !isUsingMainBGM;
+            if (useCrossFade)
+            {
+                // Cross-Fade 시작
+                bgmFadeCoroutine = StartCoroutine(CrossFadeRoutine(currentSource, nextSource, clip, volume, loop, fadeDuration));
+                // 활성 소스 플래그 토글
+                isUsingMainBGM = !isUsingMainBGM;
+            }
+            else
+            {
+                // FadeOut -> FadeIn 시작
+                // 같은 소스를 재활용할 수도 있지만, 코루틴 관리 일관성을 위해 nextSource 사용 (스왑)
+                bgmFadeCoroutine = StartCoroutine(FadeOutInRoutine(currentSource, nextSource, clip, volume, loop, fadeDuration));
+                isUsingMainBGM = !isUsingMainBGM;
+            }
         }
         else
         {
@@ -165,6 +175,51 @@ public class SoundManager : MonoBehaviour
 
         current.Stop();
         current.volume = startVolume; // 볼륨 복구 (재활용 위해)
+        next.volume = targetVolume;
+    }
+
+    private System.Collections.IEnumerator FadeOutInRoutine(AudioSource current, AudioSource next, AudioClip newClip, float targetVolume, bool loop, float duration)
+    {
+        // 1. Fade Out
+        float timer = 0f;
+        float startVolume = current.volume;
+        
+        // fadeDuration을 반으로 나누어 각각 적용할지, 전체 적용할지?
+        // "완전히 fade out된 후에 fade in" -> 각각 duration만큼? 아니면 duration/2?
+        // 보통 duration이 전체 전환 시간이므로, 절반씩 할당합니다.
+        float halfDuration = duration * 0.5f;
+
+        if (halfDuration < 0.1f) halfDuration = 0.1f; // 최소 시간 보장
+
+        while (timer < halfDuration)
+        {
+            if (current.isPlaying)
+            {
+                timer += Time.deltaTime;
+                float t = timer / halfDuration;
+                current.volume = Mathf.Lerp(startVolume, 0f, t);
+            }
+            yield return null;
+        }
+
+        current.Stop();
+        current.volume = startVolume; // 볼륨 복구
+
+        // 2. Fade In
+        next.clip = newClip;
+        next.loop = loop;
+        next.volume = 0f;
+        next.Play();
+
+        timer = 0f;
+        while (timer < halfDuration)
+        {
+            timer += Time.deltaTime;
+            float t = timer / halfDuration;
+            next.volume = Mathf.Lerp(0f, targetVolume, t);
+            yield return null;
+        }
+
         next.volume = targetVolume;
     }
 
@@ -234,6 +289,14 @@ public class SoundManager : MonoBehaviour
         PlayClipAtPoint(clip, position, volume, pitch, 1f); // 3D (Spatial Blend 1)
     }
 
+    [Header("3D Audio Settings")]
+    [Tooltip("3D 사운드 최소 거리 (감쇠 시작점)")]
+    public float sound3DMinDistance = 1f;
+    [Tooltip("3D 사운드 최대 거리 (완전 소멸점 - 급격한 감쇠를 위해 짧게 설정)")]
+    public float sound3DMaxDistance = 20f;
+
+    // ... (rest of class)
+
     // 내부 헬퍼: 임시 오디오 소스 생성 및 재생
     private void PlayClipAtPoint(AudioClip clip, Vector3 position, float volume, float pitch, float spatialBlend)
     {
@@ -248,8 +311,18 @@ public class SoundManager : MonoBehaviour
         source.outputAudioMixerGroup = sfxGroup;
         source.dopplerLevel = 0f; // 도플러 효과 끔 (필요시 조정)
         source.rolloffMode = AudioRolloffMode.Logarithmic;
-        source.minDistance = 1f;
-        source.maxDistance = 50f; // 적절한 거리 설정
+        
+        // 일괄 적용된 3D 거리 설정 사용
+        if (spatialBlend > 0.1f) // 3D 사운드인 경우만 적용
+        {
+            source.minDistance = sound3DMinDistance;
+            source.maxDistance = sound3DMaxDistance; 
+        }
+        else
+        {
+            source.minDistance = 1f;
+            source.maxDistance = 500f; // 2D는 거리에 영향 덜 받도록 (사실 spatialBlend 0이면 거리 무관)
+        }
 
         source.Play();
         Destroy(go, clip.length * (Time.timeScale < 0.01f ? 0.01f : 1f / pitch) + 0.1f); // 피치 고려하여 파괴 시간 설정
@@ -324,12 +397,43 @@ public class SoundManager : MonoBehaviour
     }
 
     /// <summary>
+    /// SoundData를 사용하여 반복 사운드를 재생합니다. (랜덤 클립, 볼륨, 피치 자동 적용)
+    /// </summary>
+    public void PlayLoop(SoundData data, string id, float fadeDuration = 0f, bool isBgm = false)
+    {
+        if (data == null) return;
+        
+        AudioClip clipToPlay = data.clip;
+        if (data.clips != null && data.clips.Length > 0)
+        {
+            clipToPlay = data.clips[Random.Range(0, data.clips.Length)];
+        }
+        
+        // SoundData의 volume, pitch 사용 (랜덤 variance는 Loop 특성상 재생 시 1회 결정 or 지속 변화? 보통 1회)
+        float finalVolume = data.volume;
+        float finalPitch = data.pitch;
+
+        if (data.useRandomVariance)
+        {
+            float volVar = data.volumeVariance * 0.5f;
+            finalVolume += Random.Range(-volVar, volVar);
+            
+            float pitchVar = data.pitchVariance * 0.5f;
+            finalPitch += Random.Range(-pitchVar, pitchVar);
+        }
+
+        PlayLoop(clipToPlay, id, fadeDuration, isBgm, finalVolume, finalPitch);
+    }
+
+    /// <summary>
     /// 반복 재생되는 사운드(예: 빗소리, 환경음)를 재생하고 관리합니다.
     /// </summary>
     /// <param name="clip">재생할 클립</param>
     /// <param name="id">사운드 식별 ID (나중에 끄기 위해 필요)</param>
     /// <param name="isBgm">true면 BGM 그룹, false면 SFX 그룹 사용 (환경음은 BGM으로 취급될 수 있음)</param>
-    public void PlayLoop(AudioClip clip, string id, float fadeDuration = 0f, bool isBgm = false)
+    /// <param name="volume">목표 볼륨</param>
+    /// <param name="pitch">피치</param>
+    public void PlayLoop(AudioClip clip, string id, float fadeDuration = 0f, bool isBgm = false, float volume = 1.0f, float pitch = 1.0f)
     {
         if (clip == null) return;
         
@@ -343,6 +447,9 @@ public class SoundManager : MonoBehaviour
             }
             else
             {
+                // 이미 재생 중일 때 볼륨/피치 업데이트 (선택 사항)
+                activeLoops[id].volume = volume;
+                activeLoops[id].pitch = pitch;
                 return; 
             }
         }
@@ -352,16 +459,17 @@ public class SoundManager : MonoBehaviour
         source.loop = true;
         source.playOnAwake = false;
         source.outputAudioMixerGroup = isBgm ? bgmGroup : sfxGroup; // 플래그에 따라 그룹 설정
+        source.pitch = pitch;
         
         if (fadeDuration > 0f)
         {
             source.volume = 0f;
             source.Play();
-            StartCoroutine(FadeIn(source, 1f, fadeDuration));
+            StartCoroutine(FadeIn(source, volume, fadeDuration));
         }
         else
         {
-            source.volume = 1f;
+            source.volume = volume;
             source.Play();
         }
 
