@@ -90,6 +90,12 @@ public class PlayerLifeCycle : MonoBehaviour
         {
             controller.enabled = false;
         }
+
+        // 식물을 심지 않는 죽음(물에 빠짐 등)인 경우 물리 정지를 기다리지 않고 즉시 처리
+        if (!shouldSpawnDeathObject)
+        {
+            SpawnDeathObject();
+        }
     }
 
     private void HandleDeathPhysics()
