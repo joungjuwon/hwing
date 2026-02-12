@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a4cc2c7245442a7b2f5d83d4fe4f690, type: 3}
+  m_Name: Tree_BioTreePreset
+  m_EditorClassIdentifier: Assembly-CSharp::MysticForgeRuntime.HW_BioTreePreset
+  growthCycle: 0.053
+  secondsToFullGrowth: 100
+  autoGrow: 1
+  maxTrunkHeight: 5.04
+  maxTrunkThickness: 0.56
+  maxRecursion: 7
+  lengthDecay: 0.7200204
+  branchingAngle: 31.501144
+  noiseIntensity: 0.67
+  lengthRandomness: 0
+  maxVerticalAngle: 110
+  sensingSamples: 4
+  repulsionStrength: 0.5
+  gravityStrength: 0.3
+  leafPrefab: {fileID: 919132149155446097, guid: 4c5b07692110595499a3f0d88cdc9f26, type: 3}
+  leafMaterial: {fileID: 2100000, guid: a9d853eb0b49ecd43bf0a2385d15862a, type: 2}
+  leavesPerBranch: 1
+  leafScale: 7.44
+  treeMaterial: {fileID: 2100000, guid: 1c272a7b2114256489f72b77f0544c42, type: 2}

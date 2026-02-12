@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -9,9 +10,20 @@ namespace MysticForgeRuntime
 {
     public class HW_BioTreeRuntime : MonoBehaviour
     {
+        [Header("Preset")]
+        public HW_BioTreePreset parameterPreset;
+        public bool usePresetParameters = true;
+
+        [Header("Seed")]
+        [Tooltip("When enabled, a new random seed is generated whenever GenerateTree() runs.")]
+        public bool randomizeSeedOnGenerate = true;
+        public int randomSeed = 0;
+
         [Header("Growth Settings")]
         [Range(0f, 1f)] public float growthCycle = 1.0f;
-        public float growthSpeed = 0.5f;
+        [FormerlySerializedAs("growthSpeed")]
+        [Tooltip("Seconds required for growthCycle to go from 0 to 1 when autoGrow is enabled.")]
+        [Min(0.01f)] public float secondsToFullGrowth = 2f;
         public bool autoGrow = false;
         
         [Header("Tree Parameters")]
@@ -27,7 +39,6 @@ namespace MysticForgeRuntime
         [Range(-1f, 1f)] public float noiseIntensity = 0.2f;
         [Range(0f, 1f)] public float lengthRandomness = 0.2f;
         [Range(45f, 160f)] public float maxVerticalAngle = 100f; 
-        public int randomSeed = 0;
 
         [Header("Space Filling (Volumetric)")]
         [Range(1, 15)] public int sensingSamples = 6;
@@ -101,6 +112,7 @@ namespace MysticForgeRuntime
 
         private void OnEnable()
         {
+            ApplyPresetParametersInternal();
             InitializeComponents();
         }
 
@@ -132,7 +144,8 @@ namespace MysticForgeRuntime
         {
             if (autoGrow)
             {
-                growthCycle += Time.deltaTime * growthSpeed;
+                float duration = Mathf.Max(0.01f, secondsToFullGrowth);
+                growthCycle += Time.deltaTime / duration;
                 if (growthCycle > 1f) growthCycle = 1f;
                 // No longer calls GenerateTree()! Just updates transforms.
                 UpdateGrowth();
@@ -220,17 +233,77 @@ namespace MysticForgeRuntime
         }
 #endif
 
+        public void SetPreset(HW_BioTreePreset preset, bool regenerateTree = true)
+        {
+            parameterPreset = preset;
+            usePresetParameters = parameterPreset != null;
+            ApplyPresetParametersInternal(forceApply: true);
+
+            if (regenerateTree)
+            {
+                GenerateTree();
+            }
+        }
+
+        [ContextMenu("Apply Preset Parameters")]
+        public void ApplyPresetParameters()
+        {
+            ApplyPresetParametersInternal(forceApply: true);
+        }
+
+        [ContextMenu("Export Current Parameters To Assigned Preset")]
+        public void ExportCurrentParametersToAssignedPreset()
+        {
+            if (parameterPreset == null) return;
+
+            parameterPreset.CaptureFrom(this);
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(parameterPreset);
+            AssetDatabase.SaveAssets();
+#endif
+        }
+
+#if UNITY_EDITOR
+        [ContextMenu("Create Preset Asset From Current Parameters")]
+        public void CreatePresetAssetFromCurrentParameters()
+        {
+            HW_BioTreePreset newPreset = ScriptableObject.CreateInstance<HW_BioTreePreset>();
+            newPreset.CaptureFrom(this);
+
+            string defaultName = $"{gameObject.name}_BioTreePreset.asset";
+            string path = AssetDatabase.GenerateUniqueAssetPath($"Assets/_project/Scripts/MysticForgeRuntime/{defaultName}");
+            AssetDatabase.CreateAsset(newPreset, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            parameterPreset = newPreset;
+            usePresetParameters = true;
+            EditorUtility.SetDirty(this);
+
+            Selection.activeObject = newPreset;
+            Debug.Log($"Created preset asset: {path}", this);
+        }
+#endif
+
+        private bool ApplyPresetParametersInternal(bool forceApply = false)
+        {
+            if (parameterPreset == null) return false;
+            if (!usePresetParameters && !forceApply) return false;
+
+            parameterPreset.ApplyTo(this);
+            return true;
+        }
+
         [ContextMenu("Generate")]
         public void GenerateTree()
         {
 #if UNITY_EDITOR
             if (PrefabUtility.IsPartOfPrefabAsset(this)) return;
 #endif
+            ApplyPresetParametersInternal();
             InitializeComponents();
             
-            // USE A LOCAL SEED to avoid OnValidate feedback loops
-            int masterSeed = (randomSeed == 0) ? GetHashCode() : randomSeed;
-            Random.InitState(masterSeed);
+            int masterSeed = ResolveMasterSeed();
             
             // CLEANUPS
             verts.Clear();
@@ -797,6 +870,25 @@ namespace MysticForgeRuntime
              }
         }
         private void AddQuad(int a, int b, int c, int d) { trunkTris.Add(a); trunkTris.Add(b); trunkTris.Add(c); trunkTris.Add(c); trunkTris.Add(d); trunkTris.Add(a); }
+        private int ResolveMasterSeed()
+        {
+            if (randomizeSeedOnGenerate)
+            {
+                randomSeed = System.Guid.NewGuid().GetHashCode();
+            }
+
+            if (randomSeed == 0)
+            {
+                randomSeed = GetHashCode();
+                if (randomSeed == 0)
+                {
+                    randomSeed = 1;
+                }
+            }
+
+            return randomSeed;
+        }
+
         private Vector3 RandomVector(System.Random r) { return new Vector3((float)r.NextDouble()-0.5f, (float)r.NextDouble()-0.5f, (float)r.NextDouble()-0.5f); }
     }
 }

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 9221130943293495092}
   - component: {fileID: 1425155713481002893}
   - component: {fileID: -9132790675205045365}
+  - component: {fileID: 6496342455017786210}
   m_Layer: 0
   m_Name: NutsPlayer
   m_TagString: Player
@@ -158,7 +159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLifeCycle
   maxLifeTime: 30
-  deathSpawnPrefab: {fileID: 0}
+  deathSpawnPrefab: {fileID: 7207991665247980607, guid: ab9da033673c1ef45ad05a33ab96d114, type: 3}
   playerVisuals: {fileID: 1713881784235912235}
   deathStopDamping: 5
   lifeDecreaseLayer:
@@ -218,6 +219,19 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 136
   cameraTransform: {fileID: 0}
+--- !u!114 &6496342455017786210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713881784235912235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c96a203adbea4fc429cbfd763bb3f373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VFX_Variant.TargetPosition5Points
+  target: {fileID: 4824271705152727447}
 --- !u!1 &4628689769957596287
 GameObject:
   m_ObjectHideFlags: 0
