@@ -196,10 +196,8 @@ public class SpawnAreaTrigger : MonoBehaviour
 
         if (sequenceBgm != null)
         {
-            AudioSource audio = gameObject.AddComponent<AudioSource>();
-            audio.clip = sequenceBgm;
-            audio.playOnAwake = false;
-            audio.Play();
+            // SoundManager를 통해 BGM 재생 (Loop: true로 변경하여 시퀀스 동안 유지)
+            SoundManager.Instance.PlayBGM(sequenceBgm, 1f, true);
         }
 
         // 2. 터레인 변화 연출 (중심에서부터 차오르기)
@@ -236,6 +234,12 @@ public class SpawnAreaTrigger : MonoBehaviour
                 cloudSystem.FadeOutAndDisable(weatherTransitionDuration);
             }
             WeatherManager.Instance.SetWeather(targetWeather);
+        }
+
+        // 시퀀스 종료 후 이벤트 BGM 정지
+        if (sequenceBgm != null)
+        {
+            SoundManager.Instance.StopBGM();
         }
     }
 

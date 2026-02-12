@@ -18,7 +18,7 @@ public class SoundRandomLooper : MonoBehaviour
     [Tooltip("활성화 시 자동 재생 여부")]
     public bool playOnEnable = true;
 
-    private Coroutine loopCoroutine;
+    private int loopId = -1;
 
     /// <summary>
     /// SoundManager에 의해 동적으로 생성될 때 초기화하는 메서드
@@ -50,7 +50,10 @@ public class SoundRandomLooper : MonoBehaviour
     public void PlayLoop()
     {
         StopLoop(); // 이미 돌고 있으면 재시작
-        loopCoroutine = StartCoroutine(LoopRoutine());
+        if (SoundManager.Instance != null && soundData != null)
+        {
+            loopId = SoundManager.Instance.RegisterRandomLoop(soundData, extraDelay);
+        }
     }
 
     /// <summary>
@@ -58,49 +61,12 @@ public class SoundRandomLooper : MonoBehaviour
     /// </summary>
     public void StopLoop()
     {
-        if (loopCoroutine != null)
+        if (loopId != -1 && SoundManager.Instance != null)
         {
-            StopCoroutine(loopCoroutine);
-            loopCoroutine = null;
+            SoundManager.Instance.UnregisterRandomLoop(loopId);
+            loopId = -1;
         }
     }
 
-    private IEnumerator LoopRoutine()
-    {
-        // 무한 루프
-        while (true)
-        {
-            if (soundData == null)
-            {
-                Debug.LogWarning("SoundRandomLooper: SoundData is missing!");
-                yield break;
-            }
-
-            // SoundManager를 통해 랜덤 재생하고, 선택된 클립 정보를 받아옴
-            // 중요: forceOneShot=true로 호출하여 다시 루프가 실행되는 것을 방지
-            AudioClip playedClip = SoundManager.Instance.PlaySFX(soundData, true);
-
-            // 재생된 클립이 있다면 그 길이만큼 대기
-            if (playedClip != null)
-            {
-                // 클립 길이만큼 대기 (피치 변화를 고려하면 좀 더 복잡하지만, 여기선 기본 길이 대기)
-                // 만약 피치 변화가 크다면 (playedClip.length / pitch) 로 계산해야 함.
-                // 현재 SoundData 구조상 피치는 랜덤하게 변할 수 있으나, 
-                // 외부에서 최종 피치를 알기 어려우므로(SoundManager가 수정되지 않는 한)
-                // 단순하게 클립 길이만큼 대기합니다. (보통 환경음은 겹쳐도 무방하므로)
-                yield return new WaitForSeconds(playedClip.length);
-            }
-            else
-            {
-                // 재생 실패 시 잠시 대기 후 재시도 (무한 루프 방지)
-                yield return new WaitForSeconds(1f);
-            }
-
-            // 추가 딜레이가 있다면 대기
-            if (extraDelay > 0f)
-            {
-                yield return new WaitForSeconds(extraDelay);
-            }
-        }
-    }
+    // LoopRoutine은 SoundManager로 이관됨
 }

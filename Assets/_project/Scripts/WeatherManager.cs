@@ -20,8 +20,10 @@ public class WeatherManager : MonoBehaviour
     public Light mainLight;
     [Tooltip("비 파티클 시스템 (미리 배치해두고 켜고 끄기)")]
     public ParticleSystem rainParticleSystem;
-    [Tooltip("빗소리 오디오 소스")]
-    public AudioSource rainAudioSource;
+    [Tooltip("빗소리 오디오 클립")]
+    public AudioClip rainClip;
+    [Tooltip("바람소리 오디오 클립 (써니 상태일 때 재생)")]
+    public AudioClip windClip;
     [Tooltip("전역 바람 영역 (선택 사항)")]
     public WindArea globalWind;
 
@@ -76,6 +78,7 @@ public class WeatherManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            // DontDestroyOnLoad(gameObject); // WeatherManager는 보통 씬에 포함되므로 필요 없음
         }
         else
         {
@@ -88,8 +91,8 @@ public class WeatherManager : MonoBehaviour
         // 안개 활성화
         RenderSettings.fog = true;
 
-        // 초기 상태 적용 (즉시)
-        ApplyWeather(currentState, true);
+        // 초기 상태 적용 (즉시, 오디오 재생 안 함 - 타이틀 BGM 유지)
+        ApplyWeather(currentState, true, false);
     }
 
     private void Update()
@@ -135,10 +138,11 @@ public class WeatherManager : MonoBehaviour
         if (currentState == newState) return;
         
         currentState = newState;
-        ApplyWeather(currentState, false);
+        currentState = newState;
+        ApplyWeather(currentState, false, true); // 날씨 변경 시에는 오디오 재생
     }
 
-    private void ApplyWeather(WeatherState state, bool immediate)
+    private void ApplyWeather(WeatherState state, bool immediate, bool playAudio = true)
     {
         Debug.Log($"[WeatherManager] Changing weather to {state}");
 
@@ -150,7 +154,14 @@ public class WeatherManager : MonoBehaviour
                 targetFogDensity = sunnyFogDensity;
 
                 if (rainParticleSystem != null) rainParticleSystem.Stop();
-                if (rainAudioSource != null) StartCoroutine(FadeOutSound(rainAudioSource, transitionDuration));
+                if (rainParticleSystem != null) rainParticleSystem.Stop();
+                
+                // 사운드 전환: Rain -> Wind (playAudio가 true일 때만)
+                if (playAudio)
+                {
+                    if (rainClip != null) SoundManager.Instance.StopLoop("Rain", transitionDuration);
+                    if (windClip != null) SoundManager.Instance.PlayLoop(windClip, "Wind", transitionDuration, true);
+                }
                 
                 if (globalWind != null) globalWind.strength = sunnyWindStrength;
 
@@ -179,11 +190,13 @@ public class WeatherManager : MonoBehaviour
                 targetFogDensity = rainFogDensity;
 
                 if (rainParticleSystem != null) rainParticleSystem.Play();
-                if (rainAudioSource != null) 
+                if (rainParticleSystem != null) rainParticleSystem.Play();
+
+                // 사운드 전환: Wind -> Rain (playAudio가 true일 때만)
+                if (playAudio)
                 {
-                    rainAudioSource.gameObject.SetActive(true);
-                    rainAudioSource.Play();
-                    StartCoroutine(FadeInSound(rainAudioSource, rainVolume, transitionDuration));
+                    if (windClip != null) SoundManager.Instance.StopLoop("Wind", transitionDuration);
+                    if (rainClip != null) SoundManager.Instance.PlayLoop(rainClip, "Rain", transitionDuration, true);
                 }
 
                 if (globalWind != null) globalWind.strength = rainWindStrength;
@@ -251,17 +264,19 @@ public class WeatherManager : MonoBehaviour
             RenderSettings.fogDensity = targetFogDensity;
             
             StopAllCoroutines();
-            if (rainAudioSource != null)
+            if (playAudio && (rainClip != null || windClip != null))
             {
                 if (state == WeatherState.Rain)
                 {
-                    rainAudioSource.volume = rainVolume;
-                    if (!rainAudioSource.isPlaying) rainAudioSource.Play();
+                    // Rain 즉시 재생, Wind 정지
+                    if (rainClip != null) SoundManager.Instance.PlayLoop(rainClip, "Rain", 1f, true);
+                    SoundManager.Instance.StopLoop("Wind", 0f);
                 }
                 else 
                 {
-                    rainAudioSource.volume = 0f;
-                    rainAudioSource.Stop();
+                    // Wind 즉시 재생, Rain 정지
+                    if (windClip != null) SoundManager.Instance.PlayLoop(windClip, "Wind", 1f, true);
+                    SoundManager.Instance.StopLoop("Rain", 0f);
                 }
             }
 
@@ -297,32 +312,7 @@ public class WeatherManager : MonoBehaviour
         }
     }
 
-    private IEnumerator FadeOutSound(AudioSource audio, float duration)
-    {
-        float startVol = audio.volume;
-        float t = 0;
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            audio.volume = Mathf.Lerp(startVol, 0f, t / duration);
-            yield return null;
-        }
-        audio.Stop();
-        audio.volume = startVol; 
-    }
 
-    private IEnumerator FadeInSound(AudioSource audio, float targetVol, float duration)
-    {
-        audio.volume = 0f;
-        float t = 0;
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            audio.volume = Mathf.Lerp(0f, targetVol, t / duration);
-            yield return null;
-        }
-        audio.volume = targetVol;
-    }
 
     [ContextMenu("Toggle Weather")]
     public void ToggleWeather()
