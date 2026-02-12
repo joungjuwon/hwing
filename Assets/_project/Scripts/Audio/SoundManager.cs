@@ -497,4 +497,91 @@ public class SoundManager : MonoBehaviour
     {
         PlaySFX(data, true);
     }
+
+    // ========== SoundEmitter Management ==========
+
+    private List<SoundEmitter> registeredEmitters = new List<SoundEmitter>();
+
+    /// <summary>
+    /// SoundEmitter를 등록합니다. (SoundEmitter.OnEnable에서 자동 호출)
+    /// </summary>
+    public void RegisterEmitter(SoundEmitter emitter)
+    {
+        if (emitter != null && !registeredEmitters.Contains(emitter))
+        {
+            registeredEmitters.Add(emitter);
+        }
+    }
+
+    /// <summary>
+    /// SoundEmitter를 해제합니다. (SoundEmitter.OnDisable에서 자동 호출)
+    /// </summary>
+    public void UnregisterEmitter(SoundEmitter emitter)
+    {
+        if (emitter != null)
+        {
+            registeredEmitters.Remove(emitter);
+        }
+    }
+
+    /// <summary>
+    /// ID로 등록된 SoundEmitter를 찾습니다.
+    /// </summary>
+    public SoundEmitter GetEmitter(string id)
+    {
+        for (int i = 0; i < registeredEmitters.Count; i++)
+        {
+            if (registeredEmitters[i] != null && registeredEmitters[i].emitterId == id)
+                return registeredEmitters[i];
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// ID로 지정된 SoundEmitter를 재생합니다.
+    /// </summary>
+    public void PlayEmitter(string id)
+    {
+        var emitter = GetEmitter(id);
+        if (emitter != null) emitter.Play();
+    }
+
+    /// <summary>
+    /// ID로 지정된 SoundEmitter를 정지합니다.
+    /// </summary>
+    public void StopEmitter(string id)
+    {
+        var emitter = GetEmitter(id);
+        if (emitter != null) emitter.Stop();
+    }
+
+    /// <summary>
+    /// 등록된 모든 SoundEmitter를 재생합니다.
+    /// </summary>
+    public void PlayAllEmitters()
+    {
+        for (int i = 0; i < registeredEmitters.Count; i++)
+        {
+            if (registeredEmitters[i] != null) registeredEmitters[i].Play();
+        }
+    }
+
+    /// <summary>
+    /// 등록된 모든 SoundEmitter를 정지합니다.
+    /// </summary>
+    public void StopAllEmitters()
+    {
+        for (int i = 0; i < registeredEmitters.Count; i++)
+        {
+            if (registeredEmitters[i] != null) registeredEmitters[i].Stop();
+        }
+    }
+
+    /// <summary>
+    /// 현재 등록된 SoundEmitter 목록을 반환합니다. (에디터/디버그용)
+    /// </summary>
+    public List<SoundEmitter> GetRegisteredEmitters()
+    {
+        return registeredEmitters;
+    }
 }
