@@ -205,7 +205,7 @@ MonoBehaviour:
   maxRotationSpeed: 15
   rotationCorrectionSpeed: 5
   rotationSpeed: 10
-  jumpForce: 6
+  jumpForce: 8
   moveInterval: 1
   moveDamping: 1
   stopDamping: 5
