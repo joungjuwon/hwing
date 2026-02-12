@@ -45,6 +45,11 @@ public class SoundData : ScriptableObject
     [Tooltip("체크 시 SFX 재생 시 자동으로 랜덤 루프 모드로 동작 (별도 오브젝트 생성됨)")]
     public bool useRandomLoop = false;
 
-    [Tooltip("루프 재생 간 대기 시간 (초)")]
-    public float loopDelay = 0f;
+    [Tooltip("루프 딜레이 최소값 (초)")]
+    [Min(0f)]
+    public float minLoopDelay = 1f;
+
+    [Tooltip("루프 딜레이 최대값 (초)")]
+    [Min(0f)]
+    public float maxLoopDelay = 5f;
 }

@@ -170,7 +170,7 @@ public class IntroSequenceController : MonoBehaviour
         // 사운드 재생 (SoundManager 사용)
         if (dropSoundData != null && SoundManager.Instance != null)
         {
-            SoundManager.Instance.PlaySFX(dropSoundData);
+            SoundManager.Instance.PlaySequenceSFX(dropSoundData);
         }
 
         // 게임플레이 스크립트 비활성화
