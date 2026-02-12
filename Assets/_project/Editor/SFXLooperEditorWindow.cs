@@ -1,25 +1,41 @@
 using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 
 /// <summary>
-/// SFX Looper 에디터 도구
-/// 선택한 오브젝트에 SoundRandomLooper 컴포넌트를 
+/// SFX Emitter 에디터 도구
+/// 선택한 오브젝트에 SoundEmitter 컴포넌트를
 /// 원클릭으로 추가/제거/설정할 수 있는 에디터 윈도우입니다.
-/// Window > Audio > SFX Looper Tool 에서 열 수 있습니다.
+/// Tools > Audio > SFX Emitter Tool 에서 열 수 있습니다.
 /// </summary>
 public class SFXLooperEditorWindow : EditorWindow
 {
-    private SoundData selectedSoundData;
+    // 설정 값
+    private AudioClip selectedClip;
+    private List<AudioClip> clipList = new List<AudioClip>();
+    private bool showClipList = false;
+
+    private float volume = 1f;
+
+    private float pitch = 1f;
+    private bool useRandomPitch = false;
+    private float minPitch = 0.9f;
+    private float maxPitch = 1.1f;
+    private bool loop = false;
+    private bool playOnEnable = true;
+    private bool useRandomDelay = false;
     private float minDelay = 1f;
     private float maxDelay = 5f;
-    private bool playOnEnable = true;
+    private float spatialBlend = 1f;
+    private string emitterId = "";
+
     private Vector2 scrollPos;
 
-    [MenuItem("Window/Audio/SFX Looper Tool")]
+    [MenuItem("Tools/Audio/SFX Emitter Tool")]
     public static void ShowWindow()
     {
-        var window = GetWindow<SFXLooperEditorWindow>("SFX Looper Tool");
-        window.minSize = new Vector2(320, 400);
+        var window = GetWindow<SFXLooperEditorWindow>("SFX Emitter Tool");
+        window.minSize = new Vector2(340, 500);
         window.Show();
     }
 
@@ -27,228 +43,255 @@ public class SFXLooperEditorWindow : EditorWindow
     {
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
 
-        // ── 타이틀 ──
+        // ── Title ──
         EditorGUILayout.Space(8);
         GUIStyle titleStyle = new GUIStyle(EditorStyles.boldLabel)
         {
-            fontSize = 16,
+            fontSize = 15,
             alignment = TextAnchor.MiddleCenter
         };
-        EditorGUILayout.LabelField("🔊 SFX Looper Tool", titleStyle);
+        EditorGUILayout.LabelField("SFX Emitter Tool", titleStyle);
         EditorGUILayout.Space(4);
-        DrawHorizontalLine();
+        DrawLine();
 
-        // ── SoundData 선택 ──
+        // ── Clip Settings ──
         EditorGUILayout.Space(6);
-        EditorGUILayout.LabelField("사운드 데이터 설정", EditorStyles.boldLabel);
-        selectedSoundData = (SoundData)EditorGUILayout.ObjectField(
-            "Sound Data", selectedSoundData, typeof(SoundData), false);
+        EditorGUILayout.LabelField("Clip Settings", EditorStyles.boldLabel);
 
-        if (selectedSoundData != null)
+        selectedClip = (AudioClip)EditorGUILayout.ObjectField("Main Clip", selectedClip, typeof(AudioClip), false);
+
+        showClipList = EditorGUILayout.Foldout(showClipList, $"Random Clips ({clipList.Count})");
+        if (showClipList)
         {
             EditorGUI.indentLevel++;
-            EditorGUILayout.LabelField("이름", selectedSoundData.soundName);
-            
-            int clipCount = 0;
-            if (selectedSoundData.clips != null && selectedSoundData.clips.Length > 0)
-                clipCount = selectedSoundData.clips.Length;
-            else if (selectedSoundData.clip != null)
-                clipCount = 1;
-            EditorGUILayout.LabelField("클립 수", clipCount.ToString());
-            EditorGUILayout.LabelField("볼륨", selectedSoundData.volume.ToString("F2"));
-            EditorGUILayout.LabelField("피치", selectedSoundData.pitch.ToString("F2"));
+            for (int i = 0; i < clipList.Count; i++)
+            {
+                EditorGUILayout.BeginHorizontal();
+                clipList[i] = (AudioClip)EditorGUILayout.ObjectField(clipList[i], typeof(AudioClip), false);
+                if (GUILayout.Button("X", GUILayout.Width(20)))
+                {
+                    clipList.RemoveAt(i);
+                    i--;
+                }
+                EditorGUILayout.EndHorizontal();
+            }
+            if (GUILayout.Button("+ Add Clip"))
+                clipList.Add(null);
             EditorGUI.indentLevel--;
         }
 
-        // ── 딜레이 설정 ──
+        // ── Playback Settings ──
         EditorGUILayout.Space(10);
-        DrawHorizontalLine();
+        DrawLine();
         EditorGUILayout.Space(6);
-        EditorGUILayout.LabelField("루프 딜레이 설정", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Playback Settings", EditorStyles.boldLabel);
 
+        volume = EditorGUILayout.Slider("Volume", volume, 0f, 1f);
+
+        // Pitch 설정 (Random 지원)
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("Min Delay (초)", GUILayout.Width(120));
-        minDelay = EditorGUILayout.FloatField(minDelay);
+        pitch = EditorGUILayout.Slider("Pitch", pitch, 0.1f, 3f);
+        useRandomPitch = EditorGUILayout.ToggleLeft("Random", useRandomPitch, GUILayout.Width(70));
         EditorGUILayout.EndHorizontal();
 
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("Max Delay (초)", GUILayout.Width(120));
-        maxDelay = EditorGUILayout.FloatField(maxDelay);
-        EditorGUILayout.EndHorizontal();
-
-        // min/max 자동 보정
-        if (minDelay < 0f) minDelay = 0f;
-        if (maxDelay < minDelay) maxDelay = minDelay;
-
-        EditorGUILayout.MinMaxSlider("딜레이 범위", ref minDelay, ref maxDelay, 0f, 30f);
-        EditorGUILayout.LabelField($"   → {minDelay:F1}초 ~ {maxDelay:F1}초 사이 랜덤", EditorStyles.miniLabel);
-
-        // ── 옵션 ──
-        EditorGUILayout.Space(6);
-        playOnEnable = EditorGUILayout.Toggle("Play On Enable", playOnEnable);
-
-        // ── SoundData → 설정 복사 ──
-        if (selectedSoundData != null)
+        if (useRandomPitch)
         {
-            EditorGUILayout.Space(4);
-            if (GUILayout.Button("📥 SoundData에서 딜레이 가져오기"))
-            {
-                minDelay = selectedSoundData.minLoopDelay;
-                maxDelay = selectedSoundData.maxLoopDelay;
-            }
+            EditorGUI.indentLevel++;
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Min", GUILayout.Width(30));
+            minPitch = EditorGUILayout.FloatField(minPitch, GUILayout.Width(50));
+            EditorGUILayout.LabelField("Max", GUILayout.Width(30));
+            maxPitch = EditorGUILayout.FloatField(maxPitch, GUILayout.Width(50));
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.MinMaxSlider("Pitch Range", ref minPitch, ref maxPitch, 0.1f, 3f);
+            if (minPitch < 0.1f) minPitch = 0.1f;
+            if (maxPitch < minPitch) maxPitch = minPitch;
+            EditorGUI.indentLevel--;
         }
 
-        // ── 선택된 오브젝트 정보 ──
-        EditorGUILayout.Space(10);
-        DrawHorizontalLine();
-        EditorGUILayout.Space(6);
-        EditorGUILayout.LabelField("선택 오브젝트 상태", EditorStyles.boldLabel);
+        loop = EditorGUILayout.Toggle("Loop", loop);
+        playOnEnable = EditorGUILayout.Toggle("Play On Enable", playOnEnable);
+        spatialBlend = EditorGUILayout.Slider("Spatial Blend (0=2D, 1=3D)", spatialBlend, 0f, 1f);
 
-        GameObject[] selectedObjects = Selection.gameObjects;
-        if (selectedObjects.Length == 0)
+        // ── Random Delay (Loop Only) ──
+        EditorGUILayout.Space(6);
+        EditorGUI.BeginDisabledGroup(!loop);
+        useRandomDelay = EditorGUILayout.Toggle("Use Random Delay", useRandomDelay && loop);
+
+        if (useRandomDelay && loop)
+        {
+            EditorGUI.indentLevel++;
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Min", GUILayout.Width(30));
+            minDelay = EditorGUILayout.FloatField(minDelay, GUILayout.Width(50));
+            EditorGUILayout.LabelField("Max", GUILayout.Width(30));
+            maxDelay = EditorGUILayout.FloatField(maxDelay, GUILayout.Width(50));
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.MinMaxSlider("Delay Range", ref minDelay, ref maxDelay, 0f, 30f);
+            EditorGUILayout.LabelField($"  {minDelay:F1}s ~ {maxDelay:F1}s", EditorStyles.miniLabel);
+            if (minDelay < 0f) minDelay = 0f;
+            if (maxDelay < minDelay) maxDelay = minDelay;
+            EditorGUI.indentLevel--;
+        }
+        EditorGUI.EndDisabledGroup();
+
+        // ── Emitter ID ──
+        EditorGUILayout.Space(6);
+        emitterId = EditorGUILayout.TextField("Emitter ID (optional)", emitterId);
+        EditorGUILayout.LabelField("  (empty = use object name)", EditorStyles.miniLabel);
+
+        // ── Selected Objects Info ──
+        EditorGUILayout.Space(10);
+        DrawLine();
+        EditorGUILayout.Space(6);
+        EditorGUILayout.LabelField("Selected Objects", EditorStyles.boldLabel);
+
+        GameObject[] selected = Selection.gameObjects;
+        if (selected.Length == 0)
         {
             EditorGUILayout.HelpBox("Hierarchy에서 오브젝트를 선택하세요.", MessageType.Info);
         }
         else
         {
-            EditorGUILayout.LabelField($"선택된 오브젝트: {selectedObjects.Length}개");
-            EditorGUILayout.Space(4);
-            
-            foreach (var go in selectedObjects)
+            EditorGUILayout.LabelField($"Selected: {selected.Length}");
+            EditorGUILayout.Space(2);
+
+            foreach (var go in selected)
             {
-                var existing = go.GetComponent<SoundRandomLooper>();
+                var emitter = go.GetComponent<SoundEmitter>();
                 EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(go.name, GUILayout.Width(160));
-                if (existing != null)
+                EditorGUILayout.LabelField(go.name, GUILayout.Width(150));
+
+                if (emitter != null)
                 {
-                    string status = existing.isLooping ? "🟢 루핑" : "🔴 정지";
-                    EditorGUILayout.LabelField(status, GUILayout.Width(70));
-                    
-                    if (existing.soundData != null)
-                        EditorGUILayout.LabelField(existing.soundData.soundName, EditorStyles.miniLabel);
-                    else
-                        EditorGUILayout.LabelField("(데이터 없음)", EditorStyles.miniLabel);
+                    string clipName = emitter.clip != null ? emitter.clip.name : "(none)";
+                    string loopStr = emitter.loop ? "Loop" : "Once";
+                    EditorGUILayout.LabelField($"[{loopStr}] {clipName}", EditorStyles.miniLabel);
                 }
                 else
                 {
-                    EditorGUILayout.LabelField("⬜ 미적용", GUILayout.Width(70));
+                    EditorGUILayout.LabelField("(no emitter)", EditorStyles.miniLabel);
                 }
                 EditorGUILayout.EndHorizontal();
             }
         }
 
-        // ── 액션 버튼 ──
+        // ── Action Buttons ──
         EditorGUILayout.Space(10);
-        DrawHorizontalLine();
+        DrawLine();
         EditorGUILayout.Space(6);
 
-        GUI.enabled = selectedObjects.Length > 0 && selectedSoundData != null;
+        bool hasClip = selectedClip != null || clipList.Count > 0;
+        GUI.enabled = selected.Length > 0 && hasClip;
 
-        // Apply 버튼
-        GUIStyle applyStyle = new GUIStyle(GUI.skin.button) { fontStyle = FontStyle.Bold, fixedHeight = 35 };
-        if (GUILayout.Button("🔨 Apply — 선택 오브젝트에 적용", applyStyle))
+        GUIStyle btnStyle = new GUIStyle(GUI.skin.button) { fontStyle = FontStyle.Bold, fixedHeight = 32 };
+        if (GUILayout.Button("Apply to Selected", btnStyle))
         {
-            ApplyToSelected(selectedObjects);
+            ApplyToSelected(selected);
         }
 
-        GUI.enabled = selectedObjects.Length > 0;
+        GUI.enabled = selected.Length > 0;
 
         EditorGUILayout.Space(4);
-
-        // 설정 업데이트 버튼
-        if (GUILayout.Button("🔄 Update — 기존 루퍼 설정 업데이트"))
+        if (GUILayout.Button("Update Existing Emitters"))
         {
-            UpdateExistingLoopers(selectedObjects);
+            UpdateExisting(selected);
         }
 
         EditorGUILayout.Space(4);
-
-        // Remove 버튼
-        GUIStyle removeStyle = new GUIStyle(GUI.skin.button) { fixedHeight = 30 };
         GUI.backgroundColor = new Color(1f, 0.6f, 0.6f);
-        if (GUILayout.Button("🗑 Remove — 선택 오브젝트에서 제거", removeStyle))
+        if (GUILayout.Button("Remove from Selected"))
         {
-            RemoveFromSelected(selectedObjects);
+            RemoveFromSelected(selected);
         }
         GUI.backgroundColor = Color.white;
 
         GUI.enabled = true;
-
         EditorGUILayout.Space(10);
         EditorGUILayout.EndScrollView();
     }
 
     private void ApplyToSelected(GameObject[] objects)
     {
-        int applied = 0;
+        int count = 0;
         foreach (var go in objects)
         {
-            Undo.RecordObject(go, "Apply SFX Looper");
+            Undo.RecordObject(go, "Apply SoundEmitter");
 
-            var looper = go.GetComponent<SoundRandomLooper>();
-            if (looper == null)
-            {
-                looper = Undo.AddComponent<SoundRandomLooper>(go);
-            }
+            var emitter = go.GetComponent<SoundEmitter>();
+            if (emitter == null)
+                emitter = Undo.AddComponent<SoundEmitter>(go);
 
-            looper.soundData = selectedSoundData;
-            looper.minDelay = minDelay;
-            looper.maxDelay = maxDelay;
-            looper.playOnEnable = playOnEnable;
-            
+            ConfigureEmitter(emitter);
             EditorUtility.SetDirty(go);
-            applied++;
+            count++;
         }
-        Debug.Log($"[SFX Looper Tool] {applied}개 오브젝트에 SoundRandomLooper 적용 완료.");
+        Debug.Log($"[SFX Emitter Tool] {count}개 오브젝트에 SoundEmitter 적용.");
     }
 
-    private void UpdateExistingLoopers(GameObject[] objects)
+    private void UpdateExisting(GameObject[] objects)
     {
-        int updated = 0;
+        int count = 0;
         foreach (var go in objects)
         {
-            var looper = go.GetComponent<SoundRandomLooper>();
-            if (looper != null)
+            var emitter = go.GetComponent<SoundEmitter>();
+            if (emitter != null)
             {
-                Undo.RecordObject(looper, "Update SFX Looper");
-                
-                if (selectedSoundData != null)
-                    looper.soundData = selectedSoundData;
-                    
-                looper.minDelay = minDelay;
-                looper.maxDelay = maxDelay;
-                looper.playOnEnable = playOnEnable;
-                
-                EditorUtility.SetDirty(looper);
-                updated++;
+                Undo.RecordObject(emitter, "Update SoundEmitter");
+                ConfigureEmitter(emitter);
+                EditorUtility.SetDirty(emitter);
+                count++;
             }
         }
-        Debug.Log($"[SFX Looper Tool] {updated}개 루퍼 설정 업데이트 완료.");
+        Debug.Log($"[SFX Emitter Tool] {count}개 이미터 설정 업데이트.");
     }
 
     private void RemoveFromSelected(GameObject[] objects)
     {
-        int removed = 0;
+        int count = 0;
         foreach (var go in objects)
         {
-            var looper = go.GetComponent<SoundRandomLooper>();
-            if (looper != null)
+            var emitter = go.GetComponent<SoundEmitter>();
+            if (emitter != null)
             {
-                Undo.DestroyObjectImmediate(looper);
-                removed++;
+                // AudioSource도 같이 제거 (SoundEmitter가 추가한 것이므로)
+                var audioSrc = go.GetComponent<AudioSource>();
+                Undo.DestroyObjectImmediate(emitter);
+                if (audioSrc != null) Undo.DestroyObjectImmediate(audioSrc);
+                count++;
             }
         }
-        Debug.Log($"[SFX Looper Tool] {removed}개 오브젝트에서 SoundRandomLooper 제거 완료.");
+        Debug.Log($"[SFX Emitter Tool] {count}개 오브젝트에서 SoundEmitter 제거.");
     }
 
-    private void DrawHorizontalLine()
+    private void ConfigureEmitter(SoundEmitter emitter)
     {
-        Rect rect = EditorGUILayout.GetControlRect(false, 1);
-        rect.height = 1;
-        EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 0.5f));
+        emitter.clip = selectedClip;
+        emitter.clips = clipList.Count > 0 ? clipList.ToArray() : null;
+        emitter.volume = volume;
+        emitter.pitch = pitch;
+        emitter.useRandomPitch = useRandomPitch;
+        emitter.minPitch = minPitch;
+        emitter.maxPitch = maxPitch;
+        emitter.loop = loop;
+        emitter.playOnEnable = playOnEnable;
+        emitter.useRandomDelay = useRandomDelay;
+        emitter.minDelay = minDelay;
+        emitter.maxDelay = maxDelay;
+        emitter.spatialBlend = spatialBlend;
+        if (!string.IsNullOrEmpty(emitterId))
+            emitter.emitterId = emitterId;
     }
 
-    // Hierarchy 선택 변경 시 자동 갱신
+    private void DrawLine()
+    {
+        Rect r = EditorGUILayout.GetControlRect(false, 1);
+        r.height = 1;
+        EditorGUI.DrawRect(r, new Color(0.5f, 0.5f, 0.5f, 0.5f));
+    }
+
     private void OnSelectionChange()
     {
         Repaint();
