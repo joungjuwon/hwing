@@ -2,107 +2,103 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public enum WeatherState
-{
-    Sunny,
-    Rain,
-    RainStop,
-    Windy
-}
+// Enum Removed as requested. Using int 1, 2, 3, 4.
+// Phase 1: Sunny
+// Phase 2: Rain
+// Phase 3: RainStop
+// Phase 4: Windy
 
 public class WeatherManager : MonoBehaviour
 {
     public static WeatherManager Instance { get; private set; }
 
-    [Header("Current Weather")]
-    public WeatherState currentState = WeatherState.Sunny;
+    [Header("Current Phase")]
+    [Tooltip("현재 날씨 페이즈 (1:Sunny, 2:Rain, 3:RainStop, 4:Windy)")]
+    [Range(1, 4)]
+    public int currentPhase = 1;
 
     [Header("References")]
-    [Tooltip("씬의 주 광원 (Directional Light)")]
     public Light mainLight;
-    [Tooltip("비 파티클 시스템 (미리 배치해두고 켜고 끄기)")]
     public ParticleSystem rainParticleSystem;
-    [Tooltip("빗소리 오디오 클립")]
-    public AudioClip rainClip;
-    [Tooltip("바람소리 오디오 클립 (써니 상태일 때 재생)")]
-    public AudioClip windClip;
-    [Tooltip("전역 바람 영역 (선택 사항)")]
     public WindArea globalWind;
 
-    [Header("BGM Settings (Phases)")]
-    public AudioClip rainBGM;
-    public AudioClip rainStopBGM;
-    public AudioClip windBGM;
+    [Header("Phase 1 Settings (Sunny)")]
+    public float phase1LightIntensity = 1.5f;
+    public Color phase1FogColor = new Color(0.6f, 0.7f, 0.8f);
+    public float phase1FogDensity = 0.005f;
+    public float phase1WindStrength = 5f;
+    public AudioClip phase1BGM;
+    public AudioClip phase1Ambient;
 
-    [Header("3D Audio Settings")]
-    [Tooltip("비가 올 때 물 오브젝트에서 재생할 3D 오디오 클립")]
-    public AudioClip waterRainClip;
+    [Header("Phase 2 Settings (Rain)")]
+    public float phase2LightIntensity = 0.5f;
+    public Color phase2FogColor = new Color(0.3f, 0.35f, 0.4f);
+    public float phase2FogDensity = 0.02f;
+    public float phase2WindStrength = 20f;
+    public AudioClip phase2BGM;
+    public AudioClip phase2Ambient; // Rain Loop
+    [Tooltip("Phase 2(Rain)에서 재생할 물 전용 오디오 클립")]
+    public AudioClip phase2WaterClip;
     [Range(0f, 1f)] public float waterRainVolume = 1.0f;
     public float waterRainMaxDistance = 20.0f;
-
-    [Header("Sunny Settings")]
-    public float sunnyLightIntensity = 1.5f;
-    public Color sunnyFogColor = new Color(0.6f, 0.7f, 0.8f);
-    public float sunnyFogDensity = 0.005f;
-    public float sunnyWindStrength = 5f;
-
-    [Header("Rain Settings")]
-    public float rainLightIntensity = 0.5f;
-    public Color rainFogColor = new Color(0.3f, 0.35f, 0.4f);
-    public float rainFogDensity = 0.02f;
-    public float rainWindStrength = 20f;
-    [Range(0f, 1f)] public float rainVolume = 1.0f;
+    
     [Tooltip("비가 올 때 활성화할 오브젝트들")]
     public GameObject[] rainPropsToActivate;
     [Tooltip("비가 올 때 Y축을 내릴 터레인")]
     public Terrain rainTargetTerrain;
-    [Tooltip("터레인을 내릴 높이")]
     public float terrainLowerAmount = 5f;
     [Tooltip("비가 올 때 Y축을 올릴 물 오브젝트들")]
     public Transform[] waterObjectsToRaise;
-    [Tooltip("물을 올릴 높이")]
     public float waterRaiseAmount = 5f;
-    [Tooltip("터레인이 이동하는 데 걸리는 시간")]
     public float terrainTransitionDuration = 2.0f;
-    [Tooltip("물이 이동하는 데 걸리는 시간")]
     public float waterTransitionDuration = 2.0f;
 
-    [Header("RainStop Settings")]
-    public float rainStopLightIntensity = 1.0f;
-    public Color rainStopFogColor = new Color(0.5f, 0.6f, 0.7f);
-    public float rainStopFogDensity = 0.01f;
+    [Header("Phase 3 Settings (RainStop)")]
+    public float phase3LightIntensity = 1.0f;
+    public Color phase3FogColor = new Color(0.5f, 0.6f, 0.7f);
+    public float phase3FogDensity = 0.01f;
+    public float phase3WindStrength = 5f; // 보통 서니와 비슷하거나 약한 바람
+    public AudioClip phase3BGM;
+    public AudioClip phase3Ambient;
 
-    [Header("Windy Settings")]
-    public float windyLightIntensity = 1.2f;
-    public Color windyFogColor = new Color(0.6f, 0.65f, 0.7f);
-    public float windyFogDensity = 0.008f;
-    public float windyWindStrength = 30f;
+    [Header("Phase 4 Settings (Windy)")]
+    public float phase4LightIntensity = 1.2f;
+    public Color phase4FogColor = new Color(0.6f, 0.65f, 0.7f);
+    public float phase4FogDensity = 0.008f;
+    public float phase4WindStrength = 30f;
+    public AudioClip phase4BGM;
+    public AudioClip phase4Ambient; // Wind Loop
 
-    [Header("Transition")]
-    public float transitionDuration = 2.0f; // 조명 및 안개용
+    [Header("Transition Settings")]
+    public float transitionDuration = 2.0f;
 
+    // Internal State
     private float targetLightIntensity;
     private Color targetFogColor;
     private float targetFogDensity;
 
     private Vector3 originalTerrainPosition;
-    private Vector3 startTerrainPosition; // 이동 시작 위치
+    private Vector3 startTerrainPosition;
     private Vector3 targetTerrainPosition;
-    private float currentTerrainTime; // 터레인 이동 경과 시간
+    private float currentTerrainTime;
     private bool terrainPositionBackedUp = false;
 
     private List<Vector3> originalWaterPositions = new List<Vector3>();
-    private List<Vector3> startWaterPositions = new List<Vector3>(); // 이동 시작 위치들
+    private List<Vector3> startWaterPositions = new List<Vector3>();
     private List<Vector3> targetWaterPositions = new List<Vector3>();
-    private float currentWaterTime; // 물 이동 경과 시간
+    private float currentWaterTime;
     private bool waterPositionsBackedUp = false;
+
+    // Backup for original water audio clips (to restore in Phase 3)
+    // Key: InstanceID of GameObject, Value: Original AudioClip
+    private Dictionary<int, AudioClip> originalWaterClips = new Dictionary<int, AudioClip>();
+    private bool waterAudioBackedUp = false;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            // DontDestroyOnLoad(gameObject); // WeatherManager는 보통 씬에 포함되므로 필요 없음
         }
         else
         {
@@ -112,16 +108,41 @@ public class WeatherManager : MonoBehaviour
 
     private void Start()
     {
-        // 안개 활성화
         RenderSettings.fog = true;
+        
+        // 시작 시 Audio Backup 수행 (Water Objects)
+        BackupWaterAudio();
 
-        // 초기 상태 적용 (즉시, 오디오 재생 안 함 - 타이틀 BGM 유지)
-        ApplyWeather(currentState, true, false);
+        // 초기 상태 적용 (즉시, 오디오 재생 안 함 - 타이틀 BGM 유지 또는 씬 초기 설정 따름)
+        ApplyPhase(currentPhase, true, false);
+    }
+
+    private void BackupWaterAudio()
+    {
+        if (waterObjectsToRaise == null) return;
+        
+        originalWaterClips.Clear();
+        foreach (var t in waterObjectsToRaise)
+        {
+            if (t == null) continue;
+            AudioSource source = t.GetComponent<AudioSource>();
+            if (source != null)
+            {
+                // 원본 클립 저장 (null일 수도 있음)
+                originalWaterClips[t.gameObject.GetInstanceID()] = source.clip;
+            }
+            else
+            {
+                // 오디오 소스가 없었다면 null로 기록
+                originalWaterClips[t.gameObject.GetInstanceID()] = null;
+            }
+        }
+        waterAudioBackedUp = true;
     }
 
     private void Update()
     {
-        // 조명 및 안개 부드러운 전환
+        // Smooth Transition for Light & Fog
         if (mainLight != null)
         {
             mainLight.intensity = Mathf.Lerp(mainLight.intensity, targetLightIntensity, Time.deltaTime / transitionDuration);
@@ -133,7 +154,7 @@ public class WeatherManager : MonoBehaviour
             RenderSettings.fogDensity = Mathf.Lerp(RenderSettings.fogDensity, targetFogDensity, Time.deltaTime / transitionDuration);
         }
 
-        // 터레인 및 물 높이 부드러운 전환
+        // Smooth Transition for Terrain
         if (terrainPositionBackedUp && rainTargetTerrain != null && currentTerrainTime < terrainTransitionDuration)
         {
             currentTerrainTime += Time.deltaTime;
@@ -141,6 +162,7 @@ public class WeatherManager : MonoBehaviour
             rainTargetTerrain.transform.position = Vector3.Lerp(startTerrainPosition, targetTerrainPosition, t);
         }
 
+        // Smooth Transition for Water
         if (waterPositionsBackedUp && waterObjectsToRaise != null && currentWaterTime < waterTransitionDuration)
         {
             currentWaterTime += Time.deltaTime;
@@ -150,94 +172,76 @@ public class WeatherManager : MonoBehaviour
             {
                 if (waterObjectsToRaise[i] != null && i < startWaterPositions.Count && i < targetWaterPositions.Count)
                 {
-                    // 시작 위치에서 목표 위치로 시간(t)에 따라 이동
                     waterObjectsToRaise[i].position = Vector3.Lerp(startWaterPositions[i], targetWaterPositions[i], t);
                 }
             }
         }
     }
 
-    public void SetWeather(WeatherState newState)
+    public void SetPhase(int newPhase)
     {
-        if (currentState == newState) return;
+        if (currentPhase == newPhase) return;
         
-        currentState = newState;
-        ApplyWeather(currentState, false, true); // 날씨 변경 시에는 오디오 재생
+        // 1~4 범위 제한
+        if (newPhase < 1) newPhase = 1;
+        if (newPhase > 4) newPhase = 4;
+
+        currentPhase = newPhase;
+        ApplyPhase(currentPhase, false, true);
     }
 
-    private void ApplyWeather(WeatherState state, bool immediate, bool playAudio = true)
+    private void ApplyPhase(int phase, bool immediate, bool playAudio = true)
     {
-        Debug.Log($"[WeatherManager] Changing weather to {state}");
+        Debug.Log($"[WeatherManager] Changing Phase to {phase}");
 
-        switch (state)
+        AudioClip targetBGM = null;
+        AudioClip targetAmbient = null;
+        string ambientID = "WeatherAmbient";
+
+        switch (phase)
         {
-            case WeatherState.Sunny:
-                targetLightIntensity = sunnyLightIntensity;
-                targetFogColor = sunnyFogColor;
-                targetFogDensity = sunnyFogDensity;
+            case 1: // Sunny
+                targetLightIntensity = phase1LightIntensity;
+                targetFogColor = phase1FogColor;
+                targetFogDensity = phase1FogDensity;
+                if (globalWind != null) globalWind.strength = phase1WindStrength;
 
                 if (rainParticleSystem != null) rainParticleSystem.Stop();
                 
-                // Sunny는 보통 조용한 상태이거나 초기 상태 (BGM 정지 또는 타이틀 BGM)
-                // 필요하다면 여기서도 BGM 재생 가능
-                 if (playAudio)
-                {
-                    // Sunny 진입 시 효과음 정리
-                    if (rainClip != null) SoundManager.Instance.StopLoop("Rain", transitionDuration);
-                    if (windClip != null) SoundManager.Instance.StopLoop("Wind", transitionDuration);
-                }
-
-                SetWaterAudio(false); // 물 소리 끄기
-                
-                if (globalWind != null) globalWind.strength = sunnyWindStrength;
+                SetWaterAudioToOriginal(); // 물 소리 원상복구
 
                 if (rainPropsToActivate != null)
                 {
-                    foreach (var prop in rainPropsToActivate)
-                    {
-                        if (prop != null) prop.SetActive(false);
-                    }
+                    foreach (var prop in rainPropsToActivate) if (prop != null) prop.SetActive(false);
                 }
 
-                // 터레인은 비가 그쳐도 다시 올라오지 않도록 복구 로직 제거
-                // if (terrainPositionBackedUp && rainTargetTerrain != null)
-                // {
-                //     targetTerrainPosition = originalTerrainPosition;
-                // }
+                // Restore/Reset positions Logic
+                // (이전 로직과 동일하게 유지: Rain에서 벗어나면 Water만 백업에서 복구)
                 if (waterPositionsBackedUp && waterObjectsToRaise != null)
                 {
                     targetWaterPositions = new List<Vector3>(originalWaterPositions);
                 }
+
+                targetBGM = phase1BGM;
+                targetAmbient = phase1Ambient;
                 break;
 
-            case WeatherState.Rain:
-                targetLightIntensity = rainLightIntensity;
-                targetFogColor = rainFogColor;
-                targetFogDensity = rainFogDensity;
+            case 2: // Rain
+                targetLightIntensity = phase2LightIntensity;
+                targetFogColor = phase2FogColor;
+                targetFogDensity = phase2FogDensity;
+                if (globalWind != null) globalWind.strength = phase2WindStrength;
 
                 if (rainParticleSystem != null) rainParticleSystem.Play();
 
-                // 사운드 전환: Rain BGM + Rain Loop
-                if (playAudio)
-                {
-                    if (rainBGM != null) SoundManager.Instance.PlayBGM(rainBGM, 1f, true, transitionDuration);
-
-                    if (windClip != null) SoundManager.Instance.StopLoop("Wind", transitionDuration);
-                    if (rainClip != null) SoundManager.Instance.PlayLoop(rainClip, "Rain", transitionDuration, true);
-                }
-
-                SetWaterAudio(true); // 물 소리 켜기
-
-                if (globalWind != null) globalWind.strength = rainWindStrength;
+                SetWaterAudioToRain(); // 2페이즈 전용 물 소리
 
                 if (rainPropsToActivate != null)
                 {
-                    foreach (var prop in rainPropsToActivate)
-                    {
-                        if (prop != null) prop.SetActive(true);
-                    }
+                    foreach (var prop in rainPropsToActivate) if (prop != null) prop.SetActive(true);
                 }
 
+                // Move Logic
                 if (rainTargetTerrain != null)
                 {
                     if (!terrainPositionBackedUp)
@@ -247,206 +251,204 @@ public class WeatherManager : MonoBehaviour
                     }
                     targetTerrainPosition = originalTerrainPosition - new Vector3(0, terrainLowerAmount, 0);
                 }
-
                 if (waterObjectsToRaise != null && waterObjectsToRaise.Length > 0)
                 {
                     if (!waterPositionsBackedUp)
                     {
                         originalWaterPositions.Clear();
-                        foreach (var water in waterObjectsToRaise)
-                        {
-                            if (water != null) originalWaterPositions.Add(water.position);
-                        }
+                        foreach (var water in waterObjectsToRaise) if (water != null) originalWaterPositions.Add(water.position);
                         waterPositionsBackedUp = true;
                     }
-
                     targetWaterPositions.Clear();
                     foreach (var originalPos in originalWaterPositions)
                     {
                         targetWaterPositions.Add(originalPos + new Vector3(0, waterRaiseAmount, 0));
                     }
                 }
+
+                targetBGM = phase2BGM;
+                targetAmbient = phase2Ambient;
                 break;
 
-            case WeatherState.RainStop: // 3페이즈: 비 그침
-                targetLightIntensity = rainStopLightIntensity;
-                targetFogColor = rainStopFogColor;
-                targetFogDensity = rainStopFogDensity;
+            case 3: // RainStop
+                targetLightIntensity = phase3LightIntensity;
+                targetFogColor = phase3FogColor;
+                targetFogDensity = phase3FogDensity;
+                if (globalWind != null) globalWind.strength = phase3WindStrength;
 
                 if (rainParticleSystem != null) rainParticleSystem.Stop();
 
-                 if (playAudio)
-                {
-                    if (rainStopBGM != null) SoundManager.Instance.PlayBGM(rainStopBGM, 1f, true, transitionDuration);
-                    
-                    // 비 루프 소리 서서히 끄기
-                    if (rainClip != null) SoundManager.Instance.StopLoop("Rain", transitionDuration);
-                    if (windClip != null) SoundManager.Instance.StopLoop("Wind", transitionDuration);
-                }
-
-                SetWaterAudio(false); // 물 소리 끄기
-
-                if (globalWind != null) globalWind.strength = sunnyWindStrength; // 바람은 다시 약하게
+                SetWaterAudioToOriginal(); // 물 소리 원상복구 (3페이즈 핵심)
 
                 if (rainPropsToActivate != null)
                 {
-                    foreach (var prop in rainPropsToActivate)
-                    {
-                        if (prop != null) prop.SetActive(false); // 비 관련 오브젝트 끄기
-                    }
+                    foreach (var prop in rainPropsToActivate) if (prop != null) prop.SetActive(false);
                 }
 
-                // 물/터레인은 그대로 유지 (비가 그쳤다고 바로 물이 빠지는건 아닐 수 있음, 필요시 복구 로직 추가)
+                // RainStop에서는 물/터레인이 바로 복구되지 않고 유지될 수 있음 (기획 의도에 따라)
+                // 현재 로직상 별도 조치 없으면 Rain 상태의 위치(target) 유지됨.
+
+                targetBGM = phase3BGM;
+                targetAmbient = phase3Ambient;
                 break;
 
-            case WeatherState.Windy: // 4페이즈: 바람
-                targetLightIntensity = windyLightIntensity;
-                targetFogColor = windyFogColor;
-                targetFogDensity = windyFogDensity;
+            case 4: // Windy
+                targetLightIntensity = phase4LightIntensity;
+                targetFogColor = phase4FogColor;
+                targetFogDensity = phase4FogDensity;
+                if (globalWind != null) globalWind.strength = phase4WindStrength;
 
                 if (rainParticleSystem != null) rainParticleSystem.Stop();
 
-                if (playAudio)
-                {
-                    if (windBGM != null) SoundManager.Instance.PlayBGM(windBGM, 1f, true, transitionDuration);
-
-                    // 바람 루프 소리 켜기
-                    if (rainClip != null) SoundManager.Instance.StopLoop("Rain", transitionDuration);
-                    if (windClip != null) SoundManager.Instance.PlayLoop(windClip, "Wind", transitionDuration, true);
-                }
-
-                SetWaterAudio(false); // 물 소리 끄기
-
-                if (globalWind != null) globalWind.strength = windyWindStrength; // 강한 바람
+                SetWaterAudioToOriginal(); // 물 소리 원상복구
 
                 if (rainPropsToActivate != null)
                 {
-                    foreach (var prop in rainPropsToActivate)
-                    {
-                        if (prop != null) prop.SetActive(false);
-                    }
+                    foreach (var prop in rainPropsToActivate) if (prop != null) prop.SetActive(false);
                 }
+                
+                targetBGM = phase4BGM;
+                targetAmbient = phase4Ambient;
                 break;
         }
 
-        // 이동 시작 전 현재 위치 저장 및 타이머 초기화 (터레인/물 이동 필요 시 동작)
-        if (state == WeatherState.Rain || state == WeatherState.Sunny) // RainStop/Windy에서는 위치 이동이 없다면 조건문 조정 필요
+        // 이동 애니메이션 초기화 (위치 변경이 필요한 Phase 1, 2인 경우 등)
+        // (간단화를 위해 항상 초기화 시도, 변화 없으면 Lerp가 제자리 유지)
+        if (rainTargetTerrain != null)
         {
-             if (rainTargetTerrain != null)
-            {
-                startTerrainPosition = rainTargetTerrain.transform.position;
-                currentTerrainTime = 0f;
-            }
-
-            if (waterObjectsToRaise != null)
-            {
-                startWaterPositions.Clear();
-                foreach (var water in waterObjectsToRaise)
-                {
-                    if (water != null) startWaterPositions.Add(water.position);
-                }
-                currentWaterTime = 0f;
-            }
+            startTerrainPosition = rainTargetTerrain.transform.position;
+            currentTerrainTime = 0f;
         }
-       
+        if (waterObjectsToRaise != null)
+        {
+            startWaterPositions.Clear();
+            foreach (var water in waterObjectsToRaise)
+            {
+                if (water != null) startWaterPositions.Add(water.position);
+            }
+            currentWaterTime = 0f;
+        }
 
+
+        // Immediate Application
         if (immediate)
         {
             if (mainLight != null) mainLight.intensity = targetLightIntensity;
             RenderSettings.fogColor = targetFogColor;
             RenderSettings.fogDensity = targetFogDensity;
             
-            StopAllCoroutines();
-            if (playAudio && (rainClip != null || windClip != null))
+            // Audio Immediate
+             if (playAudio)
             {
-                if (state == WeatherState.Rain)
-                {
-                    // Rain 즉시 재생, Wind 정지
-                    if (rainClip != null) SoundManager.Instance.PlayLoop(rainClip, "Rain", 1f, true);
-                    SoundManager.Instance.StopLoop("Wind", 0f);
-                    SetWaterAudio(true);
-                }
-                else 
-                {
-                    // Wind 즉시 재생, Rain 정지
-                    if (windClip != null) SoundManager.Instance.PlayLoop(windClip, "Wind", 1f, true);
-                    SoundManager.Instance.StopLoop("Rain", 0f);
-                    SetWaterAudio(false);
-                }
+                if (targetBGM != null) SoundManager.Instance.PlayBGM(targetBGM);
+                // else: Do not stop BGM if target is null (continue playing previous)
+
+                if (targetAmbient != null) SoundManager.Instance.PlayLoop(targetAmbient, ambientID);
+                else SoundManager.Instance.StopLoop(ambientID);
             }
 
-            if (rainPropsToActivate != null)
-            {
-                foreach (var prop in rainPropsToActivate)
-                {
-                    if (prop != null) prop.SetActive(state == WeatherState.Rain);
-                }
-            }
-
+            // Transform Immediate
             if (terrainPositionBackedUp && rainTargetTerrain != null)
             {
                 rainTargetTerrain.transform.position = targetTerrainPosition;
-                currentTerrainTime = terrainTransitionDuration; // 즉시 완료 처리
+                currentTerrainTime = terrainTransitionDuration;
             }
             if (waterPositionsBackedUp && waterObjectsToRaise != null)
             {
-                int posIndex = 0;
                 for (int i = 0; i < waterObjectsToRaise.Length; i++)
                 {
-                    if (waterObjectsToRaise[i] != null)
+                    if (waterObjectsToRaise[i] != null && i < targetWaterPositions.Count)
                     {
-                        if (posIndex < targetWaterPositions.Count)
-                        {
-                            waterObjectsToRaise[i].position = targetWaterPositions[posIndex];
-                            posIndex++;
-                        }
+                        waterObjectsToRaise[i].position = targetWaterPositions[i];
                     }
                 }
-                currentWaterTime = waterTransitionDuration; // 즉시 완료 처리
+                currentWaterTime = waterTransitionDuration;
+            }
+        }
+        else if (playAudio)
+        {
+            // Smooth Audio Transition
+            if (targetBGM != null) SoundManager.Instance.PlayBGM(targetBGM, 1f, true, transitionDuration);
+            // Ambient는 CrossFade가 SoundManager에 있으면 좋지만, 여기서는 Stop -> Play (with fade support from SoundManager?)
+            // SoundManager.StopLoop가 fade 지원하면 좋음. 지원함.
+
+            // 기존 앰비언트와 새로운 앰비언트가 다르면 교체
+            // (SoundManager가 같은 ID라도 클립 다르면 교체 처리함)
+            if (targetAmbient != null)
+            {
+                SoundManager.Instance.PlayLoop(targetAmbient, ambientID, transitionDuration);
+            }
+            else
+            {
+                SoundManager.Instance.StopLoop(ambientID, transitionDuration);
             }
         }
     }
 
-    private void SetWaterAudio(bool enable)
+    private void SetWaterAudioToRain()
     {
-        if (waterObjectsToRaise == null) return;
+        if (waterObjectsToRaise == null || phase2WaterClip == null) return;
 
         foreach (var t in waterObjectsToRaise)
         {
             if (t == null) continue;
-
             AudioSource source = t.GetComponent<AudioSource>();
-            if (enable)
+            if (source == null) source = t.gameObject.AddComponent<AudioSource>();
+
+            // Rain Water Sound Play
+            if (source.clip != phase2WaterClip || !source.isPlaying)
             {
-                if (source == null) source = t.gameObject.AddComponent<AudioSource>();
-                
-                if (!source.isPlaying || source.clip != waterRainClip)
-                {
-                    source.clip = waterRainClip;
-                    source.loop = true;
-                    source.spatialBlend = 1.0f; // 3D Sound
-                    source.minDistance = 1.0f;
-                    source.maxDistance = waterRainMaxDistance;
-                    source.rolloffMode = AudioRolloffMode.Logarithmic;
-                    source.volume = waterRainVolume;
-                    source.Play();
-                }
+                source.clip = phase2WaterClip;
+                source.loop = true;
+                source.spatialBlend = 1.0f;
+                source.minDistance = 1.0f;
+                source.maxDistance = waterRainMaxDistance;
+                source.rolloffMode = AudioRolloffMode.Logarithmic;
+                source.volume = waterRainVolume;
+                source.Play();
             }
-            else
+        }
+    }
+
+    private void SetWaterAudioToOriginal()
+    {
+        if (waterObjectsToRaise == null || !waterAudioBackedUp) return;
+
+        foreach (var t in waterObjectsToRaise)
+        {
+            if (t == null) continue;
+            int id = t.gameObject.GetInstanceID();
+            
+            if (originalWaterClips.ContainsKey(id))
             {
-                if (source != null && source.isPlaying && source.clip == waterRainClip)
+                AudioClip originalClip = originalWaterClips[id];
+                AudioSource source = t.GetComponent<AudioSource>();
+                
+                if (originalClip == null)
                 {
-                    source.Stop();
+                    // 원래 오디오가 없던 녀석 -> 소리 끄기
+                    if (source != null) source.Stop();
+                }
+                else
+                {
+                    // 원래 오디오가 있던 녀석 -> 원래 클립 복구 및 재생 (원래 loop였는지 등은 저장 안했으나 보통 loop 환경음일 것)
+                    if (source == null) source = t.gameObject.AddComponent<AudioSource>();
+
+                    if (source.clip != originalClip)
+                    {
+                        source.clip = originalClip;
+                        source.Play(); // 설정에 따라 자동 재생이 아닐 수도 있으니 주의 (여기선 일단 재생)
+                    }
                 }
             }
         }
     }
 
-    [ContextMenu("Next Weather")]
-    public void NextWeather()
+    [ContextMenu("Next Phase")]
+    public void NextPhase()
     {
-        int next = (int)currentState + 1;
-        if (next > (int)WeatherState.Windy) next = 0;
-        SetWeather((WeatherState)next);
+        int next = currentPhase + 1;
+        if (next > 4) next = 1;
+        SetPhase(next);
     }
 }
