@@ -20,7 +20,11 @@ public class EndingSequenceController : MonoBehaviour
     [Tooltip("낙하 속도 (초당 미터)")]
     public float dropSpeed = 50f;
 
-    [Header("Camera Settings")]
+    [Tooltip("낙하 중 좌우 회전 속도 - Y축 (초당 도)")]
+    public float rotationSpeedY = 90f;
+
+    [Tooltip("낙하 중 위아래 회전 속도 - X축 (초당 도)")]
+    public float rotationSpeedX = 45f;
     [Tooltip("카메라와 오브젝트 사이 거리")]
     public float cameraDistance = 5.0f;
 
@@ -47,6 +51,7 @@ public class EndingSequenceController : MonoBehaviour
     private Coroutine endingCoroutine;
     private GameObject spawnedObject;
     private bool isFollowing = false;
+    private float cameraYOffset = 0f; // 카메라가 오브젝트보다 얼마나 위에 있는지 (점점 증가)
 
     private void Awake()
     {
@@ -61,19 +66,18 @@ public class EndingSequenceController : MonoBehaviour
 
     private void LateUpdate()
     {
-        // 매 프레임 카메라가 낙하 오브젝트를 따라감
+        // 매 프레임 카메라가 낙하 오브젝트를 따라감 (약간 느리게)
         if (isFollowing && spawnedObject != null)
         {
             Camera cam = Camera.main;
             if (cam == null) return;
 
-            // 카메라를 오브젝트와 같은 높이에, 정면(Z축 뒤쪽)에서 비춤
-            // X 오프셋으로 오브젝트를 화면 왼쪽에 배치
+            // 카메라는 오브젝트보다 cameraYOffset만큼 위에 위치
+            // → 오브젝트가 화면 아래쪽으로 점점 내려감
             Vector3 targetPos = spawnedObject.transform.position
-                + new Vector3(cameraXOffset, 0f, -cameraDistance);
+                + new Vector3(cameraXOffset, cameraYOffset, -cameraDistance);
 
             cam.transform.position = targetPos;
-            // 정면을 바라보는 고정 회전 (Z축 방향)
             cam.transform.rotation = Quaternion.LookRotation(Vector3.forward);
         }
     }
@@ -137,6 +141,7 @@ public class EndingSequenceController : MonoBehaviour
         }
 
         // LateUpdate에서 매 프레임 따라가기 시작
+        cameraYOffset = 0f;
         isFollowing = true;
 
         // 1프레임 대기
@@ -162,9 +167,24 @@ public class EndingSequenceController : MonoBehaviour
         while (timer < duration)
         {
             timer += Time.deltaTime;
+            float progress = Mathf.Clamp01(timer / duration); // 0 → 1
+
             if (spawnedObject != null)
             {
+                // 오브젝트는 계속 같은 속도로 떨어짐
                 spawnedObject.transform.position += Vector3.down * dropSpeed * Time.deltaTime;
+
+                // 회전 (X축 + Y축)
+                spawnedObject.transform.Rotate(
+                    rotationSpeedX * Time.deltaTime, 
+                    rotationSpeedY * Time.deltaTime, 
+                    0f, Space.World);
+
+                // 카메라 지연: 시간이 지날수록 카메라가 점점 덜 따라감
+                // progress가 0일 때 lag=0 (완벽 추적), 1일 때 lag=최대
+                // 오브젝트 크기 * 거리 기반으로 적절한 오프셋 계산
+                float lagAmount = progress * progress; // 가속 곡선 (천천히 시작, 점점 빨라짐)
+                cameraYOffset = lagAmount * cameraDistance * 1.5f; // 최대 오프셋 = 거리의 1.5배
             }
             yield return null;
         }
