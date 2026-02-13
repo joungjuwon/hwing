@@ -288,9 +288,7 @@ public class WeatherManager : MonoBehaviour
                     foreach (var prop in rainPropsToActivate) if (prop != null) prop.SetActive(false);
                 }
 
-                // Restore/Reset positions Logic (All rain off) - Removed as per user request
-                // In Phase 3 (RainStop), Water/Terrain offsets are maintained.
-                /*
+                // Restore/Reset positions Logic (All rain off)
                 if (waterPositionsBackedUp && waterObjectsToRaise != null)
                 {
                     targetWaterPositions = new List<Vector3>(originalWaterPositions);
@@ -298,9 +296,8 @@ public class WeatherManager : MonoBehaviour
                 
                 if (terrainPositionBackedUp && rainTargetTerrain != null)
                 {
-                    targetTerrainPosition = originalTerrainPosition;
+                    // targetTerrainPosition = originalTerrainPosition; // User requested to NOT restore terrain in Phase 3
                 }
-                */
 
                 targetBGM = phase3BGM;
                 targetAmbient = phase3Ambient;

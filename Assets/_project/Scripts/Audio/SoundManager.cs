@@ -477,6 +477,39 @@ public class SoundManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 모든 사운드(BGM, SFX, Loop, RandomLoop)를 정지하고 초기화합니다.
+    /// 타이틀 화면으로 돌아갈 때 등 리셋이 필요할 때 사용합니다.
+    /// </summary>
+    public void StopAllSounds()
+    {
+        // 1. BGM 정지
+        StopBGM();
+        
+        // 2. 반복 사운드(Loop) 모두 정지
+        // 딕셔너리를 순회하며 정지해야 하므로 키를 복사해서 사용
+        var loopIds = new List<string>(activeLoops.Keys);
+        foreach (var id in loopIds)
+        {
+            StopLoop(id);
+        }
+        activeLoops.Clear();
+
+        // 3. 랜덤 루프(RandomLoop) 모두 정지
+        var randomLoopIds = new List<int>(activeRandomLoops.Keys);
+        foreach (var id in randomLoopIds)
+        {
+            UnregisterRandomLoop(id);
+        }
+        activeRandomLoops.Clear();
+
+        // 4. SFX 소스 정지
+        if (sfxSource != null) sfxSource.Stop();
+
+        // 5. 믹서 파라미터 초기화? (선택사항, 보통 볼륨 설정은 유지하는게 좋음)
+        // 하지만 타이틀 시퀀스를 위해 필요한 경우... 볼륨은 유지.
+    }
+
+    /// <summary>
     /// ID로 지정된 반복 사운드를 정지합니다.
     /// </summary>
     public void StopLoop(string id, float fadeDuration = 0f)
@@ -537,6 +570,7 @@ public class SoundManager : MonoBehaviour
         if (mainMixer == null) return;
         // 슬라이더 값(0~1)을 데시벨(-80~0)로 변환
         float db = volume <= 0.001f ? -80f : Mathf.Log10(volume) * 20f;
+        // Debug.Log($"[SoundManager] SetMasterVolume: {volume} -> {db} dB");
         mainMixer.SetFloat("MasterVolume", db);
     }
 
@@ -544,13 +578,22 @@ public class SoundManager : MonoBehaviour
     {
         if (mainMixer == null) return;
         float db = volume <= 0.001f ? -80f : Mathf.Log10(volume) * 20f;
+        // Debug.Log($"[SoundManager] SetBGMVolume: {volume} -> {db} dB");
         mainMixer.SetFloat("BGMVolume", db);
     }
 
     public void SetSFXVolume(float volume)
     {
         if (mainMixer == null) return;
+
+        // Check current value
+        if (mainMixer.GetFloat("SFXVolume", out float currentDb))
+        {
+             // Debug.Log($"[SoundManager] Previous SFXVolume: {currentDb} dB");
+        }
+
         float db = volume <= 0.001f ? -80f : Mathf.Log10(volume) * 20f;
+        Debug.Log($"[SoundManager] SetSFXVolume Input: {volume} -> Calculated DB: {db} (Prev: {currentDb})");
         mainMixer.SetFloat("SFXVolume", db);
     }
 

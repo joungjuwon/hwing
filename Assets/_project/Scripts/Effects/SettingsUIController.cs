@@ -116,6 +116,7 @@ public class SettingsUIController : MonoBehaviour
 
     public void OnSFXVolumeChanged(float volume)
     {
+        // Debug.Log($"[SettingsUI] SFX Volume Changed: {volume}");
         if (SoundManager.Instance != null)
             SoundManager.Instance.SetSFXVolume(volume);
     }
@@ -128,6 +129,17 @@ public class SettingsUIController : MonoBehaviour
     public void ReturnToTitle()
     {
         Time.timeScale = 1f; // 시간 정지 해제
+        
+        // 사운드 초기화 (BGM, SFX 루프 등 모두 정지)
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.StopAllSounds();
+            
+            // 타이틀 시퀀스 사운드 재생은 타이틀 씬이 로드되면서 
+            // 해당 씬의 스크립트(TitleInputController 등)나 AudioSource가 담당해야 함.
+            // SoundManager는 Reset 상태로 대기.
+        }
+
         SceneManager.LoadScene(titleSceneIndex);
     }
 
