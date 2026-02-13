@@ -26,6 +26,10 @@ public class TitleInputController : MonoBehaviour
 
     private void Start()
     {
+        // 타이틀 진입 시 (또는 씬 로드 시) 터레인/날씨 초기화: 잔디 제거, 레이어 1번, 위치 원복
+        if (TerrainManager.Instance != null) TerrainManager.Instance.ApplyTitleStyle();
+        if (WeatherManager.Instance != null) WeatherManager.Instance.ResetForTitle();
+
         // 씬 시작 후 바로 넘어가면 당황스러우므로 약간의 딜레이를 줌
         Invoke(nameof(EnableInput), inputDelay);
     }

@@ -140,6 +140,17 @@ public class SettingsUIController : MonoBehaviour
             // SoundManager는 Reset 상태로 대기.
         }
 
+        // 지형 및 날씨 상태 초기화 (타이틀 스타일 적용)
+        if (TerrainManager.Instance != null)
+        {
+            TerrainManager.Instance.ApplyTitleStyle();
+        }
+        
+        if (WeatherManager.Instance != null)
+        {
+            WeatherManager.Instance.ResetForTitle();
+        }
+
         SceneManager.LoadScene(titleSceneIndex);
     }
 

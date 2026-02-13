@@ -456,6 +456,62 @@ public class WeatherManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 타이틀 화면 진입 시 날씨와 지형/물 위치를 초기화합니다.
+    /// (Phase 3 설정과 무관하게 강제로 원복)
+    /// </summary>
+    public void ResetForTitle()
+    {
+        // 1. 지형 및 물 위치 강제 복구 (Lerp 없이 즉시 적용)
+        if (terrainPositionBackedUp && rainTargetTerrain != null)
+        {
+            // 목표 위치도 원복하여 Update에서 다시 움직이지 않도록 함
+            targetTerrainPosition = originalTerrainPosition;
+            startTerrainPosition = originalTerrainPosition; // 시작점도 원복
+            rainTargetTerrain.transform.position = originalTerrainPosition;
+            
+            // Lerp 로직이 더 이상 돌지 않도록 Time을 Max로 설정
+            currentTerrainTime = terrainTransitionDuration + 1f; 
+        }
+
+        if (waterPositionsBackedUp && waterObjectsToRaise != null)
+        {
+            // 리스트 크기 맞춤 (Start/Target)
+            startWaterPositions = new List<Vector3>(originalWaterPositions);
+            targetWaterPositions = new List<Vector3>(originalWaterPositions);
+
+            for (int i = 0; i < waterObjectsToRaise.Count; i++)
+            {
+                if (waterObjectsToRaise[i] != null && i < originalWaterPositions.Count)
+                {
+                    waterObjectsToRaise[i].transform.position = originalWaterPositions[i];
+                }
+            }
+            
+            // Lerp 중지
+            currentWaterTime = waterTransitionDuration + 1f;
+        }
+
+        // 2. 비 효과 정지
+        if (rainParticleSystem != null)
+        {
+            rainParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+
+        if (rainPropsToActivate != null)
+        {
+            foreach (var prop in rainPropsToActivate) if (prop != null) prop.SetActive(false);
+        }
+
+        // 3. 오디오 복구
+        SetWaterAudioToOriginal();
+
+        // 4. 날씨 상태 초기화 (Phase 1로 간주하거나, 리셋)
+        // 타이틀에서는 보통 맑은 상태나 별도 연출을 따르므로 여기선 효과만 끕니다.
+        
+        Debug.Log("[WeatherManager] Reset for Title (Positions Force Restored, Rain Stopped).");
+    }
+
     [ContextMenu("Next Phase")]
     public void NextPhase()
     {
