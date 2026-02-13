@@ -480,7 +480,7 @@ public class WeatherManager : MonoBehaviour
             startWaterPositions = new List<Vector3>(originalWaterPositions);
             targetWaterPositions = new List<Vector3>(originalWaterPositions);
 
-            for (int i = 0; i < waterObjectsToRaise.Count; i++)
+            for (int i = 0; i < waterObjectsToRaise.Length; i++)
             {
                 if (waterObjectsToRaise[i] != null && i < originalWaterPositions.Count)
                 {
